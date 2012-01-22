@@ -56,7 +56,13 @@
             <groupId>com.epimorphics.lda</groupId>
             <artifactId>json-rdf</artifactId>
             <version>1.2.5</version>
-        </dependency>		
+        </dependency>
+        <dependency>
+        	<groupId>com.sun.jersey</groupId>
+        	<artifactId>jersey-core</artifactId>
+        	<version>1.11</version>
+        	<type>jar</type>
+        </dependency>
 	</dependencies>
 	
     <properties>

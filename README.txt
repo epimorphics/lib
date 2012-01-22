@@ -24,4 +24,6 @@ Includes:
     [Extracted from Modal. I've de-OSGI-ified the PrefixManager part of that but it doesn't make 
      much sense as an interface in a non-OSGI setting. Needs a proper redesign.]
      
-...
+  - packaging to support Jersey-based REST APIs to return models and list of results
+    [Having lib depend on Jersey may not be appropriate, could factor out to a separate RESTlib]
+    
