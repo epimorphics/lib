@@ -24,3 +24,4 @@ Includes:
     [Extracted from Modal. I've de-OSGI-ified the PrefixManager part of that but it doesn't make 
      much sense as an interface in a non-OSGI setting. Needs a proper redesign.]
      
+...
