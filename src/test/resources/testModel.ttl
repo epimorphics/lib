@@ -1,0 +1,47 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix eg:      <http://www.epimporphics.com/examples#> .
+
+eg:Person a owl:Class;
+    rdfs:label "Person";
+    rdfs:comment "Class for a person"@en ;
+    .
+    
+eg:parentOf a owl:ObjectProperty;
+    rdfs:label "parentOf";
+    rdfs:domain eg:Person;
+    rdfs:range  eg:Person;
+    .
+    
+eg:age  a owl:DatatypeProperty;
+    rdfs:label "age";
+    rdfs:domain eg:Person;
+    rdfs:range  xsd:Integer;
+    .
+    
+eg:bill a eg:Person;
+    rdfs:label "Bill";
+    eg:age 94 ;
+    eg:parentOf eg:dave .
+    
+eg:joan a eg:Person;
+    rdfs:label "Joan";
+    eg:age 80 ;
+    eg:parentOf eg:dave .
+    
+eg:dave a eg:Person;
+    rdfs:label "Dave";
+    eg:age 54 ;
+    eg:parentOf eg:colin, eg:lucy, eg:duncan .
+    
+eg:colin a eg:Person;
+    rdfs:label "Colin" .
+    
+eg:lucy a eg:Person;
+    rdfs:label "Lucy" .
+    
+eg:duncan a eg:Person;
+    rdfs:label "Duncan" .
