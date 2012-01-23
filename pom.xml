@@ -10,11 +10,11 @@
 	<repositories>
 		<repository>
 			<id>apache-repo-releases</id>
-			<url>http://repository.apache.org/content/repositories/releases/</url>
+			<url>https://repository.apache.org/content/repositories/releases/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
-			
+
 		</repository>
 		<repository>
 			<id>apache-repo-snapshots</id>
@@ -26,7 +26,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		
+
 		<repository>
 			<id>repo-epi</id>
 			<name>Epimorphics repository</name>
@@ -36,7 +36,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		
+
 	</repositories>
 
 	<dependencies>
@@ -64,7 +64,7 @@
         	<type>jar</type>
         </dependency>
 	</dependencies>
-	
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
