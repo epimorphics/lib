@@ -32,6 +32,25 @@ public class NameUtils {
 	}
 	
 	/**
+	 * Convert an arbitrary name to a URI which can be used in metadata
+	 * descriptions of the named object. If the name already looks like
+	 * a URI then use that. If not then mint a URI based on the address of the
+	 * server and the given name of the "type" of resource. This will
+	 * look like:
+	 * <pre>
+	 *  {intendedBaseURL}/modal/{type}/{safe-version-of-name}
+	 * </pre>
+	 */
+	public static String uriFor(String name, String serverURI, String type) {
+		if (isURI(name)) { 
+            return name;
+		} else {
+            // not a valid IRI
+            return serverURI + "/modal/" + type + "/" + safeName(name);
+		}
+	}
+	
+	/**
 	 * Test if the given name is a legal URI. 
 	 */
 	public static boolean isURI(String name) {
@@ -93,6 +112,14 @@ public class NameUtils {
         return type + "-" + UUID.randomUUID();
     }
     
+    /**
+     * Generate a random URI for something of the given type, result
+     * will currently look like: {server}/modal/{type}/{uuid}
+     */
+    public static String newURI(String type, String serverURI){
+        return serverURI + "/modal/" + type + "/" + UUID.randomUUID();
+    }
+    
    /**
     * Extract an integer from a parameter object, with default
     */
@@ -120,4 +147,62 @@ public class NameUtils {
         // but have been given a parameter generated while on windows
         return path.replaceAll("\\\\", "/");
     }
+
+    /**
+     * Strip any leading "file:" off a URL string
+     */
+    public static String removeFilePrefix(String f) {
+        if (f.startsWith("file:")) {
+            return f.substring(5);
+        } else {
+            return f;
+        }
+    }
+
+    /**
+     * Find the last path segment in a URL or unix path.
+     */
+    public static String lastSegment(String f) {
+        return splitAfterLast(f, "/");
+    }
+
+    /**
+     * Remove a trailing .xxx extension from a file name
+     */
+    public static String removeExtension(String f) {
+        return splitBeforeLast(f, ".");
+    }
+
+    /**
+     * Find the .xxx extension of a file name
+     */
+    public static String extension(String f) {
+        return splitAfterLast(f, ".");
+    }
+
+    /**
+     * Return segment of a string after the last occurrence of "at"
+     */
+    public static String splitAfterLast(String filename, String at) {
+        int split = filename.lastIndexOf(at);
+        if (split == -1) {
+            return filename;
+        } else {
+            return filename.substring(split + 1);
+        }
+    }
+
+
+    /**
+     * Return segment of a string before the last occufrence of "at"
+     */
+    public static String splitBeforeLast(String filen, String at) {
+        int split = filen.lastIndexOf(at);
+        if (split == -1) {
+            return filen;
+        } else {
+            return filen.substring(0, split);
+        }
+
+    }    
 }

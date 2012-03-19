@@ -2,7 +2,7 @@
  * File:        SPARQLUpdateWriter.java
  * Created by:  Dave Reynolds
  * Created on:  7 Aug 2011
- * 
+ *
  * (c) Copyright 2011, Epimorphics Limited
  *
  *****************************************************************/
@@ -28,17 +28,21 @@ import com.hp.hpl.jena.shared.PrefixMapping;
  * Support for writing out a model in SPARQL UPDATE syntax.
  * Essentially just the normal N3/Turle writer but with
  * support for separate writing of prefix and body information.
- * 
+ *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
 public class SPARQLUpdateWriter extends N3JenaWriterCommon {
+
+    public SPARQLUpdateWriter() {
+        useWellKnownPropertySymbols = false;
+    }
 
     public static void writeUpdatePrefixes(PrefixMapping prefixes, Writer writer) throws IOException {
         for (Map.Entry<String, String> pm : prefixes.getNsPrefixMap().entrySet()) {
             writer.write("PREFIX " + pm.getKey() + ": <" + pm.getValue() + ">\n");
         }
     }
-    
+
     public void writeUpdateBody(Model model, Writer _out) throws IOException {
         // Set up output
         if (!(_out instanceof BufferedWriter)) {
@@ -47,30 +51,30 @@ public class SPARQLUpdateWriter extends N3JenaWriterCommon {
         out = new N3IndentedWriter(_out);
 
         bNodesMap = new HashMap<Resource, String>() ;
-        
+
         // Set up prefix mapping
         prefixMap = model.getNsPrefixMap() ;
         for ( Iterator<Entry<String, String>> iter = prefixMap.entrySet().iterator() ; iter.hasNext() ; )
         {
             Entry<String, String> e = iter.next() ;
             String prefix = e.getKey() ;
-            String uri = e.getValue(); 
-            
+            String uri = e.getValue();
+
             // XML namespaces name can include '.'
             // Turtle prefixed names can't.
-            if ( ! checkPrefixPart(prefix) ) 
+            if ( ! checkPrefixPart(prefix) )
                 iter.remove() ;
             else
             {
                 if ( checkPrefixPart(prefix) )
-                    // Build acceptable reverse mapping  
+                    // Build acceptable reverse mapping
                     reversePrefixMap.put(uri, prefix) ;
             }
         }
 
         writeModel( ModelFactory.withHiddenStatements(model));
         out.flush();
-        bNodesMap = null ;        
+        bNodesMap = null ;
     }
-    
+
 }
