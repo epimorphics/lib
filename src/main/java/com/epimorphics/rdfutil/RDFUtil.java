@@ -9,6 +9,9 @@
 
 package com.epimorphics.rdfutil;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.epimorphics.vocabs.SKOS;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -164,4 +167,16 @@ public class RDFUtil {
             return ifAbsent;
     }
 
+    /**
+     * Return a useful version of the local name for a resource. Not restricted to an NCName
+     */
+    public static String getLocalname(Resource r) {
+        Matcher match = lnmatch.matcher(r.getURI());
+        if (match.matches()) {
+            return match.group(1);
+        } else {
+            return r.getLocalName();
+        }
+    }
+    static final Pattern lnmatch = Pattern.compile(".*[#/](^#/)+$");
 }
