@@ -2,15 +2,17 @@
  * File:        FileUtill.java
  * Created by:  Dave Reynolds
  * Created on:  24 Apr 2011
- * 
+ *
  * (c) Copyright 2011, Epimorphics Limited
  *
  *****************************************************************/
 
 package com.epimorphics.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,21 +25,21 @@ import java.util.zip.CRC32;
 import com.hp.hpl.jena.util.FileUtils;
 
 public class FileUtil {
-    
+
     /**
      * Copy a source file to the output writer, reading the source as UTF-8.
      * Returns number of chars copied
      */
     public static int copyResource(File src, Writer out) throws IOException {
         Reader r = null;
-    
+
         try {
             r = FileUtils.asUTF8( new FileInputStream(src) );
-    
+
 //            int len = 0;
             char[] buf = new char[1024];
             int n;
-    
+
             while ((n = r.read(buf, 0, buf.length)) >= 0) {
                 out.write( buf, 0, n );
 //                len += n;
@@ -50,21 +52,21 @@ public class FileUtil {
             }
         }
     }
-    
+
     /**
      * Copy a source file to the output stream, byte for byte.
      * Returns number of bytes copied.
      */
     public static int copyResource(File src, OutputStream os) throws IOException {
         InputStream is = null;
-    
+
         try {
             is = new FileInputStream(src);
-    
+
             int len = 0;
             byte[] buf = new byte[1024];
             int n;
-    
+
             while ((n = is.read(buf, 0, buf.length)) >= 0) {
                 os.write( buf, 0, n );
                 len += n;
@@ -78,22 +80,31 @@ public class FileUtil {
     }
 
     /**
+     * Copy a source file to a destination file
+     */
+    public static void copyResource(String src, String dest) throws IOException {
+        OutputStream os = new BufferedOutputStream( new FileOutputStream(dest) );
+        copyResource(new File(src), os);
+        os.close();
+    }
+
+    /**
      * Ensure the given directory exists and is writable. Tries
-     * to create it if necessary. 
+     * to create it if necessary.
      * @throws ModalExeption if the directory exists but is not accessible
      */
     public static File ensureDir(String dir) throws EpiException {
-    	File fdir = new File(dir);
-    	if ( fdir.exists() ) {
-    		if ( !( fdir.isDirectory() && fdir.canRead() && fdir.canWrite() ) ) {
-    			throw new EpiException("Can't access directory " + dir);
-    		}
-    	} else {
-    		if (! fdir.mkdirs()) {
-    			throw new EpiException("Failed to create directory " + dir);
-    		}
-    	}
-    	return fdir;
+        File fdir = new File(dir);
+        if ( fdir.exists() ) {
+            if ( !( fdir.isDirectory() && fdir.canRead() && fdir.canWrite() ) ) {
+                throw new EpiException("Can't access directory " + dir);
+            }
+        } else {
+            if (! fdir.mkdirs()) {
+                throw new EpiException("Failed to create directory " + dir);
+            }
+        }
+        return fdir;
     }
 
     /**
@@ -117,15 +128,15 @@ public class FileUtil {
         boolean deleted = file.delete();
         if (!deleted) {
             throw new RuntimeException("failed to delete: " + file);
-        }           
+        }
     }
 
     static void forceDelete(File file) {
         if (file.isDirectory()) {
             FileUtil.forceDeleteDirectory(file);
         } else {
-            forceDeleteFile(file);      
-        } 
+            forceDeleteFile(file);
+        }
     }
 
     static void forceDeleteDirectory(File directory) {
@@ -133,19 +144,19 @@ public class FileUtil {
         for (int i=0; i<children.length; i++) {
             forceDelete(children[i]);
         }
-        forceDeleteFile(directory);     
+        forceDeleteFile(directory);
     }
-    
+
     /**
-     * Compute a checksum for a file for use in detecting changes. 
+     * Compute a checksum for a file for use in detecting changes.
      * May not check whole file contents.
      */
     public static long checksum(String filename) {
         return checksum(new File(filename));
     }
-    
+
     /**
-     * Compute a checksum for a file for use in detecting changes. 
+     * Compute a checksum for a file for use in detecting changes.
      * May not check whole file contents.
      */
     public static long checksum(File file) {
@@ -160,7 +171,7 @@ public class FileUtil {
     }
 
     /**
-     * Compute a checksum for a bundle URL for use in detecting changes. 
+     * Compute a checksum for a bundle URL for use in detecting changes.
      * May not check whole file contents.
      */
     public static long checksum(URL url) {
@@ -180,5 +191,5 @@ public class FileUtil {
             crc.update((int) (l & 0x000000ff));
             l >>= 8;
         }
-    }   
+    }
 }
