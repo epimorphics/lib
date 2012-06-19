@@ -148,6 +148,30 @@ public class FileUtil {
     }
 
     /**
+     * Construct a File reference for "file". If "file" is absolute
+     * then use that, if it is relative then make it relative to the given parent.
+     */
+    public static File absoluteFile(String parent, String file) {
+        File f = new File(file);
+        if (!f.isAbsolute()) {
+            f = new File(parent, file);
+        }
+        return f;
+    }
+
+    /**
+     * Construct a File reference for "file". If "file" is absolute
+     * then use that, if it is relative then make it relative to the given parent.
+     */
+    public static File absoluteFile(File parent, String file) {
+        File f = new File(file);
+        if (!f.isAbsolute()) {
+            f = new File(parent, file);
+        }
+        return f;
+    }
+
+    /**
      * Compute a checksum for a file for use in detecting changes.
      * May not check whole file contents.
      */
