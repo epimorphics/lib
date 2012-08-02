@@ -7,6 +7,10 @@
   <name>Epimorphics lib</name>
   <description>Epimorphics misc utility library</description>
 
+  <scm>
+    <developerConnection>scm:git:ssh://git@codebasehq.com/epimorphics/data-fabric/lib.git</developerConnection>
+  </scm>
+
   <repositories>
     <repository>
       <id>apache-repo-releases</id>
@@ -92,6 +96,22 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>1.7</version>
+        <configuration>
+          <connectionType>developerConnection</connectionType>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.3.2</version>
+      </plugin>
+
     </plugins>
 
     <extensions>
