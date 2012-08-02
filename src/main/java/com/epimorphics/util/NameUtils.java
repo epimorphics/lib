@@ -12,8 +12,9 @@ package com.epimorphics.util;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
-import com.hp.hpl.jena.iri.IRI;
-import com.hp.hpl.jena.iri.IRIFactory;
+import org.apache.jena.iri.IRI;
+import org.apache.jena.iri.IRIFactory;
+
 
 /**
  * Utilities for checking and converting names to forms safely
