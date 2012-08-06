@@ -59,7 +59,7 @@ public class TestPrefixUtils {
     @Test
     public void testSubstitue() {
         String query = "SELECT * WHERE {?i ?0 ?1}";
-        String result = PrefixUtils.substituteInQuery(query, "rdf:type", "foaf:Person");
+        String result = QueryUtil.substituteInQuery(query, "rdf:type", "foaf:Person");
         assertEquals("SELECT * WHERE {?i rdf:type foaf:Person}", result);
     }
 }
