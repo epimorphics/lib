@@ -25,13 +25,13 @@ public class QueryUtil {
 
 
     /**
-     * Inject strings into a SPARQL query replacing each $i with the corresponding element from the arg list.
+     * Inject strings into a SPARQL query replacing each ${i} with the corresponding element from the arg list.
      * Purely syntactic.
      */
     public static String substituteInQuery(String query, String...strings) {
         String result = query;
         for (int i = 0; i < strings.length; i++) {
-            result = result.replaceAll("\\$" + i, strings[i]);
+            result = result.replaceAll("\\$\\{" + i + "\\}", strings[i]);
         }
         return result;
     }
