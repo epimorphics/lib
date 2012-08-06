@@ -55,4 +55,11 @@ public class TestPrefixUtils {
         assertTrue( result.contains("PREFIX pc: <http://prefix/c#>") );
         assertTrue( result.endsWith(query) );
     }
+
+    @Test
+    public void testSubstitue() {
+        String query = "SELECT * WHERE {?i ?0 ?1}";
+        String result = PrefixUtils.substituteInQuery(query, "rdf:type", "foaf:Person");
+        assertEquals("SELECT * WHERE {?i rdf:type foaf:Person}", result);
+    }
 }

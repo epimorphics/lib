@@ -115,6 +115,18 @@ public class PrefixUtils {
         return result.toString();
     }
 
+    /**
+     * Inject strings into a SPARQL query replacing each ?N variable with the elements from the arg list.
+     * Purely syntactic.
+     */
+    public static String substituteInQuery(String query, String...strings) {
+        String result = query;
+        for (int i = 0; i < strings.length; i++) {
+            result = result.replaceAll("\\?" + i, strings[i]);
+        }
+        return result;
+    }
+
     private final static Pattern prefixPatt = Pattern.compile("([a-zA-Z0-9-_][a-zA-Z0-9-_\\.]*):");
 
     private static Set<String> findPrefixes(String source) {
