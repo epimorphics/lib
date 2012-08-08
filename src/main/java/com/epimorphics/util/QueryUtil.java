@@ -12,6 +12,7 @@ package com.epimorphics.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.epimorphics.webapi.PageInfo;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -34,6 +35,19 @@ public class QueryUtil {
             result = result.replaceAll("\\$\\{" + i + "\\}", strings[i]);
         }
         return result;
+    }
+
+    /**
+     * Add limit/offset to query based on paging specification.
+     */
+    public static String addPageLimits(String query, PageInfo pageInfo) {
+        String expandedQuery = query;
+        if (pageInfo.getOffset() != 0) {
+            expandedQuery += " OFFSET " + pageInfo.getOffset();
+        }
+        expandedQuery += " LIMIT " + pageInfo.getPageSize();
+        return expandedQuery;
+
     }
 
     /**
