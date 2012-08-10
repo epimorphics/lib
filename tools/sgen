@@ -1,0 +1,2 @@
+#!/bin/sh
+schemagen --package com.epimorphics.vocabs  --nostrict --rdfs -n VOID -i ../src/main/vocabs/void.rdf  > ../src/main/java/com/epimorphics/vocabs/VOID.java
