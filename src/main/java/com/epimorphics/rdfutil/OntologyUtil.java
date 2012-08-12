@@ -9,14 +9,20 @@
 
 package com.epimorphics.rdfutil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
-public class XSDUtil {
+public class OntologyUtil {
     
     /**
      * Return the common super type of two xsd type datatypes or return null
@@ -65,4 +71,55 @@ public class XSDUtil {
         XSDTree.put( XSDDatatype.XSDnormalizedString, XSDDatatype.XSDstring  );
     }
   
+
+    /**
+     * Return the common superclass of two classes, of null if there is no common superclass in 
+     * the raw ontologies (OWL inference is not used so owl:Thing might not be found).
+     */
+    public static Resource commonSuperClass(Resource c1, Resource c2) {
+        if (c1.equals(c2)) return c1;
+        Set<Resource> parents1 = new HashSet<Resource>( depthfirstSuperclasses(c1) );
+        for (Resource other : depthfirstSuperclasses(c2)) {
+            if (parents1.contains(other)) {
+                return other;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Find all the superclasses of the given starting class, in depth first order.
+     * Assumes the model does not have closure statements for rdfs:subClassOf.
+     */
+    public static List<Resource> depthfirstSuperclasses(Resource start) {
+        Set<RDFNode> found = new HashSet<RDFNode>();
+        List<Resource> traversal = new ArrayList<Resource>();
+        found.add(start);
+        List<Resource> parents = new ArrayList<Resource>();
+        parents.add(start);
+        while (!parents.isEmpty()) {
+            List<Resource> newparents = new ArrayList<Resource>();
+            for(Resource parent : parents) {
+                traversal.add(parent);
+                newparents.addAll( deepen(parent, found) );
+            }
+            parents = newparents;
+        }
+        return traversal;
+    }
+    
+    private static List<Resource> deepen(Resource node, Set<RDFNode> found) {
+        List<Resource> newparents = new ArrayList<Resource>();
+        for (StmtIterator si = node.listProperties(RDFS.subClassOf); si.hasNext();) {
+            RDFNode parent = si.next().getObject();
+            if ( ! found.contains(parent)) {
+                found.add(parent);
+                if (parent.isResource()) {
+                    newparents.add( parent.asResource() );
+                }
+            }
+        }
+        return newparents;
+    }
+
 }
