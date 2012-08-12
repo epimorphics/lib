@@ -26,5 +26,8 @@ public class TestRDFUitl {
         foo = ResourceFactory.createResource("http://example.com#foo");
         assertEquals("foo", RDFUtil.getLocalname(foo));
         assertEquals("http://example.com#", RDFUtil.getNamespace(foo));
+        foo = ResourceFactory.createResource("http://example.com/foo#1");
+        assertEquals("1", RDFUtil.getLocalname(foo));
+        assertEquals("http://example.com/foo#", RDFUtil.getNamespace(foo));
     }
 }

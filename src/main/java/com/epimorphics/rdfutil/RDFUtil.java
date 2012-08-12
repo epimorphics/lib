@@ -191,5 +191,5 @@ public class RDFUtil {
         }
     }
 
-    static final Pattern lnmatch = Pattern.compile("(.*[#/])(^#/)+$");
+    static final Pattern lnmatch = Pattern.compile("(.*[#/])([^#/]+)$");
 }
