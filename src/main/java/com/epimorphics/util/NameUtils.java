@@ -72,7 +72,7 @@ public class NameUtils {
 
     /**
      * Convert a name to a safe name in a reversible fashion by
-     * (very) conservative percent-encoding of the UFT-8 version.
+     * (very) conservative percent-encoding of the UTF-8 version.
      */
     public static String encodeSafeName(String name) {
         try {
