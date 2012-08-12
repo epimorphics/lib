@@ -173,10 +173,23 @@ public class RDFUtil {
     public static String getLocalname(Resource r) {
         Matcher match = lnmatch.matcher(r.getURI());
         if (match.matches()) {
-            return match.group(1);
+            return match.group(2);
         } else {
             return r.getLocalName();
         }
     }
-    static final Pattern lnmatch = Pattern.compile(".*[#/](^#/)+$");
+
+    /**
+     * Return a useful version of the namespace resource. Not restricted to treating the localname as an NCName
+     */
+    public static String getNamespace(Resource r) {
+        Matcher match = lnmatch.matcher(r.getURI());
+        if (match.matches()) {
+            return match.group(1);
+        } else {
+            return r.getNameSpace();
+        }
+    }
+
+    static final Pattern lnmatch = Pattern.compile("(.*[#/])(^#/)+$");
 }
