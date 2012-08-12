@@ -32,7 +32,8 @@ public class QueryUtil {
     public static String substituteInQuery(String query, Object...strings) {
         String result = query;
         for (int i = 0; i < strings.length; i++) {
-            result = result.replaceAll("\\$\\{" + i + "\\}", strings[i].toString());
+            Object subs = strings[i];
+            result = result.replaceAll("\\$\\{" + i + "\\}", subs == null ? "null" : subs.toString());
         }
         return result;
     }
