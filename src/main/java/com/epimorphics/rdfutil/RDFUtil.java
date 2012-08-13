@@ -171,6 +171,9 @@ public class RDFUtil {
      * Return a useful version of the local name for a resource. Not restricted to an NCName
      */
     public static String getLocalname(Resource r) {
+        if (! r.isURIResource()) {
+            return null;
+        }
         Matcher match = lnmatch.matcher(r.getURI());
         if (match.matches()) {
             return match.group(2);
@@ -183,6 +186,9 @@ public class RDFUtil {
      * Return a useful version of the namespace resource. Not restricted to treating the localname as an NCName
      */
     public static String getNamespace(Resource r) {
+        if (! r.isURIResource()) {
+            return null;
+        }
         Matcher match = lnmatch.matcher(r.getURI());
         if (match.matches()) {
             return match.group(1);
