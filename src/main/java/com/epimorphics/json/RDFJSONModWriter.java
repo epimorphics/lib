@@ -228,6 +228,9 @@ public class RDFJSONModWriter {
             writeResource( r );
         }
 
+        // write the rest of the model as well, replies on visited track to avoid duplication
+        write( root.getModel() );
+
         writer.finishObject();
     }
 
