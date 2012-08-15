@@ -68,7 +68,7 @@ public class TestJsonResultPageMarshall {
         marshaller.writeTo(resultPage, ResultPage.class, null, null, MediaType.APPLICATION_JSON_TYPE, null, out);
         out.close();
 
-        System.out.println(out.toString());
+//        System.out.println(out.toString());
 
         JsonObject object = JSON.parse( out.toString() );
         JsonArray items = object.get("items").getAsArray();
