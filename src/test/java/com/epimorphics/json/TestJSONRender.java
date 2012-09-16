@@ -37,6 +37,7 @@ public class TestJSONRender {
         doTestRender("bNode cycle",  "_:1 ns:p _:2 . _:2 ns:p _:1 ." );
         doTestRender("Multiple values", "ns:a ns:p 'foo', 'bar', 'baz' ." );
         doTestRender("Arrays", "ns:a ns:p (1 2 3) ." );
+        doTestRender("Empty array", "ns:a ns:p () ." );
     }
 
 
@@ -64,7 +65,7 @@ public class TestJSONRender {
         writer.finish();
 
         String json = sw.getBuffer().toString();
-//        System.out.println("JSON was:\n");
+//        System.out.println("JSON for " + msg + " was:\n");
 //        System.out.println(json);
 
         Model result = new RDFJSONModReader().parse( json );

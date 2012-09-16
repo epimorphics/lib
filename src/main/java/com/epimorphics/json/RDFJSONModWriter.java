@@ -114,22 +114,20 @@ public class RDFJSONModWriter {
             writeLiteral(node.getLiteral());
         } else {
             writer.startObject();
-            if (node.isURI()) {
+            if (isListNode(graph, node)) {
+                writeKeyValue(TYPE_KEY, LIST_TYPE);
+                writer.key(VALUE_KEY);
+                writer.startArray();
+                for (Node listnode : GraphList.members(new GNode(graph, node))) {
+                    writeNodeValue(graph, listnode);
+                }
+                writer.finishArray();
+            } else if (node.isURI()) {
                 writeKeyValue(TYPE_KEY, URI_TYPE);
                 writeKeyValue(VALUE_KEY, node.getURI());
             } else if (node.isBlank()) {
-                if (isListNode(graph, node)) {
-                    writeKeyValue(TYPE_KEY, LIST_TYPE);
-                    writer.key(VALUE_KEY);
-                    writer.startArray();
-                    for (Node listnode : GraphList.members(new GNode(graph, node))) {
-                        writeNodeValue(graph, listnode);
-                    }
-                    writer.finishArray();
-                } else {
-                    writeKeyValue(TYPE_KEY, BNODE_TYPE);
-                    writeKeyValue(VALUE_KEY, nodeLabel(node));
-                }
+                writeKeyValue(TYPE_KEY, BNODE_TYPE);
+                writeKeyValue(VALUE_KEY, nodeLabel(node));
             }
             writer.finishObject();
         }
@@ -160,7 +158,7 @@ public class RDFJSONModWriter {
     }
 
     protected boolean isListNode(Graph g, Node n) {
-        return n.equals(RDF.nil.asNode()) || (g.contains(n, RDF.first.asNode(), Node.ANY) && g.contains(n, RDF.rest.asNode(), Node.ANY));
+        return n.equals(RDF.nil.asNode()) || (n.isBlank() && (g.contains(n, RDF.first.asNode(), Node.ANY) && g.contains(n, RDF.rest.asNode(), Node.ANY)));
     }
 
     protected void writeKeyValue(String key, String value) {
