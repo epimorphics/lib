@@ -18,8 +18,7 @@ package com.epimorphics.rdfutil;
 
 import static org.junit.Assert.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -136,6 +135,25 @@ public class QueryUtilTest
         Model d = QueryUtil.describe( m, "describe ?item {?item ?pred ?_}", null, "pred", TestUtil.propertyFixture( m, "p" ) );
 
         assertTrue( TestUtil.modelFixture( ":a :p :b ; :p :c." ).isIsomorphicWith( d  ) );
+    }
+
+    @Test
+    public void testSelectAllVar() {
+        Model m = TestUtil.modelFixture( ":a :p :b ; :p :c. :e :p :g." );
+
+        List<RDFNode> as = QueryUtil.selectAllVar( "a", m, "select * {?a :p ?item}", null ) ;
+
+        TestUtil.testArray( as, new RDFNode[] {TestUtil.resourceFixture( null, "a" ),
+                                                TestUtil.resourceFixture( null, "e" )} );
+    }
+
+    @Test
+    public void testSelectFirstVar() {
+        Model m = TestUtil.modelFixture( ":a :p :b ; :p :c. :e :p :g." );
+
+        RDFNode item = QueryUtil.selectFirstVar( "item", m, "select * {?item :p :g}", null ) ;
+
+        assertEquals( TestUtil.resourceFixture( null, "e" ), item );
     }
 
     /***********************************/

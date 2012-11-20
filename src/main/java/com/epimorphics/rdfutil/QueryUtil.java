@@ -135,6 +135,8 @@ public class QueryUtil {
      */
     public static QueryExecution createQueryExecution( Model m, String query, PrefixMapping pm, QuerySolutionMap bindings ) {
         Query q = new Query();
+
+        // preference order: given prefixes, m's prefixes, common prefixes
         PrefixMapping pm_ = (pm == null) ? ((m == null) ? PrefixUtils.commonPrefixes() : m) : pm;
         q.setPrefixMapping( pm_ );
 
@@ -188,6 +190,53 @@ public class QueryUtil {
      */
     public static ResultSet selectAll( Model m, String query, PrefixMapping pm, QuerySolutionMap bindings ) {
         return createQueryExecution( m, query, pm, bindings ).execSelect();
+    }
+
+    /**
+     * Return all results from executing the given select query for a given variable.
+     * @param var The variable name to project from the query results
+     * @param m The model to run the query against
+     * @param query The sparql query
+     * @param pm Optional {@link PrefixMapping} to use when parsing the query, or null. If null is given, the default
+     * prefixes from {@link PrefixUtils#commonPrefixes()} will be used
+     * @param bindings Optional {@link QuerySolutionMap} containing initial bindings for query variables
+     * @return Non-null list of the values for <code>var</code>
+     */
+    public static List<RDFNode> selectAllVar( String var, Model m, String query, PrefixMapping pm, Object... bindings ) {
+        ResultSet rs = createQueryExecution( m, query, pm, bindings ).execSelect();
+
+        List<RDFNode> resultList = new ArrayList<RDFNode>();
+        while (rs.hasNext()) {
+            resultList.add( rs.next().get( var ) );
+        }
+        return resultList;
+    }
+
+    /**
+     * Return the first result from executing the given select query, for a given variable.
+     * @param var The variable name to project from the query results
+     * @param m The model to run the query against
+     * @param query The sparql query
+     * @param pm Optional {@link PrefixMapping} to use when parsing the query, or null. If null is given, the default
+     * prefixes from {@link PrefixUtils#commonPrefixes()} will be used
+     * @param bindings Optional {@link QuerySolutionMap} containing initial bindings for query variables
+     * @return The first value for <code>var</code>, or null
+     */
+    public static RDFNode selectFirstVar( String var, Model m, String query, PrefixMapping pm, Object... bindings ) {
+        QueryExecution qe = createQueryExecution( m, query, pm, bindings );
+        ResultSet rs = qe.execSelect();
+        RDFNode r = null;
+
+        try {
+            if (rs.hasNext()) {
+                r = rs.next().get( var );
+            }
+        }
+        finally {
+            qe.close();
+        }
+
+        return r;
     }
 
     /**
