@@ -9,12 +9,13 @@
 
 package com.epimorphics.util;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import com.epimorphics.util.PrefixUtils;
+import com.epimorphics.vocabs.Cube;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import static org.junit.Assert.*;
 
 public class TestPrefixUtils {
 
@@ -57,9 +58,38 @@ public class TestPrefixUtils {
     }
 
     @Test
-    public void testSubstitue() {
-        String query = "SELECT * WHERE {?i ${0} ${1}}";
-        String result = QueryUtil.substituteInQuery(query, "rdf:type", "foaf:Person");
-        assertEquals("SELECT * WHERE {?i rdf:type foaf:Person}", result);
+    public void testCommonPrefixes() {
+        assertNotNull( PrefixUtils.commonPrefixes() );
+        assertEquals( Cube.getURI(), PrefixUtils.commonPrefixes().getNsPrefixURI( "qb" ));
+    }
+
+    @Test
+    public void testCommonPrefixesWithAdditional() {
+        PrefixMapping pm = PrefixUtils.commonPrefixes( "unittest", "http://example.test/fu/bar#" );
+        assertNotNull( pm );
+        assertEquals( Cube.getURI(), pm.getNsPrefixURI( "qb" ));
+        assertEquals( "http://example.test/fu/bar#", pm.getNsPrefixURI( "unittest" ));
+    }
+
+    @Test
+    public void testDeclarePrefixes() {
+        PrefixMapping pm = PrefixUtils.asPrefixes( "test1", "foobar" );
+        assertEquals( "foobar", pm.getNsPrefixURI( "test1" ));
+
+        pm = PrefixUtils.asPrefixes( "test1", "foobar", "test2", "bufar" );
+        assertEquals( "foobar", pm.getNsPrefixURI( "test1" ));
+        assertEquals( "bufar", pm.getNsPrefixURI( "test2" ));
+    }
+
+    @Test
+    public void testAsSparqlPrefixes() {
+        String prefixes = PrefixUtils.asSparqlPrefixes( PrefixUtils.commonPrefixes() );
+        assertTrue( prefixes.startsWith( "prefix api: <http://purl.org/linked-data/api/vocab#>\n" ));
+    }
+
+    @Test
+    public void testAsTurtlePrefixes() {
+        String prefixes = PrefixUtils.asTurtlePrefixes( PrefixUtils.commonPrefixes() );
+        assertTrue( prefixes.startsWith( "@prefix api: <http://purl.org/linked-data/api/vocab#>.\n" ));
     }
 }

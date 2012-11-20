@@ -9,13 +9,15 @@
 
 package com.epimorphics.util;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.epimorphics.vocabs.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.shared.impl.PrefixMappingImpl;
 
 /**
  * Collection of random utilities for working with prefixes.
@@ -126,4 +128,130 @@ public class PrefixUtils {
         return prefixes;
     }
 
+    /**
+     * Return a set of commonly used RDF prefixes. This includes the Jena standard
+     * mapping (<code>rdf:</code>, <code>owl:</code>, etc) and prefixes for all of the
+     * vocabularies defined in epimorphics-lib.
+     *
+     * @return A prefix mapping object
+     * @see #commonPrefixes(PrefixMapping)
+     */
+    public static PrefixMapping commonPrefixes() {
+        return commonPrefixes( (PrefixMapping) null );
+    }
+
+    /**
+     * Utility for easily declaring a prefix mapping in code. The arguments are
+     * assumed to be pairs of strings, alternating prefix and URI.
+     * @param declarations Alternating prefix and URI strings
+     * @return A new {@link PrefixMapping} containing only the prefixes declared
+     * @exception EpiException if the declarations are not in pairs
+     */
+    public static PrefixMapping asPrefixes( String... declarations ) {
+        PrefixMapping pm = new PrefixMappingImpl();
+
+        try {
+            for (int i = 0; i < declarations.length; i += 2) {
+                pm.setNsPrefix( declarations[i], declarations[i+1] );
+            }
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            throw new EpiException( "Prefix without a corresponding URI", e );
+        }
+
+        return pm;
+    }
+
+    /**
+     * Return a set of commonly used RDF prefixes. This includes the Jena standard
+     * mapping (<code>rdf:</code>, <code>owl:</code>, etc) and prefixes for all of the
+     * vocabularies defined in epimorphics-lib. This variant also allows additional
+     * prefixes to be declared in code as alternating prefix and uri strings.
+     *
+     * @param additional Array of String objects denoting, alternately, a prefix
+     * and a URI
+     * @return A prefix mapping object
+     * @see #commonPrefixes(PrefixMapping)
+     */
+    public static PrefixMapping commonPrefixes( String... additional ) {
+        return commonPrefixes( asPrefixes( additional ) );
+    }
+
+    /**
+     * Return a set of commonly used RDF prefixes. This includes the Jena standard
+     * mapping (<code>rdf:</code>, <code>owl:</code>, etc) and prefixes for all of the
+     * vocabularies defined in epimorphics-lib.
+     *
+     * @param additional Optional additional prefixes to merge into the common core, or null
+     * @return A prefix mapping object
+     */
+    public static PrefixMapping commonPrefixes( PrefixMapping additional ) {
+        PrefixMapping pm = new PrefixMappingImpl();
+        pm.setNsPrefixes( PrefixMapping.Standard );
+
+        // local Epimorphics library prefixes
+        pm.setNsPrefix( "api", API.getURI() );
+        pm.setNsPrefix( "qb", Cube.getURI() );
+        pm.setNsPrefix( "dgu", DGU.getURI() );
+        pm.setNsPrefix( "internal", Internal.getURI() );
+        pm.setNsPrefix( "opensearch", OpenSearch.getURI() );
+        pm.setNsPrefix( "record", Record.getURI() );
+        pm.setNsPrefix( "skos", SKOS.getURI() );
+        pm.setNsPrefix( "time", Time.getURI() );
+        pm.setNsPrefix( "void", VOID.getURI() );
+        pm.setNsPrefix( "xhv", XHV.getURI() );
+
+        // merge given prefixes
+        if (additional != null) {
+            pm.setNsPrefixes( additional );
+        }
+
+        return pm;
+    }
+
+    /**
+     * Return the contents of the given prefix mapping, formatted for prepending
+     * onto Turtle content.
+     * @param pm
+     * @return
+     */
+    public static String asTurtlePrefixes( PrefixMapping pm ) {
+        return asPrefixString( pm, true );
+    }
+
+    /**
+     * Return the contents of the given prefix mapping, formatted for prepending
+     * onto a SPARQL query.
+     * @param pm
+     * @return
+     */
+    public static String asSparqlPrefixes( PrefixMapping pm ) {
+        return asPrefixString( pm, false );
+    }
+
+    public static String asPrefixString( PrefixMapping pm, boolean turtle ) {
+        List<Entry<String,String>> entries = new ArrayList<Entry<String,String>>();
+        entries.addAll( pm.getNsPrefixMap().entrySet() );
+
+        Collections.sort( entries, new Comparator<Entry<String,String>>() {
+            @Override
+            public int compare(Map.Entry<String,String> o1, Map.Entry<String,String> o2) {
+                return o1.getKey().compareTo( o2.getKey() );
+            }
+        } );
+
+        StringWriter buf = new StringWriter();
+        for (Entry<String,String> entry: entries) {
+            if (turtle) {buf.append( "@" );}
+            buf.append( "prefix " );
+            buf.append( entry.getKey() );
+            buf.append( ": <" );
+            buf.append( entry.getValue() );
+            buf.append( ">" );
+            if (turtle) {buf.append( "." );}
+            buf.append( "\n" );
+        }
+
+        return buf.toString();
+    }
 }
