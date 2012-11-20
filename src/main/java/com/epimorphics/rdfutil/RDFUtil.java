@@ -13,14 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.epimorphics.vocabs.SKOS;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -198,4 +191,40 @@ public class RDFUtil {
     }
 
     static final Pattern lnmatch = Pattern.compile("(.*[#/])([^#/]+)$");
+
+
+    /**
+     * Convert an arbitrary value to a RDF node.
+     * <ul>
+     * <li>An existing node is returned unchanged</li>
+     * <li>A string beginning <code>http:</code> is converted to a resource</li>
+     * <li>Other strings become plain literals</li>
+     * <li>All other non-null values are passed to the literal factory</li>
+     * <li>Null becomes a new bnode</li>
+     * </ul>
+     *
+     * @param val Any value
+     * @return val converted to an {@link RDFNode}
+     */
+    public static RDFNode asRDFNode( Object val ) {
+        if (val instanceof RDFNode) {
+            return (RDFNode) val;
+        }
+        else if (val instanceof String) {
+            String s = (String) val;
+            if (s.startsWith( "http:" )) {
+                return ResourceFactory.createResource( s );
+            }
+            else {
+                return ResourceFactory.createPlainLiteral( s );
+            }
+        }
+        else if (val != null) {
+            return ResourceFactory.createTypedLiteral( val );
+        }
+        else {
+            return ResourceFactory.createResource();
+        }
+    }
+
 }
