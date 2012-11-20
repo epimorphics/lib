@@ -9,8 +9,7 @@
 
 package com.epimorphics.rdfutil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.epimorphics.util.EpiException;
 import com.epimorphics.util.PrefixUtils;
@@ -205,11 +204,7 @@ public class QueryUtil {
     public static List<RDFNode> selectAllVar( String var, Model m, String query, PrefixMapping pm, Object... bindings ) {
         ResultSet rs = createQueryExecution( m, query, pm, bindings ).execSelect();
 
-        List<RDFNode> resultList = new ArrayList<RDFNode>();
-        while (rs.hasNext()) {
-            resultList.add( rs.next().get( var ) );
-        }
-        return resultList;
+        return getResultSetAll( var, rs );
     }
 
     /**
@@ -225,18 +220,7 @@ public class QueryUtil {
     public static RDFNode selectFirstVar( String var, Model m, String query, PrefixMapping pm, Object... bindings ) {
         QueryExecution qe = createQueryExecution( m, query, pm, bindings );
         ResultSet rs = qe.execSelect();
-        RDFNode r = null;
-
-        try {
-            if (rs.hasNext()) {
-                r = rs.next().get( var );
-            }
-        }
-        finally {
-            qe.close();
-        }
-
-        return r;
+        return getResultSetFirst( var, qe, rs );
     }
 
     /**
@@ -275,4 +259,179 @@ public class QueryUtil {
     public static Model describe( Model m, String query, PrefixMapping pm, QuerySolutionMap bindings ) {
         return createQueryExecution( m, query, pm, bindings ).execDescribe();
     }
+
+    /**
+     * Format a value in a way that we can include it in a SPARQL query string
+     * @param val
+     * @return The value formatted for SPARQL
+     */
+    public static String asSPARQLValue( Object val ) {
+        String s = null;
+
+        if (val instanceof RDFNode) {
+            RDFNode n = (RDFNode) val;
+            if (n.isLiteral()) {
+                Literal l = n.asLiteral();
+                if (l.getDatatypeURI() != null) {
+                    s = String.format( "\"%s\"^^<%s>", l.getLexicalForm(), l.getDatatypeURI() );
+                }
+                else if (l.getLanguage() != null && l.getLanguage() != "") {
+                    s = String.format( "\"%s\"@%s", l.getLexicalForm(), l.getLanguage() );
+                }
+                else {
+                    s = String.format( "\"%s\"", l.getLexicalForm() );
+                }
+            }
+            else {
+                Resource r = n.asResource();
+                if (r.isAnon()) {
+                    s = String.format( "_:%s", r.getId().toString().replaceAll( "[^A-Za-z0-9]", "_" ) );
+                }
+                else {
+                    s = String.format( "<%s>", r.getURI() );
+                }
+            }
+        }
+        else if (val instanceof String) {
+            String str = (String) val;
+            if (str.matches( "^(file:|http:).*" )) {
+                s = String.format( "<%s>", str );
+            }
+            else if (str.matches( "^[A-Za-z0-9]*:.*" )) {
+                // looks like a qname
+                s = str;
+            }
+        }
+
+        if (s == null) {
+            s = String.format( "\"%s\"", val.toString() );
+        }
+
+        return s;
+    }
+
+    /**
+     * Substitute the variables in a query string for the values from the given binding. This produces
+     * a new query string, suitable, for example, for sending to a remote service endpoint.
+     * @param query The query string to act on
+     * @param bindings A set of value bindings for variables that may occur in <code>query</code>
+     */
+    public static String substituteVars( String query, QuerySolutionMap bindings ) {
+        String q = query;
+
+        for (Iterator<String> vars = bindings.varNames(); vars.hasNext(); ) {
+            String var = vars.next();
+            RDFNode n  = bindings.get( var );
+            q = q.replaceAll( "\\?" + var + "\\b", asSPARQLValue( n ));
+        }
+
+        return q;
+    }
+
+    /**
+     * Execute a select query against a remote SPARQL endpoint.
+     * @param serviceURL The address of the SPARQL endpoint, as a string
+     * @param query The query string to send
+     * @param pm Optional prefix map. If null, the default common prefixes will be used
+     * @param bindings Optional bindings for variables in the query string, in pairs of variable name and value
+     * @return The resultset of all results
+     */
+    public static ResultSet serviceSelectAll( String serviceURL, String query, PrefixMapping pm, Object... bindings ) {
+        return serviceSelectAll( serviceURL, query, pm, createBindings( bindings ));
+    }
+
+    /**
+     * Execute a select query against a remote SPARQL endpoint.
+     * @param serviceURL The address of the SPARQL endpoint, as a string
+     * @param query The query string to send
+     * @param pm Optional prefix map. If null, the default common prefixes will be used
+     * @param bindings Optional bindings for variables in the query string, in pairs of variable name and value
+     * @return The resultset of all results
+     */
+    public static ResultSet serviceSelectAll( String serviceURL, String query, PrefixMapping pm, QuerySolutionMap bindings ) {
+        String qBody = substituteVars( query, bindings );
+        String qHeader = PrefixUtils.asSparqlPrefixes( (pm == null) ? PrefixUtils.commonPrefixes() : pm );
+        return QueryExecutionFactory.sparqlService( serviceURL, qHeader + qBody ).execSelect();
+    }
+
+    /**
+     * Return all values for the given var from executing the given query against the given remote sparql endpoint.
+     * @param var
+     * @param serviceURL
+     * @param query
+     * @param pm
+     * @param bindings
+     * @return
+     */
+    public static List<RDFNode> serviceSelectAllVar( String var, String serviceURL, String query, PrefixMapping pm, Object... bindings ) {
+        return getResultSetAll( var, serviceSelectAll( serviceURL, query, pm, bindings ) );
+    }
+
+    /**
+     * Return the first value for the given var from executing the given query against the given remote sparql endpoint.
+     * @param var
+     * @param serviceURL
+     * @param query
+     * @param pm
+     * @param bindings
+     * @return
+     */
+    public static RDFNode serviceSelectFirstVar( String var, String serviceURL, String query, PrefixMapping pm, Object... bindings ) {
+        return getResultSetFirst( var, null, serviceSelectAll( serviceURL, query, pm, bindings ) );
+    }
+
+    /**
+     * Execute a describe query against a remote SPARQL endpoint.
+     * @param serviceURL The address of the SPARQL endpoint, as a string
+     * @param query The query string to send
+     * @param pm Optional prefix map. If null, the default common prefixes will be used
+     * @param bindings Optional bindings for variables in the query string, in pairs of variable name and value
+     * @return The resultset of all results
+     */
+    public static Model serviceDescribe( String serviceURL, String query, PrefixMapping pm, Object... bindings ) {
+        String qBody = substituteVars( query, createBindings( bindings ) );
+        String qHeader = PrefixUtils.asSparqlPrefixes( (pm == null) ? PrefixUtils.commonPrefixes() : pm );
+        return QueryExecutionFactory.sparqlService( serviceURL, qHeader + qBody ).execDescribe();
+    }
+
+
+    /***************************
+     * Internal support methods
+     **************************/
+
+    /**
+     * @param var
+     * @param qe
+     * @param rs
+     * @return
+     */
+    protected static RDFNode getResultSetFirst( String var, QueryExecution qe, ResultSet rs ) {
+        RDFNode r = null;
+
+        try {
+            if (rs.hasNext()) {
+                r = rs.next().get( var );
+            }
+        }
+        finally {
+            if (qe != null) {qe.close();}
+        }
+
+        return r;
+    }
+
+    /**
+     * @param var
+     * @param rs
+     * @return
+     */
+    protected static List<RDFNode> getResultSetAll( String var, ResultSet rs ) {
+        List<RDFNode> resultList = new ArrayList<RDFNode>();
+        while (rs.hasNext()) {
+            resultList.add( rs.next().get( var ) );
+        }
+        return resultList;
+    }
+
+
 }
