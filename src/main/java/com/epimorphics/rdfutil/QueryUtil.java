@@ -11,6 +11,9 @@ package com.epimorphics.rdfutil;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.util.EpiException;
 import com.epimorphics.util.PrefixUtils;
 import com.epimorphics.webapi.PageInfo;
@@ -25,6 +28,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
  */
 public class QueryUtil {
 
+    private static final Logger log = LoggerFactory.getLogger( QueryUtil.class );
 
     /**
      * Inject strings into a SPARQL query replacing each ${i} with the corresponding element from the arg list.
@@ -141,6 +145,7 @@ public class QueryUtil {
 
         // default to null base URI and SPARQL 1.1.
         QueryFactory.parse( q, query, null, Syntax.syntaxSPARQL_11 );
+        log.debug( "pepared query = " + q.serialize() );
 
         QueryExecution qe = null;
 
@@ -221,6 +226,26 @@ public class QueryUtil {
         QueryExecution qe = createQueryExecution( m, query, pm, bindings );
         ResultSet rs = qe.execSelect();
         return getResultSetFirst( var, qe, rs );
+    }
+
+    /**
+     * Return the model that is the SPARQL description of resource <code>r</code>
+     * @param m
+     * @param r
+     * @return
+     */
+    public static Model describeResource( Model m, Resource r ) {
+        return describeResource( m, r.getURI() );
+    }
+
+    /**
+     * Return the model that is the SPARQL description of resource with the given URI
+     * @param m
+     * @param uri
+     * @return
+     */
+    public static Model describeResource( Model m, String uri ) {
+        return describe( m, String.format( "describe <%s>", uri ) );
     }
 
     /**
