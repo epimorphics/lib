@@ -12,9 +12,7 @@ package com.epimorphics.rdfutil;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epimorphics.rdfutil.RDFUtil;
 import com.epimorphics.util.EpiException;
-import com.epimorphics.util.PrefixUtils;
 import com.epimorphics.vocabs.SKOS;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSetRewindable;
@@ -30,6 +28,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.util.Closure;
 import com.hp.hpl.jena.sparql.util.FmtUtils;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -172,7 +171,7 @@ public class RDFNodeWrapper {
             }
         }
     }
-    static protected Property[] nameProps = new Property[]{ RDFS.label, SKOS.prefLabel, SKOS.altLabel, DCTerms.title };
+    static protected Property[] nameProps = new Property[]{ RDFS.label, SKOS.prefLabel, SKOS.altLabel, DCTerms.title, FOAF.name, FOAF.nick };
 
 
     /** If this is a literal return its language, otherwise return null */

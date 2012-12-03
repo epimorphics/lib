@@ -27,6 +27,7 @@ import com.hp.hpl.jena.query.ResultSetRewindable;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.tdb.TDB;
 
 /**
  * Wrap up a dataset to support script-friendly access. See ModelWrapper and
@@ -83,10 +84,15 @@ public class DatasetWrapper {
 
     /** Get the default graph as a Jena Model */
     public ModelWrapper getDefaultModelW() {
-        if (unionDefault) {
-            return new ModelWrapper(this, dataset.getNamedModel(TDB_UNION_GRAPH_NAME));
-        } else {
-            return new ModelWrapper(this, dataset.getDefaultModel());
+        lock();
+        try {
+            if (unionDefault) {
+                return new ModelWrapper(this, dataset.getNamedModel(TDB_UNION_GRAPH_NAME));
+            } else {
+                return new ModelWrapper(this, dataset.getDefaultModel());
+            }
+        } finally {
+            unlock();
         }
     }
 
@@ -155,6 +161,7 @@ public class DatasetWrapper {
     public ResultSetRewindable querySelect(String query) {
         String expandedQuery = expandQuery(query);
         QueryExecution qexec = QueryExecutionFactory.create(expandedQuery);
+        if (unionDefault) qexec.getContext().set(TDB.symUnionDefaultGraph, true) ;
         lock();
         try {
             return ResultSetFactory.copyResults( qexec.execSelect() );
@@ -172,6 +179,7 @@ public class DatasetWrapper {
     public boolean queryAsk(String query) {
         String expandedQuery = expandQuery(query);
         QueryExecution qexec = QueryExecutionFactory.create(expandedQuery);
+        if (unionDefault) qexec.getContext().set(TDB.symUnionDefaultGraph, true) ;
         lock();
         try {
             return ( qexec.execAsk() );
@@ -190,6 +198,7 @@ public class DatasetWrapper {
     public ModelWrapper queryConstruct(String query) {
         String expandedQuery = expandQuery(query);
         QueryExecution qexec = QueryExecutionFactory.create(expandedQuery);
+        if (unionDefault) qexec.getContext().set(TDB.symUnionDefaultGraph, true) ;
         lock();
         try {
             return new ModelWrapper( this, qexec.execConstruct() );
