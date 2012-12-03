@@ -26,7 +26,8 @@ import com.hp.hpl.jena.util.FileUtils;
 @Provider
 @Produces("text/turtle; charset=UTF-8")
 public class TurtleMarshaller implements MessageBodyWriter<Model>{
-    public static final String MIME_TURTLE = "text/turtle; charset=UTF-8";
+    public static final String MIME_TURTLE_CS = "text/turtle; charset=UTF-8";
+    public static final String MIME_TURTLE = "text/turtle";
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType,
