@@ -30,6 +30,8 @@ public class PrefixUtils {
      * Return a read-only merge of two prefix mappings
      */
     public static PrefixMapping merge(PrefixMapping pm1, PrefixMapping pm2) {
+        if (pm2 == null) return pm1;
+        if (pm1 == null) return pm2;
         return new MergePrefixMapping(pm1, pm2);
     }
 
