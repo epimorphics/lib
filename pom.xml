@@ -135,10 +135,15 @@
   </build>
 
   <distributionManagement>
+    <!--
+      <repository> <id>ftp-repo-epi</id> <url>ftp://ftp.epimorphics.org/</url>
+      </repository>
+    -->
     <repository>
-      <id>ftp-repo-epi</id>
-      <url>ftp://ftp.epimorphics.org/</url>
+      <id>epi-public-repo</id>
+      <url>ftp://epimorphics.com</url>
     </repository>
+
   </distributionManagement>
 
 </project>
