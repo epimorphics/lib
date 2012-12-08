@@ -57,7 +57,7 @@ public class ResultPage {
         } else {
             model = ModelFactory.createDefaultModel();
         }
-        root = model.createResource( pageInfo.getAbsoluteRequestURI() );
+        root = model.createResource( pageInfo.getRequestRootURI() );
         page = model.createResource( pageInfo.getPageURI() );
 
         root.addProperty(DCTerms.hasPart, page);

@@ -28,13 +28,16 @@ public class PageInfo {
     protected UriInfo requestURI;
     protected int pageSize;
     protected int pageNumber;
+    MultivaluedMap<String, String> params;
     
     public PageInfo(UriInfo requestURI) {
         this.requestURI = requestURI;
-        MultivaluedMap<String, String> params = requestURI.getQueryParameters();
+        params = requestURI.getQueryParameters();
         
         pageSize = intParam(params, PAGESIZE_PARAM, DEFAULT_PAGESIZE);
         pageNumber = intParam(params, PAGE_PARAM, 0);
+        params.remove(PAGE_PARAM);
+        params.remove(PAGESIZE_PARAM);
     }
     
     /**
@@ -66,6 +69,19 @@ public class PageInfo {
     }
 
     /**
+     * Return the request URI incluiding query parameters but not page control parameters
+     */
+    public String getRequestRootURI() {
+        UriBuilder builder = requestURI.getAbsolutePathBuilder();
+        for (String param : params.keySet()) {
+            for (String value : params.get(param)) {
+                builder = builder.queryParam(param, value);
+            }
+        }
+        return builder.build().toString();
+    }
+
+    /**
      * Return the page URI, this is the request URI with appropriate page and pagesize query
      * parameters added. 
      */
@@ -77,7 +93,13 @@ public class PageInfo {
      * Return the page URI for a specific numbered page.
      */
     public String getPageURI(int pn) {
-        UriBuilder builder = requestURI.getAbsolutePathBuilder().queryParam(PAGE_PARAM, pn);
+        UriBuilder builder = requestURI.getAbsolutePathBuilder();
+        for (String param : params.keySet()) {
+            for (String value : params.get(param)) {
+                builder = builder.queryParam(param, value);
+            }
+        }
+        builder = builder.queryParam(PAGE_PARAM, pn);
         if (pageSize != DEFAULT_PAGESIZE) {
             builder = builder.queryParam(PAGESIZE_PARAM, pageSize);
         }
