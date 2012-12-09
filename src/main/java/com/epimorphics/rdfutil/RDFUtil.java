@@ -142,6 +142,38 @@ public class RDFUtil {
     }
 
     /**
+     * Answer the long value of property p on resource x or null if there isn't one.
+     */
+    public static Long getLongValue(Resource x, Property p) {
+        Number value = getNumericValue(x, p);
+        return value == null ? null : value.longValue();
+    }
+
+    /**
+     * Answer the double value of property p on resource x or null if there isn't one.
+     */
+    public static Double getDoubleValue(Resource x, Property p) {
+        Number value = getNumericValue(x, p);
+        return value == null ? null : value.doubleValue();
+    }
+    
+    public static Number getNumericValue(Resource x, Property p) {
+        Statement s = x.getProperty( p );
+        if (s == null) {
+            return null;
+        } else {
+            RDFNode value = s.getObject();
+            if (value.isLiteral()) {
+                Object valueO = value.asLiteral().getValue();
+                if (valueO instanceof Number) {
+                    return (Number)valueO;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
         Answer the boolean value of property <code>p</code> on resource
         <code>r</code>. If there is no p-value, or the p-value is not a
         literal, return <code>ifAbsent</code>. Otherwise return true if
