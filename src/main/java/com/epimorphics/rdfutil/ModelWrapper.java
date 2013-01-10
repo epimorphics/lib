@@ -101,7 +101,12 @@ public class ModelWrapper {
         } else if (spec instanceof RDFNode) {
             return new RDFNodeWrapper(this, (RDFNode)spec);
         } else {
-            return new RDFNodeWrapper(this, getResource(spec));
+            Resource r = getResource(spec);
+            if (r == null) {
+                return null;
+            } else {
+                return new RDFNodeWrapper(this, r);
+            }
         }
     }
 
@@ -117,8 +122,10 @@ public class ModelWrapper {
             return ((RDFNode)spec).inModel(model).asResource();
         } else if (spec instanceof RDFNodeWrapper) {
             return ((RDFNodeWrapper)spec).asRDFNode().inModel(model).asResource();
+        } else if (spec == null) {
+            return null;
         } else {
-            throw new EpiException("getNode only handles strings, RDFNodes or RDFNodeWrappers");
+            throw new EpiException("getNode only handles strings, RDFNodes or RDFNodeWrappers - found " + spec);
         }
     }
 
