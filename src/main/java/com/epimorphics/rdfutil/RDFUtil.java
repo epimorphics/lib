@@ -9,6 +9,7 @@
 
 package com.epimorphics.rdfutil;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -156,7 +157,7 @@ public class RDFUtil {
         Number value = getNumericValue(x, p);
         return value == null ? null : value.doubleValue();
     }
-    
+
     public static Number getNumericValue(Resource x, Property p) {
         Statement s = x.getProperty( p );
         if (s == null) {
@@ -256,6 +257,24 @@ public class RDFUtil {
         }
         else {
             return ResourceFactory.createResource();
+        }
+    }
+
+    /**
+     * Timestamp a resource using current time
+     */
+    public static void timestamp(Resource resource, Property prop) {
+        resource.addProperty(prop, resource.getModel().createTypedLiteral(Calendar.getInstance()));
+    }
+
+    /**
+     * Copy all values of the given property from the source to the dest resource
+     */
+    public static void copyProperty(Resource src, Resource dest, Property p) {
+        StmtIterator si = src.listProperties(p);
+        while (si.hasNext()){
+            Statement s = si.next();
+            dest.addProperty(s.getPredicate(), s.getObject());
         }
     }
 
