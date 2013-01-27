@@ -13,8 +13,19 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.epimorphics.util.EpiException;
 import com.epimorphics.vocabs.SKOS;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.ResIterator;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -278,4 +289,26 @@ public class RDFUtil {
         }
     }
 
+    /**
+     * Create a datetime literal representing the given Date (in unix ms since epoch style)
+     */
+    public static Literal fromDateTime(long date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(date);
+        Object value = new XSDDateTime(cal);
+        return ResourceFactory.createTypedLiteral(value);
+    }
+    
+    /**
+     * Convert a datetime literal to a unix style date stamp
+     */
+    public static long asTimestamp(RDFNode n) {
+        if (n.isLiteral()) {
+            Literal l = n.asLiteral();
+            if (l.getDatatype().equals(XSDDatatype.XSDdateTime)) {
+                return ((XSDDateTime)l.getValue()).asCalendar().getTimeInMillis();
+            }
+        }
+        throw new EpiException("Node is not a datetime literal: " + n);
+    }
 }
