@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import com.epimorphics.vocabs.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.shared.impl.PrefixMappingImpl;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 
 /**
  * Collection of random utilities for working with prefixes.
@@ -202,6 +203,7 @@ public class PrefixUtils {
         pm.setNsPrefix( "time", Time.getURI() );
         pm.setNsPrefix( "void", VOID.getURI() );
         pm.setNsPrefix( "xhv", XHV.getURI() );
+        pm.setNsPrefix( "dct", DCTerms.getURI() );
 
         // merge given prefixes
         if (additional != null) {

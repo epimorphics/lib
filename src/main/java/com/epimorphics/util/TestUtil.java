@@ -84,13 +84,30 @@ public class TestUtil {
     }
 
     /**
+     * Return a resource which is the (assumed sole) root subject of the model given by the turtle source.
+     * Common prefixes are assumed.
+     */
+    public static Resource resourceFixture( String src ) {
+        Model m = modelFixture(src);
+        for (ResIterator ri = m.listSubjects(); ri.hasNext();) {
+            Resource root = ri.next();
+            if (m.listStatements(null, null, root).hasNext()) {
+                continue;
+            } else {
+                return root;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Return a property with the given URI.
      * @param m Optional model. If null, the property will be created using the {@link ResourceFactory}
      * @param uri Resource URI. If the URI starts with <code>http:</code>, it will be left intact otherwise
      * it is assumed relative to the {@link #baseURIFixture()}
      * @return A property
      */
-    public static Resource propertyFixture( Model m, String uri ) {
+    public static Property propertyFixture( Model m, String uri ) {
         String u = uri.startsWith( "http:" ) ? uri : (baseURIFixture() + uri);
         return (m == null) ? ResourceFactory.createProperty( u ) : m.getProperty( u );
     }
@@ -101,6 +118,51 @@ public class TestUtil {
      */
     public static String baseURIFixture() {
         return "http://example.test/test#";
+    }
+
+    /**
+     * Compare the properties of two resources, omitting any of the list of block properties.
+     * bNode values are ignored.
+     */
+    public static boolean resourcesMatch(Resource expected, Resource actual, Property... omit) {
+        return oneWayMatch(true, expected, actual, omit) && oneWayMatch(false, actual, expected, omit);
+    }
+
+    private static boolean oneWayMatch(boolean forward, Resource expected, Resource actual,
+            Property... omit) {
+        for (StmtIterator si = expected.listProperties(); si.hasNext();) {
+            Statement s = si.next();
+            Property p = s.getPredicate();
+            if (!blocked(p, omit)) {
+                Statement a_s = actual.getProperty(p);
+                if (a_s == null) {
+                    if (forward) {
+                        System.out.println("Expected property " + p + " missing");
+                    } else {
+                        System.out.println("Unexpected property " + p);
+                    }
+                    return false;
+                }
+                RDFNode a_value = a_s.getObject();
+                RDFNode e_value = s.getObject();
+                if (!e_value.isAnon() && !a_value.equals(e_value)) {
+                    if (forward) {
+                        System.out.println("Expected " + e_value + " but found " + a_value + ", on property " + p);
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean blocked(Property p, Property...omit) {
+        for (Property o : omit) {
+            if (o.equals(p)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
