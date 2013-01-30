@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Assert;
+
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
@@ -124,11 +126,12 @@ public class TestUtil {
      * Compare the properties of two resources, omitting any of the list of block properties.
      * bNode values are ignored.
      */
-    public static boolean resourcesMatch(Resource expected, Resource actual, Property... omit) {
-        return oneWayMatch(true, expected, actual, omit) && oneWayMatch(false, actual, expected, omit);
+    public static void testResourcesMatch(Resource expected, Resource actual, Property... omit) {
+        oneWayMatch(true, expected, actual, omit);
+        oneWayMatch(false, actual, expected, omit);
     }
 
-    private static boolean oneWayMatch(boolean forward, Resource expected, Resource actual,
+    private static void oneWayMatch(boolean forward, Resource expected, Resource actual,
             Property... omit) {
         for (StmtIterator si = expected.listProperties(); si.hasNext();) {
             Statement s = si.next();
@@ -136,24 +139,19 @@ public class TestUtil {
             if (!blocked(p, omit)) {
                 Statement a_s = actual.getProperty(p);
                 if (a_s == null) {
-                    if (forward) {
-                        System.out.println("Expected property " + p + " missing");
-                    } else {
-                        System.out.println("Unexpected property " + p);
-                    }
-                    return false;
+                    String msg = forward ? ("Expected property " + p + " missing") : ("Unexpected property " + p);
+                    Assert.fail(msg);
                 }
                 RDFNode a_value = a_s.getObject();
                 RDFNode e_value = s.getObject();
                 if (!e_value.isAnon() && !a_value.equals(e_value)) {
                     if (forward) {
-                        System.out.println("Expected " + e_value + " but found " + a_value + ", on property " + p);
+                        Assert.fail("Expected " + e_value + " but found " + a_value + ", on property " + p);
                     }
-                    return false;
+                    Assert.fail();
                 }
             }
         }
-        return true;
     }
 
     private static boolean blocked(Property p, Property...omit) {
