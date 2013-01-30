@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.junit.Assert;
 
+import com.epimorphics.rdfutil.RDFUtil;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
@@ -90,16 +91,7 @@ public class TestUtil {
      * Common prefixes are assumed.
      */
     public static Resource resourceFixture( String src ) {
-        Model m = modelFixture(src);
-        for (ResIterator ri = m.listSubjects(); ri.hasNext();) {
-            Resource root = ri.next();
-            if (m.listStatements(null, null, root).hasNext()) {
-                continue;
-            } else {
-                return root;
-            }
-        }
-        return null;
+        return RDFUtil.findRoot( modelFixture(src) );
     }
 
     /**
@@ -120,6 +112,25 @@ public class TestUtil {
      */
     public static String baseURIFixture() {
         return "http://example.test/test#";
+    }
+
+    /**
+     * Test that the given resource/property has the given object value and ONLY the given object value.
+     * @param subject  subject resource
+     * @param predicate property to test
+     * @param object  the expected value or null to not test the value, just that there is one
+     */
+    public static boolean isOnlyValue(Resource subject, Property predicate, RDFNode object) {
+        StmtIterator si = subject.listProperties(predicate);
+        if (si.hasNext()) {
+            RDFNode value = si.next().getObject();
+            if (object != null && ! value.equals(object)) return false;
+        }
+        if (si.hasNext()) {
+            si.close();
+            return false;
+        }
+        return true;
     }
 
     /**

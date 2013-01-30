@@ -282,10 +282,17 @@ public class RDFUtil {
      * Copy all values of the given property from the source to the dest resource
      */
     public static void copyProperty(Resource src, Resource dest, Property p) {
+        copyProperty(src, dest, p, p);
+    }
+
+    /**
+     * Copy all values of p from src to values of newp on dest.
+     */
+    public static void copyProperty(Resource src, Resource dest, Property p, Property newp) {
         StmtIterator si = src.listProperties(p);
         while (si.hasNext()){
             Statement s = si.next();
-            dest.addProperty(s.getPredicate(), s.getObject());
+            dest.addProperty(newp, s.getObject());
         }
     }
 
@@ -298,7 +305,7 @@ public class RDFUtil {
         Object value = new XSDDateTime(cal);
         return ResourceFactory.createTypedLiteral(value);
     }
-    
+
     /**
      * Convert a datetime literal to a unix style date stamp
      */
@@ -310,5 +317,21 @@ public class RDFUtil {
             }
         }
         throw new EpiException("Node is not a datetime literal: " + n);
+    }
+
+    /**
+     * Return the root resource of a model (or the first root we find if there are multiple).
+     * Return null there is no root.
+     */
+    public static Resource findRoot(Model m) {
+        for (ResIterator ri = m.listSubjects(); ri.hasNext();) {
+            Resource root = ri.next();
+            if (m.listStatements(null, null, root).hasNext()) {
+                continue;
+            } else {
+                return root;
+            }
+        }
+        return null;
     }
 }

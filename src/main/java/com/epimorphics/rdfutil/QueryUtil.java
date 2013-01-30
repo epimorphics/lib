@@ -121,7 +121,7 @@ public class QueryUtil {
      * @return A query execution object
      */
     public static QueryExecution createQueryExecution( Model m, String query, PrefixMapping pm, Object... bindings ) {
-        return createQueryExecution( m, query, pm, (bindings == null) ? null : createBindings( bindings ) );
+        return createQueryExecution( m, query, pm, (QuerySolutionMap)((bindings == null) ? null : createBindings( bindings )) );
     }
 
     /**
