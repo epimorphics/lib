@@ -96,13 +96,14 @@ public class TestUtil {
 
     /**
      * Return a property with the given URI.
+     * @param m Optional model. If null, the property will be created using the {@link ResourceFactory}
      * @param uri Resource URI. If the URI starts with <code>http:</code>, it will be left intact otherwise
      * it is assumed relative to the {@link #baseURIFixture()}
      * @return A property
      */
-    public static Property propertyFixture( String uri ) {
+    public static Property propertyFixture( Model m, String uri ) {
         String u = uri.startsWith( "http:" ) ? uri : (baseURIFixture() + uri);
-        return ResourceFactory.createProperty( u ) ;
+        return (m == null) ? ResourceFactory.createProperty( u ) : m.getProperty( u );
     }
 
     /**
