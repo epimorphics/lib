@@ -10,6 +10,8 @@
 package com.epimorphics.rdfutil;
 
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -334,4 +336,17 @@ public class RDFUtil {
         }
         return null;
     }
+    
+
+    /**
+     * Return a collection of all the distinct properties of the given resource
+     */
+    public static Set<Property> allPropertiesOf(Resource r) {
+        Set<Property> result = new HashSet<Property>();
+        for (StmtIterator si = r.listProperties(); si.hasNext();) {
+            result.add(si.next().getPredicate());
+        }
+        return result;
+    }
+    
 }

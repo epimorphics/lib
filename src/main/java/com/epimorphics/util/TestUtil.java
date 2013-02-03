@@ -8,7 +8,8 @@
 
 package com.epimorphics.util;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import java.io.StringReader;
 import java.util.HashSet;
@@ -16,10 +17,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-
 import com.epimorphics.rdfutil.RDFUtil;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.util.iterator.Map1;
 
 /**
  * Support for testing iterator/list values against and expected set
@@ -134,44 +141,57 @@ public class TestUtil {
     }
 
     /**
-     * Compare the properties of two resources, omitting any of the list of block properties.
-     * bNode values are ignored.
+     * Compare the properties of two resources, omitting any of the list of blocked properties.
+     * Single, unadorned, bNode values on the expected resource are treated as wild cards, the 
+     * actual is required to just have some value for that property.
      */
     public static void testResourcesMatch(Resource expected, Resource actual, Property... omit) {
-        oneWayMatch(true, expected, actual, omit);
-        oneWayMatch(false, actual, expected, omit);
-    }
-
-    private static void oneWayMatch(boolean forward, Resource expected, Resource actual,
-            Property... omit) {
-        for (StmtIterator si = expected.listProperties(); si.hasNext();) {
-            Statement s = si.next();
-            Property p = s.getPredicate();
-            if (!blocked(p, omit)) {
-                Statement a_s = actual.getProperty(p);
-                if (a_s == null) {
-                    String msg = forward ? ("Expected property " + p + " missing") : ("Unexpected property " + p);
-                    Assert.fail(msg);
-                }
-                RDFNode a_value = a_s.getObject();
-                RDFNode e_value = s.getObject();
-                if (!e_value.isAnon() && !a_value.equals(e_value)) {
-                    if (forward) {
-                        Assert.fail("Expected " + e_value + " but found " + a_value + ", on property " + p);
-                    }
-                    Assert.fail();
-                }
+        Set<Property> testProperties = propertyList(actual, omit);
+        assertEquals(testProperties, propertyList(expected, omit));
+        boolean ok = match(expected, actual, testProperties.toArray(new Property[testProperties.size()]));
+        if (!ok) {
+            for (Property p : testProperties) {
+                testMatch(expected, actual, p);
             }
         }
     }
-
-    private static boolean blocked(Property p, Property...omit) {
-        for (Property o : omit) {
-            if (o.equals(p)) {
-                return true;
-            }
+    
+    private static Set<Property> propertyList(Resource r, Property... omit) {
+        Set<Property> testProperties = RDFUtil.allPropertiesOf(r);
+        for (Property p : omit) {
+            testProperties.remove(p);
         }
-        return false;
+        return testProperties;
     }
+
+    private static boolean match(Resource expected, Resource actual, Property...props) {
+        return buildTestModel(actual, props).isIsomorphicWith( buildTestModel(expected, props));
+    }
+
+    private static void testMatch(Resource expected, Resource actual, Property p) {
+        Set<RDFNode> expectedValues = getValues(expected, p);
+        Set<RDFNode> actualValues = getValues(actual, p);
+        if (expectedValues.size() == 1 && expectedValues.iterator().next().isAnon()) {
+            assertTrue("Must have value for wildcard property " + p, actualValues.size() > 0);
+        } else {
+            assertEquals("Compare property values for " + p, expectedValues, actualValues);
+        }
+    }
+    
+    private static Set<RDFNode> getValues(Resource expected, Property p) {
+        return expected.listProperties(p).mapWith(new Map1<Statement,RDFNode>() {
+            @Override public RDFNode map1(Statement s) { return s.getObject(); }
+        }).toSet();
+    }
+    
+    private static Model buildTestModel(Resource r, Property...props) {
+        Model m = ModelFactory.createDefaultModel();
+        Resource dest = r.inModel(m);
+        for (Property p : props) {
+            RDFUtil.copyProperty(r, dest, p);
+        }
+        return m;
+    }
+
 }
 
