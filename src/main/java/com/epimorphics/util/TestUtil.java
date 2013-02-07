@@ -142,12 +142,12 @@ public class TestUtil {
 
     /**
      * Compare the properties of two resources, omitting any of the list of blocked properties.
-     * Single, unadorned, bNode values on the expected resource are treated as wild cards, the 
+     * Single, unadorned, bNode values on the expected resource are treated as wild cards, the
      * actual is required to just have some value for that property.
      */
     public static void testResourcesMatch(Resource expected, Resource actual, Property... omit) {
         Set<Property> testProperties = propertyList(actual, omit);
-        assertEquals(testProperties, propertyList(expected, omit));
+        assertEquals(propertyList(expected, omit), testProperties);
         boolean ok = match(expected, actual, testProperties.toArray(new Property[testProperties.size()]));
         if (!ok) {
             for (Property p : testProperties) {
@@ -155,7 +155,7 @@ public class TestUtil {
             }
         }
     }
-    
+
     private static Set<Property> propertyList(Resource r, Property... omit) {
         Set<Property> testProperties = RDFUtil.allPropertiesOf(r);
         for (Property p : omit) {
@@ -177,13 +177,13 @@ public class TestUtil {
             assertEquals("Compare property values for " + p, expectedValues, actualValues);
         }
     }
-    
+
     private static Set<RDFNode> getValues(Resource expected, Property p) {
         return expected.listProperties(p).mapWith(new Map1<Statement,RDFNode>() {
             @Override public RDFNode map1(Statement s) { return s.getObject(); }
         }).toSet();
     }
-    
+
     private static Model buildTestModel(Resource r, Property...props) {
         Model m = ModelFactory.createDefaultModel();
         Resource dest = r.inModel(m);
