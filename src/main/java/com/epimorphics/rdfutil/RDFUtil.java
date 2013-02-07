@@ -336,7 +336,7 @@ public class RDFUtil {
         }
         return null;
     }
-    
+
 
     /**
      * Return a collection of all the distinct properties of the given resource
@@ -348,5 +348,12 @@ public class RDFUtil {
         }
         return result;
     }
-    
+
+    /**
+     * Create a property with the same URI as the given resource
+     */
+    public static Property asProperty(Resource r) {
+        if (r == null || r.isAnon()) return null;
+        return ResourceFactory.createProperty(r.getURI());
+    }
 }
