@@ -75,6 +75,7 @@ public class NameUtils {
      * (very) conservative percent-encoding of the UTF-8 version.
      */
     public static String encodeSafeName(String name) {
+        if (name == null) return null;
         try {
             StringBuilder encode = new StringBuilder();
             for (byte b : name.getBytes("UTF-8")) {
