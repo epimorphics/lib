@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.openjena.atlas.json.JSON;
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonObject;
-import org.openjena.atlas.json.JsonValue;
-import org.openjena.riot.RiotException;
+import org.apache.jena.atlas.json.JSON;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonValue;
+import org.apache.jena.riot.RiotException;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.TypeMapper;

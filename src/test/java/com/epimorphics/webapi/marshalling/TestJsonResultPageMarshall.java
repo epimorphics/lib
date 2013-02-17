@@ -21,9 +21,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openjena.atlas.json.JSON;
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JSON;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 
 import com.epimorphics.webapi.PageInfo;
 import com.epimorphics.webapi.ResultPage;

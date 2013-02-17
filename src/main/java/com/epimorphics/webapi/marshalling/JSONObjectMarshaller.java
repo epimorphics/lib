@@ -20,10 +20,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 
-import org.openjena.atlas.io.IndentedWriter;
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonObject;
-import org.openjena.atlas.json.JsonValue;
+import org.apache.jena.atlas.io.IndentedWriter;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonValue;
 
 /**
  * The default Jersey Marshaller doesn't seem to get registered so

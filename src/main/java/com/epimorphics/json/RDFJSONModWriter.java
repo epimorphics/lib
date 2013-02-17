@@ -8,15 +8,24 @@
 
 package com.epimorphics.json;
 
+import static com.epimorphics.json.RDFJSONModReader.BNODE_TYPE;
+import static com.epimorphics.json.RDFJSONModReader.DATATYPE_KEY;
+import static com.epimorphics.json.RDFJSONModReader.LANG_KEY;
+import static com.epimorphics.json.RDFJSONModReader.LIST_TYPE;
+import static com.epimorphics.json.RDFJSONModReader.LITERAL_TYPE;
+import static com.epimorphics.json.RDFJSONModReader.TYPE_KEY;
+import static com.epimorphics.json.RDFJSONModReader.URI_TYPE;
+import static com.epimorphics.json.RDFJSONModReader.VALUE_KEY;
+
 import java.io.OutputStream;
-import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.openjena.riot.RiotException;
+import org.apache.jena.atlas.json.io.JSWriter;
+import org.apache.jena.riot.RiotException;
 
-import com.epimorphics.jsonrdf.extras.JSStreamingWriter;
+import com.epimorphics.util.GraphUtil;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.impl.XSDBaseNumericType;
@@ -31,7 +40,6 @@ import com.hp.hpl.jena.sparql.util.graph.GraphList;
 import com.hp.hpl.jena.util.OneToManyMap;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.hp.hpl.jena.vocabulary.RDF;
-import static com.epimorphics.json.RDFJSONModReader.*;
 
 /**
  * <p>Support for serializing sets of RDF resources and whole models in JSON.</p>
@@ -54,17 +62,17 @@ public class RDFJSONModWriter {
     // and should not be included in a whole model scan.
     protected Set<Node> visited = new HashSet<Node>();
 
-    protected JSStreamingWriter writer;
+    protected JSWriter writer;
 
     public RDFJSONModWriter(OutputStream out) {
-        writer = new JSStreamingWriter(out);
+        writer = new JSWriter(out);
         start();
     }
 
-    public RDFJSONModWriter(Writer out) {
-        writer = new JSStreamingWriter(out);
-        start();
-    }
+//    public RDFJSONModWriter(Writer out) {
+//        writer = new JSWriter( new IndentedW);
+//        start();
+//    }
 
     protected void start() {
         writer.startOutput();
@@ -101,25 +109,32 @@ public class RDFJSONModWriter {
         for (Node prop : props.keySet()) {
             writer.key(prop.getURI());
             writer.startArray();
+            boolean isFirst = true;
             for (Iterator<Node> ni =  props.getAll(prop); ni.hasNext(); ) {
-                writeNodeValue(graph, ni.next());
+                writeNodeValue(graph, ni.next(), isFirst);
+                isFirst = false;
             }
             writer.finishArray();
         }
         writer.finishObject();
     }
 
-    protected void writeNodeValue(Graph graph, Node node) {
+    protected void writeNodeValue(Graph graph, Node node, boolean isFirst) {
         if (node.isLiteral()) {
-            writeLiteral(node.getLiteral());
+            writeLiteral(node.getLiteral(), isFirst);
         } else {
+            if (!isFirst) {
+                writer.arraySep();
+            }
             writer.startObject();
             if (isListNode(graph, node)) {
                 writeKeyValue(TYPE_KEY, LIST_TYPE);
                 writer.key(VALUE_KEY);
                 writer.startArray();
+                boolean first = true;
                 for (Node listnode : GraphList.members(new GNode(graph, node))) {
-                    writeNodeValue(graph, listnode);
+                    writeNodeValue(graph, listnode, first);
+                    first = false;
                 }
                 writer.finishArray();
             } else if (node.isURI()) {
@@ -133,16 +148,20 @@ public class RDFJSONModWriter {
         }
     }
 
-    protected void writeLiteral(LiteralLabel literal) {
+    protected void writeLiteral(LiteralLabel literal, boolean isFirst) {
         RDFDatatype dt = literal.getDatatype();
         if (dt != null) {
             if (dt instanceof XSDBaseNumericType
                     && !dt.equals(XSDDatatype.XSDfloat)
                     && !dt.equals(XSDDatatype.XSDdouble)
                     && !dt.equals(XSDDatatype.XSDdecimal)) {
-                writer.value( Long.parseLong( literal.getLexicalForm() ) );
+                // arrayElement does it's own insertion of separators
+                writer.arrayElement( Long.parseLong( literal.getLexicalForm() ) );
                 return;
             }
+        }
+        if (!isFirst) {
+            writer.arraySep();
         }
         writer.startObject();
         writeKeyValue( TYPE_KEY, LITERAL_TYPE );
@@ -162,13 +181,11 @@ public class RDFJSONModWriter {
     }
 
     protected void writeKeyValue(String key, String value) {
-        writer.key(key);
-        writer.value(value);
+        writer.pair(key, value);
     }
 
     protected void writeKeyValue(String key, long value) {
-        writer.key(key);
-        writer.value(value);
+        writer.pair(key, value);
     }
 
     protected String nodeLabel(Node node) {
@@ -192,7 +209,7 @@ public class RDFJSONModWriter {
      * Write the given graph, not including a resources that have already been visited
      */
     public void write(Graph graph) {
-        ExtendedIterator<Node> ni = graph.queryHandler().subjectsFor(null, null);
+        ExtendedIterator<Node> ni = GraphUtil.subjectsFor(graph, null, null);
         while (ni.hasNext()) {
             Node n = ni.next();
             if (!visited.contains(n)) {
@@ -214,7 +231,7 @@ public class RDFJSONModWriter {
         writer.key("items");
         writer.startArray();
         for (Resource item : items) {
-            writer.value( item.getURI() );
+            writer.arrayElement( item.getURI() );
         }
         writer.finishArray();
 
