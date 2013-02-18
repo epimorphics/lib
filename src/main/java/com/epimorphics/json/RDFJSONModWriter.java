@@ -25,11 +25,11 @@ import java.util.Set;
 import org.apache.jena.atlas.json.io.JSWriter;
 import org.apache.jena.riot.RiotException;
 
-import com.epimorphics.util.GraphUtil;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.impl.XSDBaseNumericType;
 import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.GraphUtil;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.graph.impl.LiteralLabel;
@@ -209,7 +209,7 @@ public class RDFJSONModWriter {
      * Write the given graph, not including a resources that have already been visited
      */
     public void write(Graph graph) {
-        ExtendedIterator<Node> ni = GraphUtil.subjectsFor(graph, null, null);
+        ExtendedIterator<Node> ni = GraphUtil.listSubjects(graph, null, null);
         while (ni.hasNext()) {
             Node n = ni.next();
             if (!visited.contains(n)) {
