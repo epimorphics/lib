@@ -20,7 +20,6 @@ import java.util.Map.Entry;
 import com.hp.hpl.jena.n3.N3IndentedWriter;
 import com.hp.hpl.jena.n3.N3JenaWriterCommon;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -72,7 +71,8 @@ public class SPARQLUpdateWriter extends N3JenaWriterCommon {
             }
         }
 
-        writeModel( ModelFactory.withHiddenStatements(model));
+//        writeModel( ModelFactory.withHiddenStatements(model));
+        writeModel( model );
         out.flush();
         bNodesMap = null ;
     }
