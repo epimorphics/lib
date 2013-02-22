@@ -9,8 +9,10 @@
 
 package com.epimorphics.rdfutil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -355,5 +357,19 @@ public class RDFUtil {
     public static Property asProperty(Resource r) {
         if (r == null || r.isAnon()) return null;
         return ResourceFactory.createProperty(r.getURI());
+    }
+
+    /**
+     * Return a list of all the resource-values of the property on the resource
+     */
+    public static List<Resource> allResourceValues(Resource resource, Property p) {
+        List<Resource> results = new ArrayList<Resource>();
+        for (StmtIterator si = resource.listProperties(p); si.hasNext(); ) {
+            RDFNode o = si.next().getObject();
+            if (o.isResource()) {
+                results.add( o.asResource() );
+            }
+        }
+        return results;
     }
 }
