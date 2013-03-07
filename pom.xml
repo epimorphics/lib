@@ -31,7 +31,7 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
- 
+
     <repository>
       <id>repo-epi</id>
       <name>Epimorphics repository</name>
@@ -61,8 +61,8 @@
         <groupId>org.apache.jena</groupId>
         <artifactId>apache-jena-libs</artifactId>
         <type>pom</type>
-        <version>2.10.0-SNAPSHOT</version>
-      </dependency>     
+        <version>2.10.0</version>
+      </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
