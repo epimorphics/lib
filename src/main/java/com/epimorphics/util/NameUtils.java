@@ -180,6 +180,27 @@ public class NameUtils {
     }
 
     /**
+     * Normalize a URI by stripping any final "/"
+     */
+    public static String stripLastSlash(String u) {
+        if (u.endsWith("/")) {
+            return u.substring(0, u.length()-1);
+        }
+        return u;
+    }
+
+    /**
+     * Normalize a URI by ensuring there is a final "/"
+     */
+    public static String ensureLastSlash(String u) {
+        if (u.endsWith("/")) {
+            return u;
+        } else {
+            return u + "/";
+        }
+    }
+
+    /**
      * Remove a trailing .xxx extension from a file name
      */
     public static String removeExtension(String f) {
@@ -207,7 +228,7 @@ public class NameUtils {
 
 
     /**
-     * Return segment of a string before the last occufrence of "at"
+     * Return segment of a string before the last occurrence of "at"
      */
     public static String splitBeforeLast(String filen, String at) {
         int split = filen.lastIndexOf(at);
