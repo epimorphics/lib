@@ -149,6 +149,21 @@ public class RDFUtil {
     }
 
     /**
+     * Return all the resource values of the property on a resource.
+     */
+    public static List<Resource> getResourceValues(Resource subject, Property prop) {
+        List<Resource> values = new ArrayList<Resource>();
+        StmtIterator ni = subject.listProperties(prop);
+        while (ni.hasNext()) {
+            RDFNode n = ni.next().getObject();
+            if (n instanceof Resource) {
+                values.add(n.asResource());
+            }
+        }
+        return values;
+    }
+
+    /**
      * Answer the integer value of property p on resource x, or
      * ifAbsent if there isn't one.
      */
@@ -337,6 +352,22 @@ public class RDFUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * Return all the root resources of a model 
+     */
+    public static List<Resource> findRoots(Model m) {
+        List<Resource> roots = new ArrayList<Resource>();
+        for (ResIterator ri = m.listSubjects(); ri.hasNext();) {
+            Resource root = ri.next();
+            if (m.listStatements(null, null, root).hasNext()) {
+                continue;
+            } else {
+                roots.add(root);
+            }
+        }
+        return roots;
     }
 
 
