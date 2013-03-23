@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.util.EpiException;
-import com.epimorphics.vocabs.SKOS;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSetRewindable;
 import com.hp.hpl.jena.rdf.model.Literal;
@@ -28,9 +27,6 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.util.Closure;
 import com.hp.hpl.jena.sparql.util.FmtUtils;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Provides a wrapper round an RDFNode from some model in some dataset.
@@ -154,10 +150,9 @@ public class RDFNodeWrapper {
             Resource r = node.asResource();
             modelw.lock();
             try {
-                for (Property p : nameProps) {
-                    if (r.hasProperty(p)) {
-                        return lexicalForm( r.getProperty(p).getObject() );
-                    }
+                String label = RDFUtil.getLabel(r, modelw.getLanguage());
+                if (label != null) {
+                    return label;
                 }
             } finally {
                 modelw.unlock();
@@ -171,7 +166,6 @@ public class RDFNodeWrapper {
             }
         }
     }
-    static protected Property[] nameProps = new Property[]{ RDFS.label, SKOS.prefLabel, SKOS.altLabel, DCTerms.title, FOAF.name, FOAF.nick };
 
 
     /** If this is a literal return its language, otherwise return null */
@@ -270,6 +264,22 @@ public class RDFNodeWrapper {
             try {
                 Statement s =node.asResource().getProperty( toProperty(prop) );
                 if (s != null) return new RDFNodeWrapper(modelw, s.getObject() );
+            } finally {
+                modelw.unlock();
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Return a string value for the given property, selecting one in the model's locale language if possible
+     */
+    public String getLocalizedValue(Object prop) {
+        if (node.isResource()) {
+            Property p = toProperty(prop);
+            modelw.lock();
+            try {
+                return RDFUtil.findLangMatchValue(node.asResource(), modelw.getLanguage(), p);
             } finally {
                 modelw.unlock();
             }

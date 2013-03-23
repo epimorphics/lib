@@ -56,4 +56,16 @@ public class TestRDFUtil {
         assertTrue( n.isResource() );
         assertTrue( n.isAnon() );
     }
+    
+    @Test
+    public void testLanguageMatch() {
+        Resource r = TestUtil.resourceFixture(":r skos:prefLabel 'foo'; skos:altLabel 'bar'.");
+        assertEquals("foo", RDFUtil.getLabel(r, "en"));
+        
+        r = TestUtil.resourceFixture(":r skos:prefLabel 'foo'@fr; skos:altLabel 'bar'.");
+        assertEquals("bar", RDFUtil.getLabel(r, "en"));
+        
+        r = TestUtil.resourceFixture(":r rdfs:label 'foo-fr'@fr; rdfs:label 'foo-en'@en;");
+        assertEquals("foo-en", RDFUtil.getLabel(r, "en"));
+    }
 }

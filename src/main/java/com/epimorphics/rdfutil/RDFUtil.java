@@ -30,6 +30,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -39,7 +40,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
 public class RDFUtil {
-    public static final Property[] labelProps = { SKOS.prefLabel, SKOS.altLabel, RDFS.label, DCTerms.title };
+    public static final Property[] labelProps = { SKOS.prefLabel, SKOS.altLabel, RDFS.label, DCTerms.title, FOAF.name, FOAF.nick };
     public static final Property[] descriptionProps = { DCTerms.description, SKOS.definition, RDFS.comment };
 
     /**
@@ -55,6 +56,31 @@ public class RDFUtil {
     }
 
     /**
+     * Checks the list of properties for one for which we can return a string 
+     * which either matches the given language or a plain-literal
+     */
+    public static String findLangMatchValue(Resource root, String language, Property...props) {
+        String label = null;
+        for (Property p : props) {
+            for (StmtIterator si = root.listProperties(p); si.hasNext(); ) {
+                RDFNode val = si.next().getObject();
+                if (val.isLiteral()) {
+                    Literal l = val.asLiteral();
+                    if (label == null) {
+                        // Keep first match as fall back
+                        label = l.getLexicalForm();
+                    }
+                    String lang = l.getLanguage();
+                    if (lang == null || lang.equals(language) || lang.isEmpty()) {
+                        return l.getLexicalForm();
+                    }
+                }
+            }
+        }
+        return label;
+    }
+    
+    /**
      * Return a label for the given resource
      */
     public static String getLabel(Resource root) {
@@ -62,7 +88,30 @@ public class RDFUtil {
         if (label != null && label.isLiteral()) {
             return label.asLiteral().getLexicalForm();
         } else {
-            return  NodeUtil.getLocalName(root.asNode());
+            return getLocalname(root); 
+        }
+    }
+    
+    /**
+     * Return a label for the given resource
+     */
+    public static String getLabel(Resource root, String language) {
+        String label = findLangMatchValue(root, language, labelProps);
+        if (label != null) {
+            return label;
+        } else {
+            return getLocalname(root); 
+        }
+    }
+
+    /**
+     * Return a label for the given node
+     */
+    public static String getLabel(RDFNode node) {
+        if (node.isLiteral()) {
+            return node.asLiteral().getLexicalForm();
+        } else {
+            return getLabel(node.asResource());
         }
     }
 

@@ -42,7 +42,9 @@ public class ModelWrapper {
 
     protected DatasetWrapper dsw;
     protected Model model;
-
+    protected String language;          // Optional, used for choosing locale-appropriate lexical forms
+    protected static final String DEFAULT_LANGUAGE = "en";
+    
     public ModelWrapper(DatasetWrapper dataset, Model model) {
         this.dsw = dataset;
         this.model = model;
@@ -71,6 +73,22 @@ public class ModelWrapper {
         this(new DatasetWrapper(DatasetFactory.create(model)), model);
     }
 
+    /**
+     * Set a language code (2-letter ISO639 code) which will be used to
+     * guide choice of lexical form in e.g. node.getName()
+     */
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    /**
+     * Return a language code (2-letter ISO639 code) which can be used to
+     * guide choice of lexical form in e.g. node.getName()
+     */
+    public String getLanguage() {
+        return language == null ? DEFAULT_LANGUAGE : language;
+    }
+    
     public Model getModel() {
         return model;
     }
