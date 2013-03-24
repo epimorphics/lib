@@ -28,6 +28,8 @@ import com.hp.hpl.jena.util.FileUtils;
 public class RDFXMLMarshaller implements MessageBodyWriter<Model>{
 
     public static final String MIME_RDFXML = "application/rdf+xml";
+    public static final String FULL_MIME_RDFXML = "application/rdf+xml; charset=UTF-8";
+
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType,
