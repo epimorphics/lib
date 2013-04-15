@@ -25,6 +25,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.util.Closure;
 import com.hp.hpl.jena.sparql.util.FmtUtils;
 
@@ -85,7 +86,26 @@ public class RDFNodeWrapper {
      * @return The formatted node
      */
     public String asTurtle() {
-        return FmtUtils.stringForNode( node.asNode(), modelw.getPrefixes() );
+        return asTurtle(asRDFNode(), modelw.getPrefixes());
+    }
+
+    protected String asTurtle(RDFNode val, PrefixMapping prefixes) {
+        if (val.isAnon()) {
+            StringBuffer render = new StringBuffer();
+            render.append("[");
+            StmtIterator i = val.asResource().listProperties();
+            while(i.hasNext()) {
+                Statement s = i.nextStatement();
+                render.append( asTurtle(s.getPredicate(), prefixes) );
+                render.append(" ");
+                render.append( asTurtle(s.getObject(), prefixes) );
+                render.append("; ");
+            }
+            render.append("]");
+            return render.toString();
+        } else {
+            return FmtUtils.stringForNode( val.asNode(), prefixes );
+        }
     }
 
     public ModelWrapper getModelW() {
@@ -270,7 +290,7 @@ public class RDFNodeWrapper {
         }
         return null;
     }
-    
+
     /**
      * Return a string value for the given property, selecting one in the model's locale language if possible
      */
