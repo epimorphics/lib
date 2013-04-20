@@ -171,18 +171,13 @@ public class RDFNodeWrapper {
             modelw.lock();
             try {
                 String label = RDFUtil.getLabel(r, modelw.getLanguage());
-                if (label != null) {
+                if (label != null && !label.isEmpty()) {
                     return label;
+                } else {
+                    return r.isAnon() ? "[]" : r.getURI();
                 }
             } finally {
                 modelw.unlock();
-            }
-            // TODO consult vocabulary manager
-            if (r.isAnon()) {
-                return "[]";        // TODO review, should this be an anonID?
-            } else {
-                String ln = RDFUtil.getLocalname(r);
-                return ln.isEmpty() ? r.getURI() : ln;
             }
         }
     }
