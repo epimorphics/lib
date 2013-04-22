@@ -20,6 +20,11 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.CRC32;
 
 import com.hp.hpl.jena.util.FileUtils;
@@ -86,6 +91,32 @@ public class FileUtil {
         OutputStream os = new BufferedOutputStream( new FileOutputStream(dest) );
         copyResource(new File(src), os);
         os.close();
+    }
+    
+    /**
+     * Copy a directory tree from a source location to a destination
+     */
+    public static void copyDirectory(final Path src, final Path dest) throws IOException {
+        Files.walkFileTree(src, new SimpleFileVisitor<Path>(){
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir,
+                    BasicFileAttributes attrs) throws IOException {
+                Path targetPath = dest.resolve(src.relativize(dir));
+                if (!Files.exists(targetPath)) {
+                    Files.createDirectory(targetPath);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
+                Files.copy(file, dest.resolve(src.relativize(file)));
+                return FileVisitResult.CONTINUE;
+            }
+            
+        });
     }
 
     /**
