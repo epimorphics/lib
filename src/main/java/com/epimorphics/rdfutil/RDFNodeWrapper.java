@@ -410,7 +410,7 @@ public class RDFNodeWrapper {
         if (!node.isURIResource()) {
             throw new EpiException("Attempted to find things connected to a non (URI) resource");
         }
-        String query = "SELECT ?i WHERE { <" + node.asResource().getURI() +"> " + path + " ?i .}";
+        String query = "SELECT DISTINCT ?i WHERE { <" + node.asResource().getURI() +"> " + path + " ?i .} ORDER BY ?i";
         ResultSetRewindable rs = modelw.querySelect(query);
         List<RDFNodeWrapper> results = new ArrayList<RDFNodeWrapper>();
         while (rs.hasNext()) {
