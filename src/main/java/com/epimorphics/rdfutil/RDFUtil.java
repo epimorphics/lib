@@ -21,6 +21,7 @@ import com.epimorphics.util.EpiException;
 import com.epimorphics.vocabs.SKOS;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -30,6 +31,9 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.impl.LiteralImpl;
+import com.hp.hpl.jena.sparql.util.FmtUtils;
+import com.hp.hpl.jena.sparql.util.NodeFactory;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -451,5 +455,26 @@ public class RDFUtil {
             }
         }
         return results;
+    }
+
+    /**
+     * Serialize a (URI or literal) RDFNode to a string which can be later parsed
+     */
+    public static String serlialize(RDFNode node) {
+        return FmtUtils.stringForNode(node.asNode());
+    }
+
+    /**
+     * Decode a serlialized RDFNode, not associated with any useful model
+     */
+    public static RDFNode deserialize(String ser) {
+        Node n = NodeFactory.parseNode(ser);
+        if (n.isLiteral()) {
+            return new LiteralImpl(n, null);
+        } else if (n.isURI()) {
+            return ResourceFactory.createResource(n.getURI());
+        } else {
+            return ResourceFactory.createResource();
+        }
     }
 }

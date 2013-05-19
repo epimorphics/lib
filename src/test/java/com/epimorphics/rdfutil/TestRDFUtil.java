@@ -68,4 +68,17 @@ public class TestRDFUtil {
         r = TestUtil.resourceFixture(":r rdfs:label 'foo-fr'@fr; rdfs:label 'foo-en'@en;");
         assertEquals("foo-en", RDFUtil.getLabel(r, "en"));
     }
+    
+    @Test
+    public void testSerialize() {
+        doTestSerialize(TestUtil.resourceFixture( null, "foo" ));
+        doTestSerialize( ResourceFactory.createPlainLiteral("bar"));
+        doTestSerialize( ResourceFactory.createLangLiteral("foobar", "en"));
+        doTestSerialize( ResourceFactory.createTypedLiteral(42) );
+        assertTrue( RDFUtil.deserialize( RDFUtil.serlialize(ResourceFactory.createResource()) ).isAnon() );
+    }
+    
+    private void doTestSerialize(RDFNode node) {
+        assertEquals(node, RDFUtil.deserialize( RDFUtil.serlialize(node) ) );
+    }
 }
