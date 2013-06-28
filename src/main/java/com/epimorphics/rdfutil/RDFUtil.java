@@ -291,6 +291,18 @@ public class RDFUtil {
     /**
      * Return a useful version of the local name for a resource. Not restricted to an NCName
      */
+    public static String getLocalname(String uri) {
+        Matcher match = lnmatch.matcher(uri);
+        if (match.matches()) {
+            return match.group(2);
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Return a useful version of the local name for a resource. Not restricted to an NCName
+     */
     public static String getLocalname(Resource r) {
         if (! r.isURIResource()) {
             return null;
