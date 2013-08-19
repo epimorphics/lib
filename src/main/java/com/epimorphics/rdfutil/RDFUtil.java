@@ -45,7 +45,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.LiteralImpl;
 import com.hp.hpl.jena.sparql.util.FmtUtils;
-import com.hp.hpl.jena.sparql.util.NodeFactory;
+import com.hp.hpl.jena.sparql.util.NodeFactoryExtra;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -492,7 +492,7 @@ public class RDFUtil {
      * Decode a serlialized RDFNode, not associated with any useful model
      */
     public static RDFNode deserialize(String ser) {
-        Node n = NodeFactory.parseNode(ser);
+        Node n = NodeFactoryExtra.parseNode(ser);
         if (n.isLiteral()) {
             return new LiteralImpl(n, null);
         } else if (n.isURI()) {
