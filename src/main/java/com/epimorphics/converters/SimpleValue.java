@@ -25,8 +25,8 @@ import com.epimorphics.util.EpiException;
 
 
 /**
- * Wraps a value from a data source such as a CSV to simply 
- * conversion to typed values. Failed conversions throw generic ModalException (Change this?).
+ * Wraps a value from a data source such as a CSV to simplify 
+ * conversion to typed values. 
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
