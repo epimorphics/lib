@@ -67,6 +67,14 @@ public class TestRDFUtil {
         n = RDFUtil.asRDFNode( null );
         assertTrue( n.isResource() );
         assertTrue( n.isAnon() );
+        
+        n = RDFUtil.asRDFNode("foo@en");
+        l = ResourceFactory.createLangLiteral( "foo", "en" );
+        assertEquals(l,  n);
+        
+        n = RDFUtil.asRDFNode("foo@en-GB");
+        l = ResourceFactory.createLangLiteral( "foo", "en-GB" );
+        assertEquals(l,  n);
     }
     
     @Test

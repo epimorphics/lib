@@ -338,6 +338,7 @@ public class RDFUtil {
      * <ul>
      * <li>An existing node is returned unchanged</li>
      * <li>A string beginning <code>http:</code> is converted to a resource</li>
+     * <li>A string ending with <code>@lang</code> becomes a lang-tagged literal</li>
      * <li>Other strings become plain literals</li>
      * <li>All other non-null values are passed to the literal factory</li>
      * <li>Null becomes a new bnode</li>
@@ -352,11 +353,15 @@ public class RDFUtil {
         }
         else if (val instanceof String) {
             String s = (String) val;
-            if (s.startsWith( "http:" )) {
+            if (s.startsWith( "http:" ) || s.startsWith("https:")) {
                 return ResourceFactory.createResource( s );
-            }
-            else {
-                return ResourceFactory.createPlainLiteral( s );
+            } else {
+                Matcher match = langPattern.matcher(s);
+                if (match.matches()) {
+                    return ResourceFactory.createLangLiteral(match.group(1), match.group(2));
+                } else {
+                    return ResourceFactory.createPlainLiteral( s );
+                }
             }
         }
         else if (val != null) {
@@ -366,6 +371,8 @@ public class RDFUtil {
             return ResourceFactory.createResource();
         }
     }
+    
+    static Pattern langPattern = Pattern.compile("^(.*)@([-a-zA-Z]*)$");
 
     /**
      * Timestamp a resource using current time
