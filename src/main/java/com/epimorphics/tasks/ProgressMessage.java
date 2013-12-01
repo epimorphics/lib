@@ -55,6 +55,19 @@ public class ProgressMessage implements JSONWritable {
                 );
     }
     
+    
+    public String getMessage() {
+        return message;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
     @Override
     public String toString() {
         return String.format("%tT.%tL %s", timestamp, timestamp, message) + (lineNumber == NULL_LINE_NUMBER ? "" : " [" + lineNumber + "]");
