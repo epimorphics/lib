@@ -57,6 +57,7 @@ public class SimpleProgressMonitor implements ProgressMonitor, ProgressReporter,
         } else {
             progress = 100;
         }
+        reportStateChange();
         notifyAll();
     }
 
@@ -68,35 +69,44 @@ public class SimpleProgressMonitor implements ProgressMonitor, ProgressReporter,
     @Override
     public synchronized void setProgress(int progress) {
         this.progress = progress;
+        reportStateChange();
     }
 
     @Override
     public synchronized void setSuccess(boolean wasSuccessful) {
         succeeded = wasSuccessful;
+        reportStateChange();
     }
 
     @Override
     public synchronized void suceeeded() {
-        setState( TaskState.Terminated );
         succeeded = true;
+        setState( TaskState.Terminated );
     }
 
     @Override
     public synchronized void failed() {
-        setState( TaskState.Terminated );
         succeeded = false;
+        setState( TaskState.Terminated );
     }
 
     @Override
     public synchronized void report(String message) {
-        messages.add( new ProgressMessage(message) );
+        reportNewMessage( new ProgressMessage(message) );
     }
 
     @Override
     public synchronized void report(String message, int lineNumber) {
-        messages.add( new ProgressMessage(message, lineNumber) );
+        reportNewMessage( new ProgressMessage(message, lineNumber) );
+    }
+    
+    protected void reportStateChange() {
     }
 
+    protected void reportNewMessage(ProgressMessage message) {
+        messages.add( message );
+    }
+    
     @Override
     public synchronized TaskState getState() {
         return state;
