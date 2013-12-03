@@ -41,7 +41,7 @@ public class NameUtils {
      * Not reversible.
      */
     public static String safeName(String name) {
-        return name.replaceAll("[^@a-zA-Z0-9_\\.\\-~]+", "_");
+        return name.replaceAll("[^@$a-zA-Z0-9_\\.\\-~]+", "_");
     }
     
     /**
@@ -49,7 +49,7 @@ public class NameUtils {
      * variable name in an expression as well as a path segment, normalizing the case.
      */
     public static String safeVarName(String name) {
-        return name.replaceAll("[^@a-zA-Z0-9_]+", "_").toLowerCase();
+        return name.replaceAll("[^@$a-zA-Z0-9_]+", "_").toLowerCase();
     }
 
     /**
