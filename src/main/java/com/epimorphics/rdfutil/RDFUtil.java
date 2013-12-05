@@ -36,6 +36,7 @@ import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
@@ -507,5 +508,36 @@ public class RDFUtil {
         } else {
             return ResourceFactory.createResource();
         }
+    }
+    
+    /**
+     * Map a namespace used in a model
+     */
+    public static Model mapNamespace(Model model, String originalNS, String replacementNS) {
+        Model result = ModelFactory.createDefaultModel();
+        result.setNsPrefixes(model);
+        for (StmtIterator si = model.listStatements(); si.hasNext();) {
+            Statement s = si.next();
+            Resource subject = (Resource) mapNamespace(result, s.getSubject(), originalNS, replacementNS);
+            Property predicate = (Property) mapNamespace(result, s.getPredicate(), originalNS, replacementNS);
+            RDFNode  object = mapNamespace(result, s.getObject(), originalNS, replacementNS);
+            result.add(subject, predicate, object);
+        }
+        return result;
+    }
+    
+    private static RDFNode mapNamespace(Model resultModel, RDFNode node, String originalNS, String replacementNS) {
+        if (node.isURIResource()) {
+            String uri = node.asResource().getURI();
+            if (uri.startsWith(originalNS)) {
+                String newuri = uri.replace(originalNS, replacementNS);
+                if (node instanceof Property) {
+                    return resultModel.createProperty(newuri);
+                } else {
+                    return resultModel.createResource(newuri);                    
+                }
+            }
+        }
+        return node.inModel(resultModel);
     }
 }
