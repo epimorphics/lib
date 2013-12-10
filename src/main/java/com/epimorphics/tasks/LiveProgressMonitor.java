@@ -10,7 +10,7 @@
 package com.epimorphics.tasks;
 
 /**
- * Simple progress monitor which reports progress messages live to stdout.
+ * Simple progress monitor which reports progress messages live to stderr.
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
@@ -22,7 +22,7 @@ public class LiveProgressMonitor extends SimpleProgressMonitor implements Progre
 
     protected void reportNewMessage(ProgressMessage message) {
         super.reportNewMessage(message);
-        System.out.println(message.toString());
+        System.err.println(message.toString());
     }
      
 }
