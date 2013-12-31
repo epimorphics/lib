@@ -45,7 +45,7 @@ public class FileUtil {
 
     /**
      * Copy a source file to the output writer, reading the source as UTF-8.
-     * Returns number of chars copied
+     * Returns number of chars copied. Leaves output open.
      */
     public static int copyResource(File src, Writer out) throws IOException {
         Reader r = null;
@@ -72,7 +72,7 @@ public class FileUtil {
 
     /**
      * Copy a source file to the output stream, byte for byte.
-     * Returns number of bytes copied.
+     * Returns number of bytes copied. Leaves output open.
      */
     public static int copyResource(File src, OutputStream os) throws IOException {
         return copyResource(new FileInputStream(src), os);
@@ -80,7 +80,7 @@ public class FileUtil {
 
     /**
      * Copy a source file to the output stream, byte for byte.
-     * Returns number of bytes copied.
+     * Returns number of bytes copied. Leaves output open.
      */
     public static int copyResource(InputStream is, OutputStream os) throws IOException {
         try {
