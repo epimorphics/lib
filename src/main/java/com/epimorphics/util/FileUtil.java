@@ -75,11 +75,15 @@ public class FileUtil {
      * Returns number of bytes copied.
      */
     public static int copyResource(File src, OutputStream os) throws IOException {
-        InputStream is = null;
+        return copyResource(new FileInputStream(src), os);
+    }
 
+    /**
+     * Copy a source file to the output stream, byte for byte.
+     * Returns number of bytes copied.
+     */
+    public static int copyResource(InputStream is, OutputStream os) throws IOException {
         try {
-            is = new FileInputStream(src);
-
             int len = 0;
             byte[] buf = new byte[1024];
             int n;
