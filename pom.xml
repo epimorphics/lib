@@ -7,7 +7,7 @@
   <description>Epimorphics misc utility library</description>
 
   <scm>
-    <developerConnection>scm:git:ssh://git@github.com:epimorphics/lib.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com/epimorphics/lib.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
