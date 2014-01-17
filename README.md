@@ -11,6 +11,9 @@ Only documentation is the code and javadoc.
    * [RDFUtil](https://github.com/epimorphics/lib/tree/master/src/main/java/com/epimorphics/rdfutil/RDFUtil.java)
 Collection of utilities for common trivial RDF tasks, a couple of other utils in that directory might be handy but most are obsoleted
 
+   * [Wrappers](https://github.com/epimorphics/lib/tree/master/src/main/java/com/epimorphics/rdfutil/RDFUtil.java)
+Provides wrappers for Datasets, Models and RDFNodes which simplify their use from scripting languages like Velocity. Obsoleted by appbase.
+
    * [json](https://github.com/epimorphics/lib/tree/master/src/main/java/com/epimorphics/json)
 Some utils for working with Jena's json support including a hacked version of the Talis-format RDF writer which handles lists as JSON arrays. 
    
