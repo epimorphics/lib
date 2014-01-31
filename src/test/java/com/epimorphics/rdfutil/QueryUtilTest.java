@@ -187,6 +187,19 @@ public class QueryUtilTest
         rs.next();
         assertFalse( rs.hasNext() );
     }
+    
+
+    @Test
+    public void testPath() {
+        Model m = TestUtil.modelFixture( "@prefix : <http://fu.bar/test#>.\n :a :p :c . :c :q :d, 'foo' ." );
+        Resource root = m.createResource("http://fu.bar/test#a");
+        List<Resource> results = QueryUtil.connectedResources(root, ":p/:q");
+        TestUtil.testArray(results, new Resource[]{ m.createResource("http://fu.bar/test#d") });
+        
+        TestUtil.testArray(
+                QueryUtil.connectedLiterals(root, ":p/:q"),
+                new Literal[]{ m.createLiteral("foo") });
+    }
 
     /***********************************/
     /* Instance variables              */

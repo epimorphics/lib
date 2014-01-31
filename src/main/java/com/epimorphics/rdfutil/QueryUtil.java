@@ -35,8 +35,6 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
  * Random small utilities to help with SPARQl queries.
- *
- * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
 public class QueryUtil {
 
@@ -72,6 +70,7 @@ public class QueryUtil {
      * Take a column from result set and extract it as a list of resources.
      * Skips any non-resource results.
      */
+    // TODO clean this up, have generalized verion later in this class
     public static List<Resource> resultsFor(ResultSet results, String varname) {
         List<Resource> resultList = new ArrayList<Resource>();
         while (results.hasNext()) {
@@ -431,6 +430,27 @@ public class QueryUtil {
         return QueryExecutionFactory.sparqlService( serviceURL, qHeader + qBody ).execDescribe();
     }
 
+    /**
+     * Return all resources connected by a property path to the given resource.
+     * Path can use prefixes defined in the resource's Model.
+     */
+    public static List<Resource> connectedResources(Resource root, String path) {
+        Model m = root.getModel();
+        String query = String.format("SELECT ?x WHERE { <%s> %s ?x }", root.getURI(), path);
+        query = PrefixUtils.expandQuery(query, m);
+        return resultsFor(selectAll(m, query), "x");
+    }
+
+    /**
+     * Return all Literals connected by a property path to the given resource.
+     * Path can use prefixes defined in the resource's Model.
+     */
+    public static List<Literal> connectedLiterals(Resource root, String path) {
+        Model m = root.getModel();
+        String query = String.format("SELECT ?x WHERE { <%s> %s ?x }", root.getURI(), path);
+        query = PrefixUtils.expandQuery(query, m);
+        return resultsFor(selectAll(m, query), "x", Literal.class);
+    }
 
     /***************************
      * Internal support methods
@@ -470,5 +490,23 @@ public class QueryUtil {
         return resultList;
     }
 
+
+    /**
+     * Take a column from result set and extract it as a list of values of the 
+     * given type (e.g. Resource, Literal or generic RDFNode.
+     * Skips any non-matching results
+     * @param <T>
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> resultsFor(ResultSet results, String varname, Class<T> cls) {
+        List<T> resultList = new ArrayList<T>();
+        while (results.hasNext()) {
+            RDFNode result = results.nextSolution().get(varname);
+            if (cls.isInstance(result)) {
+                resultList.add( (T) result);
+            }
+        }
+        return resultList;
+    }
 
 }
