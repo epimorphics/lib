@@ -10,6 +10,7 @@
 package com.epimorphics.json;
 
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -147,6 +148,12 @@ public class JSFullWriter {
     {
         arrayElementProcess() ;
         value(integer) ;
+    }
+
+    public void arrayElement(Number n)
+    {
+        arrayElementProcess() ;
+        value(n) ;
     }
     
     /**
