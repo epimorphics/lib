@@ -10,7 +10,6 @@
 package com.epimorphics.json;
 
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
