@@ -79,12 +79,6 @@ public class SimpleProgressMonitor implements ProgressMonitor, ProgressReporter,
     }
 
     @Override
-    public synchronized void suceeeded() {
-        succeeded = true;
-        setState( TaskState.Terminated );
-    }
-
-    @Override
     public synchronized void failed() {
         succeeded = false;
         setState( TaskState.Terminated );

@@ -36,11 +36,6 @@ public interface ProgressReporter {
      * Record whether the task was successful or not.
      */
     public void setSuccess(boolean wasSuccessful);
-
-    /**
-     * Record that a task has completed successfully.
-     */
-    public void suceeeded();
     
     /**
      * Record that a task has completed but with an error.
