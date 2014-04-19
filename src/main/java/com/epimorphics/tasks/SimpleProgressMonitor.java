@@ -168,4 +168,10 @@ public class SimpleProgressMonitor implements ProgressMonitor, ProgressReporter,
         out.finishObject();
     }
 
+    @Override
+    public void setSucceeded() {
+        succeeded = true;
+        setState(TaskState.Terminated);
+    }
+
 }

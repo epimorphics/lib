@@ -38,6 +38,11 @@ public interface ProgressReporter {
     public void setSuccess(boolean wasSuccessful);
     
     /**
+     * Record that a task has completed but successfully
+     */
+    public void setSucceeded();
+    
+    /**
      * Record that a task has completed but with an error.
      */
     public void failed();
@@ -59,10 +64,5 @@ public interface ProgressReporter {
      * Running or Terminated.
      */
     public TaskState getState();
-    
-    /**
-     * Return true if the task has Terminated and was successful.
-     */
-    public boolean succeeded();
     
 }
