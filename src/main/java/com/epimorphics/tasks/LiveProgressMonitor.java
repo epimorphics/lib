@@ -14,7 +14,7 @@ package com.epimorphics.tasks;
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
-public class LiveProgressMonitor extends SimpleProgressMonitor implements ProgressMonitor, ProgressReporter {
+public class LiveProgressMonitor extends SimpleProgressMonitor implements ProgressMonitorReporter {
 
     protected void reportStateChange() {
 //        System.out.println("Progress state: " + state);

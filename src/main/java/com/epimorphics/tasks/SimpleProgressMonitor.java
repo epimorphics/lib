@@ -22,7 +22,7 @@ import com.epimorphics.json.JSONWritable;
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
-public class SimpleProgressMonitor implements ProgressMonitor, ProgressReporter, JSONWritable {    
+public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWritable {    
     public static final String PROGRESS_FIELD = "progress";
     public static final String STATE_FIELD    = "state";
     public static final String SUCEEDED_FIELD = "succeeded";
