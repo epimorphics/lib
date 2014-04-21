@@ -118,12 +118,14 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
 
     @Override
     public synchronized List<ProgressMessage> getMessages() {
-        return messages;
+        // Need to copy since will pass outside synchronization boundary
+        return new ArrayList<ProgressMessage>(messages);
     }
 
     @Override
     public synchronized List<ProgressMessage> getMessagesSince(int offset) {
-        return messages.subList(offset, messages.size());
+        // Need to copy since will pass outside synchronization boundary
+        return new ArrayList<ProgressMessage>(messages.subList(offset, messages.size()));
     }
 
     @Override
