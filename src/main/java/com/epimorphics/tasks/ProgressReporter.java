@@ -45,7 +45,7 @@ public interface ProgressReporter {
     /**
      * Record that a task has completed but with an error.
      */
-    public void failed();
+    public void setFailed();
     
     /**
      * Log a progress message, this may be timestamped by the reporter implementation.

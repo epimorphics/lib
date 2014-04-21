@@ -79,7 +79,7 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     }
 
     @Override
-    public synchronized void failed() {
+    public synchronized void setFailed() {
         succeeded = false;
         setState( TaskState.Terminated );
     }
