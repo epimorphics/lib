@@ -75,7 +75,8 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     @Override
     public synchronized void setSuccess(boolean wasSuccessful) {
         succeeded = wasSuccessful;
-        reportStateChange();
+//        reportStateChange();
+        setState( TaskState.Terminated );
     }
 
     @Override
