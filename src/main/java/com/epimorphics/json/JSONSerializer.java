@@ -25,7 +25,7 @@ public class JSONSerializer implements JSONWritable {
         this.root = root;
     }
     
-    public JSONSerializer(Map<String, Object> root) {
+    public JSONSerializer(Map<?, ?> root) {
         this.root = root;
     }
     
