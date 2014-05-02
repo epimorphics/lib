@@ -47,22 +47,22 @@ public class FileUtil {
      * Copy a source file to the output writer, reading the source as UTF-8.
      * Returns number of chars copied. Leaves output open.
      */
-    public static int copyResource(File src, Writer out) throws IOException {
+    public static long copyResource(File src, Writer out) throws IOException {
         Reader r = null;
 
         try {
             r = FileUtils.asUTF8( new FileInputStream(src) );
 
-//            int len = 0;
+            long len = 0;
             char[] buf = new char[1024];
             int n;
 
             while ((n = r.read(buf, 0, buf.length)) >= 0) {
                 out.write( buf, 0, n );
-//                len += n;
+                len += n;
             }
 
-            return n;
+            return len;
         } finally {
             if (r != null) {
                 r.close();
@@ -74,7 +74,7 @@ public class FileUtil {
      * Copy a source file to the output stream, byte for byte.
      * Returns number of bytes copied. Leaves output open.
      */
-    public static int copyResource(File src, OutputStream os) throws IOException {
+    public static long copyResource(File src, OutputStream os) throws IOException {
         return copyResource(new FileInputStream(src), os);
     }
 
@@ -82,9 +82,9 @@ public class FileUtil {
      * Copy a source file to the output stream, byte for byte.
      * Returns number of bytes copied. Leaves output open.
      */
-    public static int copyResource(InputStream is, OutputStream os) throws IOException {
+    public static long copyResource(InputStream is, OutputStream os) throws IOException {
         try {
-            int len = 0;
+            long len = 0;
             byte[] buf = new byte[1024];
             int n;
 
