@@ -49,4 +49,6 @@ public class JsonUtil {
             return val.getAsBoolean().value();
         }
     }
+
 }
+
