@@ -145,6 +145,18 @@ public class RDFUtil {
     }
 
     /**
+     * Return a description for the given resource
+     */
+    public static String getDescription(Resource root, String lang) {
+        String label = findLangMatchValue(root, lang, descriptionProps);
+        if (label != null) {
+            return label;
+        } else {
+            return  "";
+        }
+    }
+
+    /**
      * Find the singleton subject of the given property/value pair.
      * Return null if there is no match. Return an arbitrary match if there are multiples
      */
