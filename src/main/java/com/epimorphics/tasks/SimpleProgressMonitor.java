@@ -11,7 +11,6 @@ package com.epimorphics.tasks;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.epimorphics.json.JSFullWriter;
@@ -154,21 +153,39 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     }
 
     @Override
-    public void writeTo(JSFullWriter out) {
+    public synchronized void writeTo(JSFullWriter out) {
+        writeIncrement(out, 0);
+    }
+    
+    protected synchronized void writeIncrement(JSFullWriter out, int offset) {
         out.startObject();
         out.pair(STATE_FIELD, state.name());
         out.pair(PROGRESS_FIELD, progress);
         out.pair(SUCEEDED_FIELD, succeeded);
         out.key(MESSAGES_FIELD);
         out.startArray();
-        for (Iterator<ProgressMessage> mi = messages.iterator(); mi.hasNext();) {
-            mi.next().writeTo(out);
-            if (mi.hasNext()) {
+        int len = messages.size();
+        for (int i = offset; i < len; i++) {
+            messages.get(i).writeTo(out);
+            if (i < len-1) {
                 out.arraySep();
             }
         }
         out.finishArray();
         out.finishObject();
+    }
+    
+    /**
+     * Return a JSON view onto the status of the monitor including any messages
+     * since the given offset.
+     */
+    public JSONWritable viewUpdatesSince(final int offset) {
+        return new JSONWritable() {
+            @Override
+            public synchronized void writeTo(JSFullWriter out) {
+                writeIncrement(out, offset);
+            }
+        };
     }
 
     @Override

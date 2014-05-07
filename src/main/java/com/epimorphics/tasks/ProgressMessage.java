@@ -25,6 +25,7 @@ import com.epimorphics.json.JSONWritable;
  */
 public class ProgressMessage implements JSONWritable {
     public static final String MESSAGE_FIELD     = "message";
+    public static final String RAW_MESSAGE_FIELD     = "raw_message";
     public static final String LINE_NUMBER_FIELD = "lineNumber";
     public static final String TIMESTAMP_FIELD   = "timestamp";
     
@@ -77,7 +78,8 @@ public class ProgressMessage implements JSONWritable {
     public void writeTo(JSFullWriter out) {
         out.startObject();
         out.pair(TIMESTAMP_FIELD, timestamp);
-        out.pair(MESSAGE_FIELD, message);
+        out.pair(RAW_MESSAGE_FIELD, message);
+        out.pair(MESSAGE_FIELD, toString());
         if (lineNumber != NULL_LINE_NUMBER) {
             out.pair(LINE_NUMBER_FIELD, lineNumber);
         }

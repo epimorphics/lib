@@ -11,6 +11,8 @@ package com.epimorphics.tasks;
 
 import java.util.List;
 
+import com.epimorphics.json.JSONWritable;
+
 /**
  * Interface for accessing progress status from an async task such
  * as a web service or shell script.
@@ -52,4 +54,12 @@ public interface ProgressMonitor {
      * Return true if there are more progress messages available since the given message number.
      */
     public boolean moreMessagesSince(int offset);
+    
+    
+    /**
+     * Return a JSON view onto the status of the monitor including any messages
+     * since the given offset.
+     */
+    public JSONWritable viewUpdatesSince(int offset);
+    
 }
