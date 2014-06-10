@@ -26,6 +26,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -37,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.epimorphics.util.EpiException;
+import com.epimorphics.util.FileUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.util.FileUtils;
@@ -69,6 +71,7 @@ public class SPARQLUpdate {
     protected String responseBody;
     protected HttpURLConnection conn;
     protected BufferedWriter out;
+    protected boolean started = false;
 
     /**
      * Constructor. Throws an unchecked exception (EpiException) if the server URL is malformed.
@@ -139,12 +142,20 @@ public class SPARQLUpdate {
                     logFile.write(command);
                 }
                 out.write(command);
+                started = true;
             } catch (IOException e) {
                 throw new EpiException(e);
             }
         } else {
             throw new EpiException("Update connection not open");
         }
+    }
+    
+    /**
+     * Return true if at least one command string has been sent, whether complete or not
+     */
+    public boolean isStarted() {
+        return started;
     }
     
     /**
@@ -206,12 +217,28 @@ public class SPARQLUpdate {
     }
     
     /**
+     * Write a set of formatted SPARQL Update instructions to the stream
+     */
+    public void send(InputStream in) throws IOException {
+        FileUtil.copyResource(in, out);
+    }
+    
+    /**
      * Convenience packaging of common pattern of use.
      * Opens the connection if not already open, sends Model prefixes, then preamble command,
      * then the model (using compact Turtle) then postamble command then closes.
      */
-    
     public void performUpdate(String preamble, Model model, String postamble) {
+        sendUpdate(preamble, model, postamble);
+        close();
+    }
+    
+    /**
+     * Convenience packaging of common pattern of use.
+     * Opens the connection if not already open, sends Model prefixes, then preamble command,
+     * then the model (using compact Turtle) then postamble command. Leaves udpate open
+     */
+    public void sendUpdate(String preamble, Model model, String postamble) {
         if (out == null) {
             open();
         }
@@ -219,7 +246,6 @@ public class SPARQLUpdate {
         send(preamble);
         send(model, true);
         send(postamble);
-        close();
     }
     
     /**
