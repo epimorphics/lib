@@ -11,7 +11,13 @@ package com.epimorphics.tasks;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonValue;
+
+import static com.epimorphics.json.JsonUtil.*;
 
 import com.epimorphics.json.JSFullWriter;
 import com.epimorphics.json.JSONWritable;
@@ -22,6 +28,7 @@ import com.epimorphics.json.JSONWritable;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
 public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWritable {    
+    public static final String ID_FIELD = "id";
     public static final String PROGRESS_FIELD = "progress";
     public static final String STATE_FIELD    = "state";
     public static final String SUCEEDED_FIELD = "succeeded";
@@ -40,6 +47,17 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     
     public SimpleProgressMonitor(String id) {
         this.id = id;
+    }
+    
+    public SimpleProgressMonitor(JsonObject stored) {
+        this.id = getStringValue(stored, ID_FIELD);
+        this.state = TaskState.valueOf( getStringValue(stored, STATE_FIELD) );
+        this.succeeded = getBooleanValue(stored, SUCEEDED_FIELD, false);
+        this.progress = getIntValue(stored, PROGRESS_FIELD, 0);
+        Iterator<JsonValue> i = stored.get(MESSAGES_FIELD).getAsArray().iterator();
+        while (i.hasNext()) {
+            messages.add( new ProgressMessage( i.next().getAsObject() ) );
+        }
     }
     
     public long getTimestamp() {
@@ -159,6 +177,7 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     
     protected synchronized void writeIncrement(JSFullWriter out, int offset) {
         out.startObject();
+        out.pair(ID_FIELD, id);
         out.pair(STATE_FIELD, state.name());
         out.pair(PROGRESS_FIELD, progress);
         out.pair(SUCEEDED_FIELD, succeeded);

@@ -48,6 +48,18 @@ public class TestStatusReports {
         assertEquals( 2,        messages.size());
         JsonObject m = messages.get(1).getAsObject();
         assertEquals( "message 2",   m.get("raw_message").getAsString().value());
+        
+        SimpleProgressMonitor monitorCopy = new SimpleProgressMonitor( object );
+        assertEquals(monitor.getId(), monitorCopy.getId());
+        assertEquals(monitor.getState(), monitorCopy.getState());
+        assertEquals(monitor.getProgress(), monitorCopy.getProgress());
+        assertEquals(monitor.succeeded, monitorCopy.succeeded);
+        for (int i = 0; i < monitor.getMessages().size(); i++) {
+            ProgressMessage ms = monitor.getMessages().get(i); 
+            ProgressMessage msc = monitorCopy.getMessages().get(i); 
+            assertEquals(ms.getMessage(), msc.getMessage());
+            assertEquals(ms.getTimestamp(), msc.getTimestamp());
+        }
     }
 
 }

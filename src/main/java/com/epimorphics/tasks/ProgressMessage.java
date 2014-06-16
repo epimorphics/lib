@@ -50,7 +50,7 @@ public class ProgressMessage implements JSONWritable {
     }
     
     public ProgressMessage(JsonObject json) {
-        this(   getStringValue(json, MESSAGE_FIELD, ""),
+        this(   getStringValue(json, RAW_MESSAGE_FIELD, ""),
                 getIntValue(json, LINE_NUMBER_FIELD, NULL_LINE_NUMBER),
                 getLongValue(json, TIMESTAMP_FIELD, System.currentTimeMillis())
                 );
