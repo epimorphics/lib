@@ -96,8 +96,7 @@ public class TestJSONFullWriter {
 	    jw.value(jo2);
 	    jw.finishOutput();
 	    
-	    JsonObject result = JSON.parse( new ByteArrayInputStream( bos.toString().getBytes() ) );
-	    assertEquals(jo2, result);
+	    assertEquals( jo2, JSON.parse( bos.toString() ) );
 	}
 	
 	JsonValue string(String s) {

@@ -118,6 +118,12 @@ public class JSFullWriter {
         value(val);
     }
 
+    
+    public void pair(String key, JSONWritable jw) {
+        key(key);
+        jw.writeTo(this);
+    }
+
     protected void value(JsonValue val) {
         if (val.isBoolean()) {
             value( val.getAsBoolean().value() );
