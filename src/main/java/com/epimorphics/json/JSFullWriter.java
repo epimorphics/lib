@@ -12,9 +12,13 @@ package com.epimorphics.json;
 import java.io.OutputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Map.Entry;
 
 import org.apache.jena.atlas.io.IndentedLineBuffer;
 import org.apache.jena.atlas.io.IndentedWriter;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonValue;
 import org.apache.jena.atlas.json.io.JSWriter;
 import org.apache.jena.atlas.lib.Ref;
 
@@ -108,7 +112,45 @@ public class JSFullWriter {
         key(key) ;
         value(val) ;
     }
+    
+    public void pair(String key, JsonValue val) {
+        key(key);
+        value(val);
+    }
 
+    protected void value(JsonValue val) {
+        if (val.isBoolean()) {
+            value( val.getAsBoolean().value() );
+        } else if (val.isNumber()) {
+            value( val.getAsNumber().value() );
+        } else if (val.isString()) {
+            value( val.getAsString().value() );
+        } else if (val.isObject()) {
+            value( val.getAsObject() );
+        } else if (val.isArray()) {
+            value( val.getAsArray() );
+        } else {
+            // skip nulls
+        }
+    }
+
+    protected void value(JsonObject val) {
+        startObject();
+        for (Entry<String, JsonValue> entry : val.entrySet()) {
+            pair( entry.getKey(), entry.getValue() );
+        }
+        finishObject();
+    }
+    
+    protected void value(JsonArray val) {
+        startArray();
+        for (int i = 0; i < val.size(); i++) {
+            arrayElementProcess();
+            value( val.get(i) );
+        }
+        finishArray();
+    }
+    
     public void startArray()
     {
         startCompound() ;

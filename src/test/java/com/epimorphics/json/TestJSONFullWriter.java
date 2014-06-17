@@ -7,6 +7,7 @@ package com.epimorphics.json;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 
@@ -14,6 +15,7 @@ import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonBoolean;
 import org.apache.jena.atlas.json.JsonNumber;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonString;
 import org.apache.jena.atlas.json.JsonValue;
 import org.junit.Test;
@@ -73,6 +75,29 @@ public class TestJSONFullWriter {
 		jw.finishOutput();
 		
 		assertEquals( array(a_long(17)), JSON.parseAny( bos.toString() ) );
+	}
+	
+	@Test
+	public void testNestedObjects() {
+        JsonObject jo = new JsonObject();
+        jo.put("string", "hello");
+        jo.put("number", 42);
+        jo.put("boolean", false);
+        
+        JsonArray array = new JsonArray();
+        array.add(42);
+        array.add("hello world");
+        
+        JsonObject jo2 = new JsonObject();
+	    jo2.put("object", jo);
+	    jo2.put("array", array);
+	    
+	    jw.startOutput();
+	    jw.value(jo2);
+	    jw.finishOutput();
+	    
+	    JsonObject result = JSON.parse( new ByteArrayInputStream( bos.toString().getBytes() ) );
+	    assertEquals(jo2, result);
 	}
 	
 	JsonValue string(String s) {
