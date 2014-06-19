@@ -265,7 +265,7 @@ public class JsonUtil {
         for (Entry<String,JsonValue> entry : base.entrySet()) {
             result.put( entry.getKey(), entry.getValue() );
         }
-        return mergeInto(base, extend);
+        return mergeInto(result, extend);
     }
     
     /**
