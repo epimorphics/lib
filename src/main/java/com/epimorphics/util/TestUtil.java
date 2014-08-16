@@ -24,9 +24,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import com.epimorphics.rdfutil.RDFUtil;
@@ -58,7 +58,7 @@ public class TestUtil {
         assertEquals(expectedSet, actualSet);
     }
 
-    public static <E> void testArray(List<E> actual, E[] expected) {
+    public static <E> void testArray(Collection<E> actual, E[] expected) {
         Set<Object> expectedSet = new HashSet<Object>();
         for (Object e : expected) expectedSet.add(e);
 
