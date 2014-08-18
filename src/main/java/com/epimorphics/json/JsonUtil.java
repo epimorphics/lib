@@ -162,6 +162,7 @@ public class JsonUtil {
      * A near inverse of asJson except that number types might be changed.
      */
     public static Object fromJson(JsonValue jv) {
+        if (jv == null) return null;
         if (jv.isString()) {
             return jv.getAsString().value();
         } else if (jv.isBoolean()) {
