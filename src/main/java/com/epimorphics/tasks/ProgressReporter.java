@@ -68,6 +68,16 @@ public interface ProgressReporter {
     public void report(String message);
     
     /**
+     * Report an error as a progress message of type "error" and set the status to failed
+     */
+    public void reportError(String message);
+    
+    /**
+     * Report an error as a progress message of type "error" and set the status to failed
+     */
+    public void reportError(String message, int lineNumber);
+    
+    /**
      * Log a progress message with an associated line number, this may be timestamped by the reporter implementation.
      * @param message the message text
      * @param lineNumber the number in some input file corresponding the the message 

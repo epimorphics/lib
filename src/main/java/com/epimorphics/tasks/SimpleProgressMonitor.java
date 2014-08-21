@@ -33,6 +33,9 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     public static final String STATE_FIELD    = "state";
     public static final String SUCEEDED_FIELD = "succeeded";
     public static final String MESSAGES_FIELD = "messages";
+    
+    public static final String TYPE_ERROR = "error";
+    public static final String TYPE_MAIN = "main";
 
     protected String id;
     protected TaskState state = TaskState.Waiting;
@@ -120,6 +123,18 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     @Override
     public void report(String message, int lineNumber, String type) {
         reportNewMessage( new ProgressMessage(message, lineNumber, type) );
+    }
+    
+    @Override
+    public void reportError(String message) {
+        report(message, TYPE_ERROR);
+        setFailed();
+    }
+    
+    @Override
+    public void reportError(String message, int lineNumber) {
+        report(message, lineNumber, TYPE_ERROR);
+        setFailed();
     }
     
     protected void reportStateChange() {
