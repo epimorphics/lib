@@ -28,12 +28,14 @@ public class ProgressMessage implements JSONWritable {
     public static final String RAW_MESSAGE_FIELD     = "raw_message";
     public static final String LINE_NUMBER_FIELD = "lineNumber";
     public static final String TIMESTAMP_FIELD   = "timestamp";
+    public static final String TYPE_FIELD       = "type";
     
     protected static final int NULL_LINE_NUMBER = -1;
     
     String message;
     long timestamp;
     int lineNumber;
+    String type = "";
     
     public ProgressMessage(String message) {
         this(message, NULL_LINE_NUMBER);
@@ -49,10 +51,26 @@ public class ProgressMessage implements JSONWritable {
         this.timestamp = timestamp;
     }
     
+    public ProgressMessage(String message, String style) {
+        this(message, NULL_LINE_NUMBER, style);
+    }
+    
+    public ProgressMessage(String message, int lineNumber, String style) {
+        this(message, lineNumber, System.currentTimeMillis(), style);
+    }
+    
+    public ProgressMessage(String message, int lineNumber, long timestamp, String style) {
+        this.message = message;
+        this.lineNumber = lineNumber;
+        this.timestamp = timestamp;
+        this.type = style;
+    }
+    
     public ProgressMessage(JsonObject json) {
         this(   getStringValue(json, RAW_MESSAGE_FIELD, ""),
                 getIntValue(json, LINE_NUMBER_FIELD, NULL_LINE_NUMBER),
-                getLongValue(json, TIMESTAMP_FIELD, System.currentTimeMillis())
+                getLongValue(json, TIMESTAMP_FIELD, System.currentTimeMillis()),
+                getStringValue(json, TYPE_FIELD, "")
                 );
     }
     
@@ -64,11 +82,19 @@ public class ProgressMessage implements JSONWritable {
     public long getTimestamp() {
         return timestamp;
     }
+    
+    public String getTimelabel() {
+        return  String.format("%tT.%tL", timestamp, timestamp);
+    }
 
     public int getLineNumber() {
         return lineNumber;
     }
 
+    public String getType() {
+        return type;
+    }
+    
     @Override
     public String toString() {
         return String.format("%tT.%tL %s", timestamp, timestamp, message) + (lineNumber == NULL_LINE_NUMBER ? "" : " [" + lineNumber + "]");
@@ -80,6 +106,7 @@ public class ProgressMessage implements JSONWritable {
         out.pair(TIMESTAMP_FIELD, timestamp);
         out.pair(RAW_MESSAGE_FIELD, message);
         out.pair(MESSAGE_FIELD, toString());
+        out.pair(TYPE_FIELD, type);
         if (lineNumber != NULL_LINE_NUMBER) {
             out.pair(LINE_NUMBER_FIELD, lineNumber);
         }

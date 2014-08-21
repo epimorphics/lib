@@ -49,12 +49,28 @@ public interface ProgressReporter {
     
     /**
      * Log a progress message, this may be timestamped by the reporter implementation.
+     * @param message the message text
+     * @param type the nature of the message e.g. "error", application dependent what types are supported 
+     */
+    public void report(String message, String type);
+    
+    /**
+     * Log a progress message with an associated line number, this may be timestamped by the reporter implementation.
+     * @param message the message text
+     * @param type the nature of the message e.g. "error", application dependent what types are supported 
+     * @param lineNumber the number in some input file corresponding the the message 
+     */
+    public void report(String message, int lineNumber, String type);
+    
+    /**
+     * Log a progress message, this may be timestamped by the reporter implementation.
      */
     public void report(String message);
     
     /**
      * Log a progress message with an associated line number, this may be timestamped by the reporter implementation.
-     * 
+     * @param message the message text
+     * @param lineNumber the number in some input file corresponding the the message 
      */
     public void report(String message, int lineNumber);
     

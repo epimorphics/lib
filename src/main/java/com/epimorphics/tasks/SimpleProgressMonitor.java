@@ -111,6 +111,16 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     public synchronized void report(String message, int lineNumber) {
         reportNewMessage( new ProgressMessage(message, lineNumber) );
     }
+
+    @Override
+    public void report(String message, String type) {
+        reportNewMessage( new ProgressMessage(message, type) );
+    }
+
+    @Override
+    public void report(String message, int lineNumber, String type) {
+        reportNewMessage( new ProgressMessage(message, lineNumber, type) );
+    }
     
     protected void reportStateChange() {
     }
