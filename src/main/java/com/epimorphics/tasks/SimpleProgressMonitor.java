@@ -103,12 +103,12 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     }
 
     @Override
-    public synchronized void report(String message) {
+    public void report(String message) {
         reportNewMessage( new ProgressMessage(message) );
     }
 
     @Override
-    public synchronized void report(String message, int lineNumber) {
+    public void report(String message, int lineNumber) {
         reportNewMessage( new ProgressMessage(message, lineNumber) );
     }
 
@@ -125,7 +125,7 @@ public class SimpleProgressMonitor implements ProgressMonitorReporter, JSONWrita
     protected void reportStateChange() {
     }
 
-    protected void reportNewMessage(ProgressMessage message) {
+    protected synchronized void reportNewMessage(ProgressMessage message) {
         messages.add( message );
     }
     
