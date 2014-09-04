@@ -93,35 +93,44 @@ public class JsonUtil {
                 return JsonNumber.value( (Double) obj);
             } else if (obj instanceof BigDecimal) {
                 return JsonNumber.value( (BigDecimal) obj);
+            } else if (obj instanceof BigInteger) {
+                return JsonNumber.value( new BigDecimal( (BigInteger)obj ) );
             } else {
                 return JsonNumber.valueDecimal(obj.toString());
             }
+            
         } else if (obj instanceof Boolean){
             return new JsonBoolean((Boolean)obj);
+            
         } else if (obj instanceof List<?>) {
             JsonArray a = new JsonArray();
             for (Object o : (List<?>)obj) {
                 a.add( asJson(o) );
             }
             return a;
+            
         } else if (obj instanceof Object[]) {
             JsonArray a = new JsonArray();
             for (Object o : (Object[])obj) {
                 a.add( asJson(o) );
             }
             return a;
+            
         } else if (obj instanceof Map<?, ?>) {
             JsonObject r = new JsonObject();
             for (Entry<?,?> entry : ((Map<?,?>)obj).entrySet()) {
                 r.put( entry.getKey().toString(), asJson(entry.getValue()) );
             }
             return r;
+            
         } else if (obj instanceof JsonValue) {
             return (JsonValue) obj;
+            
         } else if (obj == null) {
             return JsonNull.instance;
+            
         } else {
-            throw new EpiException("Could not covert to JSON object: " + obj);
+            throw new EpiException("Could not convert to JSON object: " + obj);
         }
     }
     
