@@ -177,6 +177,43 @@ public class RDFNodeWrapperTest
     }
 
     @Test
+    public void testGetNameFixLocalNameCamelCase() {
+        RDFNodeWrapper bw = new RDFNodeWrapper( modelw, ResourceFactory.createResource( NS + "bathingWater" ) );
+        assertEquals( "bathing water", bw.getName() );
+    }
+
+    @Test
+    public void testGetNameFixLocalNameCamelCaseMany() {
+        RDFNodeWrapper bw = new RDFNodeWrapper( modelw, ResourceFactory.createResource( NS + "bathingWaterSampleLocation" ) );
+        assertEquals( "bathing water sample location", bw.getName() );
+    }
+
+    @Test
+    public void testGetNameFixLocalNameHyphen() {
+        RDFNodeWrapper bw = new RDFNodeWrapper( modelw, ResourceFactory.createResource( NS + "bathing-water" ) );
+        assertEquals( "bathing water", bw.getName() );
+    }
+
+    @Test
+    public void testGetNameFixLocalNameHyphenMany() {
+        RDFNodeWrapper bw = new RDFNodeWrapper( modelw, ResourceFactory.createResource( NS + "bathing-water-sample-location" ) );
+        assertEquals( "bathing water sample location", bw.getName() );
+    }
+
+    @Test
+    public void testGetNameFixLocalNameMixed() {
+        RDFNodeWrapper bw = new RDFNodeWrapper( modelw, ResourceFactory.createResource( NS + "bathingWater-sampleLocation" ) );
+        assertEquals( "bathing water sample location", bw.getName() );
+    }
+
+    @Test
+    public void testGetNameDontFixLabelCamelCase() {
+        RDFNodeWrapper bw = new RDFNodeWrapper( modelw, ResourceFactory.createResource( NS + "bathing-water" ) );
+        modelw.getModel().add( bw.asResource(), RDFS.label, "this is a bathingWater" );
+        assertEquals( "this is a bathingWater", bw.getName() );
+    }
+
+    @Test
     public void testGetLanguage() {
         assertEquals( "", testLit.getLanguage() );
     }
