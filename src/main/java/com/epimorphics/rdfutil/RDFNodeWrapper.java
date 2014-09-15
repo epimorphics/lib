@@ -174,7 +174,8 @@ public class RDFNodeWrapper {
         }
     }
 
-    /** Return a name for the resource, falling back on curies or localnames if no naming propery is found */
+    /** @return A name for the resource. By preference, this will be a label property
+     * of the resource. Otherwise, a curie or localname will be used if no naming property is found. */
     public String getName() {
         if (node.isLiteral()) {
             return getLexicalForm();
@@ -265,6 +266,20 @@ public class RDFNodeWrapper {
         }
     }
 
+    /**
+     * Return the RDF property object identified by the given <code>prop</code>.
+     * Cases:
+     * <ul>
+     *  <li><code>prop</code> is the URI of the property in full</li>
+     *  <li><code>prop</code> is the URI of the property in prefix:name form</li>
+     *  <li><code>prop</code> is an RDF {@link Property} object</li>
+     *  <li><code>prop</code> is an RDF {@link Resource} object</li>
+     *  <li><code>prop</code> is an {@link RDFNodeWrapper}, in which case the property
+     *  denoted is that denoted by the wrapped RDF node</li>
+     * </ul>
+     * @param prop An object identifying a property
+     * @return The RDF {@link Property} object, or null
+     */
     public Property toProperty(Object prop) {
         if (prop instanceof String) {
             return modelw.model.createProperty( modelw.expandPrefix((String)prop) );
