@@ -214,6 +214,12 @@ public class RDFNodeWrapperTest
     }
 
     @Test
+    public void testGetNameLabelUnchanged() {
+        modelw.getModel().add( testRes.asResource(), RDFS.label, "Groot" );
+        assertEquals( "Groot", testRes.getName() );
+    }
+
+    @Test
     public void testGetLanguage() {
         assertEquals( "", testLit.getLanguage() );
     }

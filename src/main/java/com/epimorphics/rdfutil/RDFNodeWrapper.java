@@ -205,10 +205,7 @@ public class RDFNodeWrapper {
      * @return The input string, with camel-case boundaries, hyphens and underscores replaced by spaces.
      */
     protected String tokeniseWords( String name ) {
-        if (name.matches( ".*\\p{Space}.*" )) {
-            return name;
-        }
-        else {
+        if (name.matches( "[^\\p{Space}]*(((\\p{Lower}|\\p{Digit})(\\p{Upper}))|[-_])[^\\p{Space}]*" )) {
             String deCamelCased = name.replaceAll( "(\\p{Lower}|\\p{Digit})(\\p{Upper})", "$1-$2" );
             List<String> correctlyCased = new ArrayList<String>();
 
@@ -219,6 +216,9 @@ public class RDFNodeWrapper {
             }
 
             return StrUtils.strjoin( " ", correctlyCased );
+        }
+        else {
+            return name;
         }
     }
 
