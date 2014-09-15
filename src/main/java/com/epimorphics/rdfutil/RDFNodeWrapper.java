@@ -24,6 +24,8 @@ package com.epimorphics.rdfutil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.atlas.lib.StrUtils;
+
 import com.epimorphics.util.EpiException;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSetRewindable;
@@ -185,7 +187,7 @@ public class RDFNodeWrapper {
             try {
                 String label = RDFUtil.getLabel(r, modelw.getLanguage());
                 if (label != null && !label.isEmpty()) {
-                    return label;
+                    return tokeniseWords( label );
                 } else {
                     return r.isAnon() ? "[]" : r.getURI();
                 }
@@ -195,6 +197,30 @@ public class RDFNodeWrapper {
         }
     }
 
+    /**
+     * Tokenise the input string into words based on camelCase boundaries and hyphen characters.
+     * If the input string is already tokenised into words (determined by whether it contains a
+     * space character or not), return the string unchanged.
+     * @param name The input name to tokenise
+     * @return The input string, with camel-case boundaries, hyphens and underscores replaced by spaces.
+     */
+    protected String tokeniseWords( String name ) {
+        if (name.matches( ".*\\p{Space}.*" )) {
+            return name;
+        }
+        else {
+            String deCamelCased = name.replaceAll( "(\\p{Lower}|\\p{Digit})(\\p{Upper})", "$1-$2" );
+            List<String> correctlyCased = new ArrayList<String>();
+
+            for (String word: deCamelCased.split( "[-_]" )) {
+                if (word.length() > 0) {
+                    correctlyCased.add( word.substring( 0, 1 ).toLowerCase() + word.substring( 1) );
+                }
+            }
+
+            return StrUtils.strjoin( " ", correctlyCased );
+        }
+    }
 
     /** If this is a literal return its language, otherwise return null */
     public String getLanguage() {
