@@ -262,9 +262,16 @@ public class JsonUtil {
     }
 
     /**
-     * Singleton empty object
+     * Singleton empty object. Risk of mutation!
      */
-    public static JsonObject EMPTY_OBJECT = new JsonObject();
+//    public static JsonObject EMPTY_OBJECT = new JsonObject();
+    
+    /**
+     * Return a new singleton empty object
+     */
+    public static JsonObject emptyObject() {
+        return new JsonObject();
+    }
     
     /**
      * Create a new json object by cloning one object and then asserting all values from the second.
