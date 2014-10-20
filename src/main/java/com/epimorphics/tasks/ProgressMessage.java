@@ -13,6 +13,9 @@ import static com.epimorphics.json.JsonUtil.getIntValue;
 import static com.epimorphics.json.JsonUtil.getLongValue;
 import static com.epimorphics.json.JsonUtil.getStringValue;
 
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jena.atlas.json.JsonObject;
 
 import com.epimorphics.json.JSFullWriter;
@@ -97,9 +100,15 @@ public class ProgressMessage implements JSONWritable {
     
     @Override
     public String toString() {
-        return String.format("%tT.%tL %s", timestamp, timestamp, message) + (lineNumber == NULL_LINE_NUMBER ? "" : " [" + lineNumber + "]");
+        return String.format("%tT.%tL %s", timestamp, timestamp, cleanMessage()) + (lineNumber == NULL_LINE_NUMBER ? "" : " [" + lineNumber + "]");
     }
-
+    
+    protected String cleanMessage() {
+        String clean = StringEscapeUtils.escapeHtml(message);
+        return CHEF_JUNK.matcher(clean).replaceAll("");
+    }
+    static final Pattern CHEF_JUNK = Pattern.compile("\u001B\\[\\d*m");
+    
     @Override
     public void writeTo(JSFullWriter out) {
         out.startObject();
