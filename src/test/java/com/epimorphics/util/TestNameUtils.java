@@ -21,11 +21,14 @@
 
 package com.epimorphics.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 import static com.epimorphics.util.NameUtils.*;
 
-public class TestNameUtils extends TestCase {
+public class TestNameUtils {
 
+    @Test
 	public void testEncode() {
 		assertEquals("urn%2ffoo", encodeSafeName("urn/foo") );
 		doTestEncode("urn/foo");
@@ -36,5 +39,17 @@ public class TestNameUtils extends TestCase {
 	private void doTestEncode(String test) {
 		String enc = encodeSafeName(test);
 		assertEquals(test, decodeSafeName(enc));
+	}
+	
+	@Test
+	public void testDurationFormat() {
+        doTestDurationFormat(123, "123 ms");
+        doTestDurationFormat(1123, "1.123 s");
+        doTestDurationFormat(61123, "1m 1s");
+        doTestDurationFormat(3662123, "1h 1m 2s");
+	}
+	
+	private void doTestDurationFormat(long duration, String expected) {
+	    assertEquals(expected, formatDuration(duration));
 	}
 }

@@ -31,6 +31,9 @@ import org.apache.jena.iri.IRIFactory;
 /**
  * Utilities for checking and converting names to forms safely
  * usable in different circumstances.
+ * <p>
+ * Has accreeted a ragbag of other string bashing utilities.
+ * </p>
  *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
@@ -258,5 +261,23 @@ public class NameUtils {
             return filen.substring(0, split);
         }
 
+    }
+    
+    /**
+     * Format a duration (measured in ms) as human readable
+     */
+    public static String formatDuration(long duration) {
+        if (duration < 1000) {
+            return String.format("%d ms", duration);
+        } else if (duration < 60000) {
+            return String.format("%5.3f s", duration/1000.0);
+        } else {
+            long secs = duration/1000;
+            if (secs > 2600) {
+                return String.format("%dh %dm %ds", secs/3600, (secs%3600)/60, (secs%60));
+            } else {
+                return String.format("%dm %ds", (secs%3600)/60, (secs%60));
+            }
+        }        
     }
 }
