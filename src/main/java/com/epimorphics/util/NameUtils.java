@@ -48,11 +48,15 @@ public class NameUtils {
     }
     
     /**
-     * Convert an arbirary name, such as a CSV column name to something usable as a
+     * Convert an arbitrary name, such as a CSV column name to something usable as a
      * variable name in an expression as well as a path segment, normalizing the case.
      */
     public static String safeVarName(String name) {
-        return name.replaceAll("[^@$a-zA-Z0-9_]+", "_").toLowerCase();
+        String safe = name.replaceAll("[^@$a-zA-Z0-9_]+", "_").toLowerCase();
+        if (Character.isDigit( safe.charAt(0) )) {
+            safe = "_" + safe;
+        }
+        return safe;
     }
 
     /**
