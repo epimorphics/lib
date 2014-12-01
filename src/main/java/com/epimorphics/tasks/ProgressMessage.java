@@ -106,7 +106,7 @@ public class ProgressMessage implements JSONWritable {
     protected String cleanMessage() {
         String clean = StringEscapeUtils.escapeHtml(message);
         clean = CHEF_JUNK.matcher(clean).replaceAll("");
-        clean = clean.replaceAll("\n", "<br>");
+        clean = clean.replaceAll("\n", "<br>\n");
         return clean;
     }
     static final Pattern CHEF_JUNK = Pattern.compile("\u001B\\[\\d*m");
