@@ -15,6 +15,12 @@ package com.epimorphics.geo;
 
 import com.epimorphics.util.EpiException;
 
+/**
+ * An Ordance Survey Grid Reference. Create create from full six-digit easting/northing values or can
+ * parse from a grid reference. Supports conversion to/from lat/lon in web standard WGS84 as well as in OSGB36.
+ *  
+ * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
+ */
 public class OsGridRef {
     long easting;
     long northing;
