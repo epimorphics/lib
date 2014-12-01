@@ -34,3 +34,7 @@ Support for incremental reporting of messgaes from async processes, e.g. used fo
 
    * [marshalling](https://github.com/epimorphics/lib/tree/master/src/main/java/com/epimorphics/webapi/marshalling)
 Set of JAX-RS bindings for read/write of RDF when using Jersey.  This does mean that lib depends on Jersey which isn't nice. Could factor this out into the libraries that more naturally need Jersey anyway. 
+
+
+   * [geo](https://github.com/epimorphics/lib/tree/master/src/main/java/com/epimorphics/geo)
+Support for geolocations including parsing/formating OS Grid References and converting to from lat/log (in WGS84 as well as OSGB36) 
