@@ -49,4 +49,16 @@ public class TestOsGridRef {
         assertEquals(-1.80523897165, point.getLon(), 0.0001);
         assertEquals(ref.format(10), OsGridRef.fromLatLon(point).format(10));
     }
+    
+    @Test
+    public void testGeoPointWrapper() {
+        GeoPoint point = GeoPoint.fromEastingNorthing(429157, 623009);
+        assertEquals(55.5, point.getLat(), 0.0001); 
+        assertEquals(-1.54, point.getLon(), 0.0001);
+        assertEquals("NU 29157 23009", point.getGridRefString());
+
+        point = GeoPoint.fromLatLon(55.6822199717, -1.80523897165);
+        assertEquals(412345, point.getEasting(), 2);
+        assertEquals(643210, point.getNorthing(), 2);
+    }
 }
