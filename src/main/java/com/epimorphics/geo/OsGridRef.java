@@ -227,7 +227,7 @@ public class OsGridRef {
     /**
      * Return as a lat lon point in WGS84
      */
-    public LatLonE toLotLon() {
+    public LatLonE toLatLon() {
         return toLotLonOSGB36().convertDatum(LatLonDatum.WGS84);
     }
 

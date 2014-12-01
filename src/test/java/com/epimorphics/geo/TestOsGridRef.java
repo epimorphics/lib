@@ -37,14 +37,14 @@ public class TestOsGridRef {
     @Test
     public void testLatLonConvert() {
         OsGridRef ref = new OsGridRef(429157, 623009);
-        LatLonE point = ref.toLotLon();
+        LatLonE point = ref.toLatLon();
         assertEquals(55.5, point.getLat(), 0.0001); 
         assertEquals(-1.54, point.getLon(), 0.0001);
         assertTrue(point.datum == LatLonDatum.WGS84);
         assertEquals(ref.format(10), OsGridRef.fromLatLon(point).format(10));
         
         ref = new OsGridRef(412345, 643210);
-        point = ref.toLotLon();
+        point = ref.toLatLon();
         assertEquals(55.6822199717, point.getLat(), 0.0001); 
         assertEquals(-1.80523897165, point.getLon(), 0.0001);
         assertEquals(ref.format(10), OsGridRef.fromLatLon(point).format(10));

@@ -66,7 +66,7 @@ public class GeoPoint {
      */
     public LatLonE getLatLon()  {
         if (latlon == null) {
-            latlon = gridref.toLotLon();
+            latlon = gridref.toLatLon();
         }
         return latlon;
     }
