@@ -7,7 +7,7 @@
  *
  *****************************************************************/
 
-package com.epimorphics.util;
+package com.epimorphics.xmlutil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,23 +31,60 @@ import com.epimorphics.util.EpiException;
 /**
  * Utility to create a DOM structure for an XML source and provide
  * XPath-based access and iteration over it.
+ * <p>
+ * Default is to not be namespace aware. If set to be namespace aware then
+ * the namespace of the root node of the document will be used as the default namespace.
+ * Additional namespace mappings can be registered with addnamespace.
  *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
 public class DomWrapper {
 
+    boolean namespaceAware = false;
+    SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
     Document doc;
     XPath xpath;
 
-    public DomWrapper(String file)  {
+    public DomWrapper()  {
+    }
+    
+    /**
+     * Set to true to make the parse and accesses namespace aware.
+     */
+    public void setNamespaceAware(boolean aware) {
+        namespaceAware = aware;
+    }
+    
+    /**
+     * Register a namespace prefix
+     */
+    public void addNamespace(String prefix, String uri) {
+        nsContext.addNamespace(prefix, uri);
+    }
+    
+    /**
+     * Load and parse a source document.
+     */
+    public void load(String file) {
         try {
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-            domFactory.setNamespaceAware(true);
+            domFactory.setNamespaceAware( namespaceAware );
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             doc = builder.parse(file);
-
+            
             XPathFactory factory = XPathFactory.newInstance();
             xpath = factory.newXPath();
+            if (namespaceAware) {
+                xpath.setNamespaceContext(nsContext);
+                Node root = doc.getFirstChild();
+                if (root != null) {
+                    String defaultNS = root.getNamespaceURI();
+                    if (defaultNS != null) {
+                        nsContext.addNamespace("", defaultNS);
+                    }
+                }
+            }
+            
         } catch (Exception e) {
             throw new EpiException(e);
         }
