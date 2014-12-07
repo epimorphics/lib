@@ -60,5 +60,8 @@ public class TestOsGridRef {
         point = GeoPoint.fromLatLon(55.6822199717, -1.80523897165);
         assertEquals(412345, point.getEasting(), 2);
         assertEquals(643210, point.getNorthing(), 2);
+        
+        assertTrue( point.getLatLiteral().asLiteral().getLexicalForm().startsWith("55.682") );
+        assertTrue( point.getLonLiteral().asLiteral().getLexicalForm().startsWith("-1.805") );
     }
 }

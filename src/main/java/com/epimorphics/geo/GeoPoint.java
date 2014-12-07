@@ -9,6 +9,10 @@
 
 package com.epimorphics.geo;
 
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+
 /**
  * A geographic point identified by an OS grid reference lat lon.
  * 
@@ -89,10 +93,24 @@ public class GeoPoint {
     }
     
     /**
-     * Return WGS84 latitude
+     * Return WGS84 longitude
      */
     public double getLon() {
         return getLatLon().getLon();
+    }
+    
+    /**
+     * Return WGS84 latitude as RDF literal 
+     */
+    public RDFNode getLatLiteral() {
+        return ResourceFactory.createTypedLiteral( String.format("%f", getLat()), XSDDatatype.XSDdecimal);
+    }
+    
+    /**
+     * Return WGS84 longitude as RDF literal 
+     */
+    public RDFNode getLonLiteral() {
+        return ResourceFactory.createTypedLiteral( String.format("%f", getLon()), XSDDatatype.XSDdecimal);
     }
     
     /**
