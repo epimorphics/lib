@@ -9,6 +9,10 @@
 
 package com.epimorphics.json;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonBoolean;
 import org.apache.jena.atlas.json.JsonNull;
@@ -25,6 +30,7 @@ import org.apache.jena.atlas.json.JsonNumber;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonString;
 import org.apache.jena.atlas.json.JsonValue;
+import org.yaml.snakeyaml.Yaml;
 
 import com.epimorphics.util.EpiException;
 
@@ -296,6 +302,57 @@ public class JsonUtil {
         }
         return base;
     }
-  
+    
+    /**
+     * Parse a JSON or YAML file to an array of json objects, supports multi-document yaml files
+     */
+    public static JsonArray readArray(String filename, InputStream is) {
+        if (filename.endsWith(".yaml") || filename.endsWith(".yml")) {
+            JsonArray result = new JsonArray();
+            for (Object doc : new Yaml().loadAll(is)) {
+                result.add( asJson(doc) );
+            }
+            return result;
+        } else {
+            return JSON.parseAny(is).getAsArray();
+        }
+    }
+    
+    /**
+     * Parse a JSON or YAML file to an array of json objects, supports multi-document yaml files
+     * @throws FileNotFoundException 
+     */
+    public static JsonArray readArray(String filename) throws FileNotFoundException {
+        InputStream is = new FileInputStream(filename);
+        try {
+            return readArray(filename, is);
+        } finally {
+            try {  is.close();  } catch (IOException e) { }
+        }
+    }
+    
+    /**
+     * Parse a JSON or YAML file to a json object.
+     */
+    public static JsonObject readObject(String filename, InputStream is) {
+        if (filename.endsWith(".yaml") || filename.endsWith(".yml")) {
+            return asJson( new Yaml().load(is) ).getAsObject() ;
+        } else {
+            return JSON.parseAny(is).getAsObject();
+        }
+    }
+    
+    /**
+     * Parse a JSON or YAML file to a json object.
+     * @throws FileNotFoundException 
+     */
+    public static JsonObject readObject(String filename) throws FileNotFoundException {
+        InputStream is = new FileInputStream(filename);
+        try {
+            return readObject(filename, is);
+        } finally {
+            try {  is.close();  } catch (IOException e) { }
+        }
+    }
 }
 
