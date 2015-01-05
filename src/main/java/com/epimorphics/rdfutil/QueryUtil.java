@@ -330,11 +330,15 @@ public class QueryUtil {
         }
         else if (val instanceof String) {
             String str = (String) val;
-            if (str.matches( "^(file:|http:).*" )) {
+            if (str.matches( "^(file:|http:|https:).*" )) {
                 s = String.format( "<%s>", str );
             }
             else if (str.matches( "^[A-Za-z0-9]*:.*" )) {
                 // looks like a qname
+                s = str;
+            }
+            else if (str.matches("^[0-9]+(\\.[0-9]*)?")) {
+                // Looks like a number
                 s = str;
             }
         }
