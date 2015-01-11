@@ -15,29 +15,39 @@ import static org.junit.Assert.*;
 
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 public class TypeUtilTest {
 
     @Test
     public void testExplicitConversion() {
-        checkExplicit("1234", "int", true);
-        checkExplicit("foo", "int", false);
-        checkExplicit("foo", null, true);
-        checkExplicit("2014-01-10", "date", true);
-        checkExplicit("2014-01-10T15:12:34", "date", false);
-        checkExplicit("2014-01-10T15:12:34", "dateTime", true);
+        checkExplicit("1234", "int", "int", true);
+        checkExplicit("foo", "int", "int", false);
+        checkExplicit("foo", null, null, true);
+        checkExplicit("foo", "", null, true);
+        checkExplicit("1234", "", null, true);
+        checkExplicit("2014-01-10", "date", "date", true);
+        checkExplicit("2014-01-10T15:12:34", "date", "date", false);
+        checkExplicit("2014-01-10T15:12:34", "dateTime", "dateTime", true);
+        
+        checkExplicit("1234", null, "int", true);
+        checkExplicit("foo", null, null, true);
+        checkExplicit("2014-01-10", null, "date", true);
+        checkExplicit("2014-01-10T15:12:34", null, "date", false);
+        checkExplicit("2014-01-10T15:12:34", null, "dateTime", true);
     }
     
-    private void checkExplicit(String lex, String type, boolean ok) {
-        String typeURI = type == null ? null : XSD.getURI() + type;
+    private void checkExplicit(String lex, String type, String expected, boolean ok) {
+        String typeURI = type == null ? null : type.isEmpty() ? "" :  XSD.getURI() + type;
+        String eTypeURI = expected == null ? null : XSD.getURI() + expected;
         try {
             RDFNode node = TypeUtil.asTypedValue(lex, typeURI);
             assertTrue(node.isLiteral());
             Literal l = node.asLiteral();
             assertEquals(lex, l.getLexicalForm());
             if (type != null) {
-                assertEquals(typeURI, l.getDatatypeURI());
+                assertEquals(eTypeURI, l.getDatatypeURI());
             }
         } catch (TypeUtil.IllegalFormatException e) {
             assertFalse(ok);
@@ -65,5 +75,17 @@ public class TypeUtilTest {
         } else {
             assertEquals(typeURI, l.getDatatypeURI());
         }
+    }
+    
+    private static final String URI = "http://example.com/test";
+    @Test
+    public void testResourceCase() {
+        RDFNode node = TypeUtil.asTypedValue(URI);
+        assertTrue(node.isResource());
+        assertEquals(URI, node.asResource().getURI());
+        
+        node = TypeUtil.asTypedValue(URI, RDFS.Resource.getURI());
+        assertTrue(node.isResource());
+        assertEquals(URI, node.asResource().getURI());
     }
 }

@@ -16,6 +16,7 @@ import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Utilities for converting strings to typed RDF nodes
@@ -36,6 +37,12 @@ public class TypeUtil {
     protected static final Pattern GYEARMONTH_PATTERN = Pattern.compile( String.format("%s(%s)?", GYM_BLOCK, TZONE_BLOCK) );
     protected static final Pattern ANYDATE_PATTERN = Pattern.compile( String.format("-?(%sT%s|%s|%s|%s)(%s)?", DATE_BLOCK, TIME_BLOCK, DATE_BLOCK, TIME_BLOCK, GYM_BLOCK, TZONE_BLOCK) );
 
+    protected static final Pattern URL_PATTERN = Pattern.compile("(http://|https://|ftp:|file:|mailto:).*");
+    
+    /**
+     * Return a typed RDFNode based on a guess of the type from the syntax. 
+     * Handles numbers, date/dateTimes and URIs. Defaults to a plain literal.
+     */
     public static RDFNode asTypedValue(String value){
         if (INTEGER_PATTERN.matcher(value).matches()) {
             return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDinteger);
@@ -49,14 +56,25 @@ public class TypeUtil {
             return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDdate);
         } else if (GYEARMONTH_PATTERN.matcher(value).matches()) {
             return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDgYearMonth);
+        } else if (URL_PATTERN.matcher(value).matches()) {
+            return ResourceFactory.createResource(value);
         } else {
             return ResourceFactory.createPlainLiteral(value);
         }
     }
     
+    /**
+     * Return a typed RDFNode using the given type URI.
+     * If the type URI is null then the typed is guessed, if it is empty string then
+     * a plain literal is used, if it is rdfs:Resource then a returns a resource.
+     */
     public static RDFNode asTypedValue(String value, String typeURI) {
         if (typeURI == null) {
+            return asTypedValue(value);
+        } else if (typeURI.isEmpty()) {
             return ResourceFactory.createPlainLiteral(value);
+        } else if (typeURI.equals(RDFS.Resource.getURI())) {
+            return ResourceFactory.createResource(value);
         } else {
             RDFDatatype dt = TypeMapper.getInstance().getSafeTypeByName(typeURI);
             if (dt.isValid(value)) {
