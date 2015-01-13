@@ -16,6 +16,7 @@ import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -38,6 +39,8 @@ public class TypeUtil {
     protected static final Pattern ANYDATE_PATTERN = Pattern.compile( String.format("-?(%sT%s|%s|%s|%s)(%s)?", DATE_BLOCK, TIME_BLOCK, DATE_BLOCK, TIME_BLOCK, GYM_BLOCK, TZONE_BLOCK) );
 
     protected static final Pattern URL_PATTERN = Pattern.compile("(http://|https://|ftp:|file:|mailto:).*");
+    
+    public static final String PLAIN_LITERAL_URI = RDF.getURI() + "PlainLiteral";    
     
     /**
      * Return a typed RDFNode based on a guess of the type from the syntax. 
@@ -71,7 +74,7 @@ public class TypeUtil {
     public static RDFNode asTypedValue(String value, String typeURI) {
         if (typeURI == null) {
             return asTypedValue(value);
-        } else if (typeURI.isEmpty()) {
+        } else if (typeURI.isEmpty() || PLAIN_LITERAL_URI.equals(typeURI)) {
             return ResourceFactory.createPlainLiteral(value);
         } else if (typeURI.equals(RDFS.Resource.getURI())) {
             return ResourceFactory.createResource(value);

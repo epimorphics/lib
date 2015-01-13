@@ -39,7 +39,7 @@ public class TypeUtilTest {
     }
     
     private void checkExplicit(String lex, String type, String expected, boolean ok) {
-        String typeURI = type == null ? null : type.isEmpty() ? "" :  XSD.getURI() + type;
+        String typeURI = type == null ? null : type.isEmpty() ? TypeUtil.PLAIN_LITERAL_URI :  XSD.getURI() + type;
         String eTypeURI = expected == null ? null : XSD.getURI() + expected;
         try {
             RDFNode node = TypeUtil.asTypedValue(lex, typeURI);
