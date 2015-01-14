@@ -9,11 +9,13 @@
 
 package com.epimorphics.xmlutil;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -67,26 +69,44 @@ public class DomWrapper {
      */
     public void load(String file) {
         try {
-            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-            domFactory.setNamespaceAware( namespaceAware );
-            DocumentBuilder builder = domFactory.newDocumentBuilder();
-            doc = builder.parse(file);
-            
-            XPathFactory factory = XPathFactory.newInstance();
-            xpath = factory.newXPath();
-            if (namespaceAware) {
-                xpath.setNamespaceContext(nsContext);
-                Node root = doc.getFirstChild();
-                if (root != null) {
-                    String defaultNS = root.getNamespaceURI();
-                    if (defaultNS != null) {
-                        nsContext.addNamespace("", defaultNS);
-                    }
-                }
-            }
-            
+            doc = getBuilder().parse(file);
+            initXpath();
         } catch (Exception e) {
             throw new EpiException(e);
+        }
+    }
+    
+    /**
+     * Load and parse a source document.
+     */
+    public void load(InputStream in) {
+        try {
+            doc = getBuilder().parse(in);
+            initXpath();
+        } catch (Exception e) {
+            throw new EpiException(e);
+        }
+    }
+    
+    private DocumentBuilder getBuilder() throws ParserConfigurationException {
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+        domFactory.setNamespaceAware( namespaceAware );
+        DocumentBuilder builder = domFactory.newDocumentBuilder();
+        return builder;
+    }
+    
+    private void initXpath() {
+        XPathFactory factory = XPathFactory.newInstance();
+        xpath = factory.newXPath();
+        if (namespaceAware) {
+            xpath.setNamespaceContext(nsContext);
+            Node root = doc.getFirstChild();
+            if (root != null) {
+                String defaultNS = root.getNamespaceURI();
+                if (defaultNS != null) {
+                    nsContext.addNamespace("", defaultNS);
+                }
+            }
         }
     }
 
