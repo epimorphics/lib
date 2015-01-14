@@ -165,14 +165,26 @@ public class DomWrapper {
     }
 
     /**
-     * Helper function. Retrieve an attribute value from a node.
+     * Helper function. Retrieve a required attribute value from a node.
+     */
+    public static String getRequiredAttribute(Node n, String name) {
+        Node a = n.getAttributes().getNamedItem(name);
+        if (a != null) {
+            return a.getNodeValue();
+        } else {
+            throw new EpiException("Could not find attribute " + name + " on " + n);
+        }
+    }
+
+    /**
+     * Helper function. Retrieve an attribute value from a node or return null if not present
      */
     public static String getAttribute(Node n, String name) {
         Node a = n.getAttributes().getNamedItem(name);
         if (a != null) {
             return a.getNodeValue();
         } else {
-            throw new EpiException("Could not find attribute " + name + " on " + n);
+            return null;
         }
     }
 
