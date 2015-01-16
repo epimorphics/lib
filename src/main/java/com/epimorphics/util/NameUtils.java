@@ -284,4 +284,18 @@ public class NameUtils {
             }
         }        
     }
+    
+    /**
+     * Escape a sensitive character by a "\" if it is not already so escaped.
+     */
+    public static String escape(String value, char esc) {
+        String clean = value;
+        int loc = -2;
+        while ( (loc = clean.indexOf(esc, loc+2)) != -1) {
+            if (loc > 0 && clean.charAt(loc-1) == '\\') continue;
+            clean = clean.substring(0, loc) + "\\" + clean.substring(loc);
+        }
+        return clean;
+    }
+
 }

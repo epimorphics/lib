@@ -32,6 +32,7 @@ import com.epimorphics.webapi.PageInfo;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import static com.epimorphics.util.NameUtils.escape;
 
 /**
  * Random small utilities to help with SPARQl queries.
@@ -42,7 +43,7 @@ public class QueryUtil {
 
     /**
      * Inject strings into a SPARQL query replacing each ${i} with the corresponding element from the arg list.
-     * Purely syntactic.
+     * Purely syntactic. Up to the caller to protected any sensitive characters.
      */
     public static String substituteInQuery(String query, Object... strings) {
         String result = query;
@@ -310,13 +311,13 @@ public class QueryUtil {
             if (n.isLiteral()) {
                 Literal l = n.asLiteral();
                 if (l.getDatatypeURI() != null) {
-                    s = String.format( "\"%s\"^^<%s>", l.getLexicalForm(), l.getDatatypeURI() );
+                    s = String.format( "'%s'^^<%s>", escape(l.getLexicalForm(), '\''), l.getDatatypeURI() );
                 }
                 else if (l.getLanguage() != null && l.getLanguage() != "") {
-                    s = String.format( "\"%s\"@%s", l.getLexicalForm(), l.getLanguage() );
+                    s = String.format( "'%s'@%s", escape(l.getLexicalForm(), '\''), l.getLanguage() );
                 }
                 else {
-                    s = String.format( "\"%s\"", l.getLexicalForm() );
+                    s = String.format( "'%s'", escape(l.getLexicalForm(), '\'') );
                 }
             }
             else {
@@ -332,7 +333,7 @@ public class QueryUtil {
         else if (val instanceof String) {
             String str = (String) val;
             if (str.matches( "^(file:|http:|https:).*" )) {
-                s = String.format( "<%s>", str );
+                s = String.format( "<%s>", str.replace(">", "%3E") );
             }
             else if (str.matches( "^[A-Za-z0-9]*:.*" )) {
                 // looks like a qname
@@ -345,7 +346,7 @@ public class QueryUtil {
         }
 
         if (s == null) {
-            s = String.format( "\"%s\"", val.toString() );
+            s = String.format( "'%s'", escape(val.toString(), '\'') );
         }
 
         return s;

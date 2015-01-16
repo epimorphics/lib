@@ -160,20 +160,20 @@ public class QueryUtilTest
     public void testAsSparqlValue() {
         assertEquals( "<http://example.test/test#r>", QueryUtil.asSPARQLValue( TestUtil.resourceFixture( null, "r" ) ));
         assertTrue( QueryUtil.asSPARQLValue( ResourceFactory.createResource() ).startsWith( "_:" ) );
-        assertEquals( "\"123\"^^<http://www.w3.org/2001/XMLSchema#int>", QueryUtil.asSPARQLValue( ResourceFactory.createTypedLiteral( 123 ) ));
+        assertEquals( "'123'^^<http://www.w3.org/2001/XMLSchema#int>", QueryUtil.asSPARQLValue( ResourceFactory.createTypedLiteral( 123 ) ));
 
         Model m = ModelFactory.createDefaultModel();
-        assertEquals( "\"foo\"@klingon", QueryUtil.asSPARQLValue( m.createLiteral( "foo", "klingon" ) ));
-        assertEquals( "\"foo\"", QueryUtil.asSPARQLValue( m.createLiteral( "foo" ) ));
+        assertEquals( "'foo'@klingon", QueryUtil.asSPARQLValue( m.createLiteral( "foo", "klingon" ) ));
+        assertEquals( "'foo'", QueryUtil.asSPARQLValue( m.createLiteral( "foo" ) ));
 
-        assertEquals( "\"foo\"", QueryUtil.asSPARQLValue( "foo" ));
+        assertEquals( "'foo'", QueryUtil.asSPARQLValue( "foo" ));
         assertEquals( "foo:bar", QueryUtil.asSPARQLValue( "foo:bar" ));
-        assertEquals( "\"1234\"", QueryUtil.asSPARQLValue( 1234 ));
+        assertEquals( "'1234'", QueryUtil.asSPARQLValue( 1234 ));
     }
 
     @Test
     public void testSubstituteVars() {
-        assertEquals( "select * where {?p :q \"bar\"}", QueryUtil.substituteVars( "select * where {?p :q ?foo}", QueryUtil.createBindings( "foo", "bar" ) ) );
+        assertEquals( "select * where {?p :q 'bar'}", QueryUtil.substituteVars( "select * where {?p :q ?foo}", QueryUtil.createBindings( "foo", "bar" ) ) );
 
         Resource r = TestUtil.resourceFixture( null, "r" );
         assertEquals( "select * where {?p :q <http://example.test/test#r>}", QueryUtil.substituteVars( "select * where {?p :q ?foo}", QueryUtil.createBindings( "foo", r ) ) );
