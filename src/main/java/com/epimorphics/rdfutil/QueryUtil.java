@@ -48,7 +48,8 @@ public class QueryUtil {
         String result = query;
         for (int i = 0; i < strings.length; i++) {
             Object subs = strings[i];
-            result = result.replaceAll("\\$\\{" + i + "\\}", subs == null ? "null" : subs.toString());
+//            result = result.replaceAll("\\$\\{" + i + "\\}", subs == null ? "null" : subs.toString());
+            result = result.replace("${" + i + "}", subs == null ? "null" : subs.toString());
         }
         return result;
     }
