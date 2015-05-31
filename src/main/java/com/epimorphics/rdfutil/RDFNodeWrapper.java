@@ -22,11 +22,13 @@
 package com.epimorphics.rdfutil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.jena.atlas.lib.StrUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.epimorphics.util.EpiException;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSetRewindable;
 import com.hp.hpl.jena.rdf.model.Literal;
@@ -51,6 +53,7 @@ import com.hp.hpl.jena.sparql.util.FmtUtils;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
 public class RDFNodeWrapper {
+    static final Logger log = LoggerFactory.getLogger( RDFNodeWrapper.class );
 
     protected RDFNode node;
     protected ModelWrapper modelw;
@@ -461,16 +464,22 @@ public class RDFNodeWrapper {
      */
     public List<RDFNodeWrapper> connectedNodes(String path) {
         if (!node.isURIResource()) {
-            throw new EpiException("Attempted to find things connected to a non (URI) resource");
+            log.error("Attempted to find things connected to a non (URI) resource");
+            return Collections.emptyList();
         }
         String query = "SELECT DISTINCT ?i WHERE { <" + node.asResource().getURI() +"> " + path + " ?i .} ORDER BY ?i";
-        ResultSetRewindable rs = modelw.querySelect(query);
-        List<RDFNodeWrapper> results = new ArrayList<RDFNodeWrapper>();
-        while (rs.hasNext()) {
-            QuerySolution soln = rs.next();
-            results.add( new RDFNodeWrapper(modelw, soln.get("i")) );
+        try {
+            ResultSetRewindable rs = modelw.querySelect(query);
+            List<RDFNodeWrapper> results = new ArrayList<RDFNodeWrapper>();
+            while (rs.hasNext()) {
+                QuerySolution soln = rs.next();
+                results.add( new RDFNodeWrapper(modelw, soln.get("i")) );
+            }
+            return results;
+        } catch (Exception e) {
+            log.error("Illegal query: " + query);
+            return Collections.emptyList();
         }
-        return results;
     }
 
     /**
