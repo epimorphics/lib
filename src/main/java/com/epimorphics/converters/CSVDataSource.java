@@ -33,6 +33,7 @@ import java.util.Map;
 
 import com.epimorphics.util.EpiException;
 
+import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVReader;
 
 /**
@@ -67,7 +68,8 @@ public class CSVDataSource implements RawDataSource {
     
     public CSVDataSource(Reader reader, boolean preload) throws IOException {
         this.preload = preload;
-        csvIn = new CSVReader(reader);
+//        csvIn = new CSVReader(reader);
+        csvIn = new CSVReader(reader, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, '\0');
         String[] headerRow = csvIn.readNext();
         if (headerRow == null) {
             csvIn = null;
