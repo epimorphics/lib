@@ -5,9 +5,8 @@
 */
 package com.epimorphics.json;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 

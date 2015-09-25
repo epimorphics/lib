@@ -13,10 +13,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 public class TypeUtilTest {
 
@@ -25,8 +25,8 @@ public class TypeUtilTest {
         checkExplicit("1234", "int", "int", true);
         checkExplicit("foo", "int", "int", false);
         checkExplicit("foo", null, null, true);
-        checkExplicit("foo", "", null, true);
-        checkExplicit("1234", "", null, true);
+        checkExplicit("foo", "", "string", true);
+        checkExplicit("1234", "", "string", true);
         checkExplicit("2014-01-10", "date", "date", true);
         checkExplicit("2014-01-10T15:12:34", "date", "date", false);
         checkExplicit("2014-01-10T15:12:34", "dateTime", "dateTime", true);
@@ -56,7 +56,7 @@ public class TypeUtilTest {
     
     @Test
     public void testImplicitConverstion() {
-        checkImplicit("foo", null);
+        checkImplicit("foo", "string");
         checkImplicit("1234", "integer");
         checkImplicit("1234.56", "decimal");
         checkImplicit("2015-01-10", "date");

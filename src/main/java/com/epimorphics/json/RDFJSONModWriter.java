@@ -37,21 +37,21 @@ import java.util.Set;
 import org.apache.jena.atlas.json.io.JSWriter;
 import org.apache.jena.riot.RiotException;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.impl.XSDBaseNumericType;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.GraphUtil;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.graph.impl.LiteralLabel;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.util.graph.GNode;
-import com.hp.hpl.jena.sparql.util.graph.GraphList;
-import com.hp.hpl.jena.util.OneToManyMap;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.XSDBaseNumericType;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.GraphUtil;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.impl.LiteralLabel;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.util.graph.GNode;
+import org.apache.jena.sparql.util.graph.GraphList;
+import org.apache.jena.util.OneToManyMap;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * <p>Support for serializing sets of RDF resources and whole models in JSON.</p>

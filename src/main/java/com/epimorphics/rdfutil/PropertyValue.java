@@ -24,7 +24,7 @@ package com.epimorphics.rdfutil;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 /**
  * Property/value pair for wrapped RDF resources.

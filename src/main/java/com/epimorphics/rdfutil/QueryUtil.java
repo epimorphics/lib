@@ -29,9 +29,11 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.util.EpiException;
 import com.epimorphics.util.PrefixUtils;
 import com.epimorphics.webapi.PageInfo;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.XSD;
+
 import static com.epimorphics.util.NameUtils.escape;
 
 /**
@@ -310,11 +312,11 @@ public class QueryUtil {
             RDFNode n = (RDFNode) val;
             if (n.isLiteral()) {
                 Literal l = n.asLiteral();
-                if (l.getDatatypeURI() != null) {
-                    s = String.format( "'%s'^^<%s>", escape(l.getLexicalForm(), '\''), l.getDatatypeURI() );
-                }
-                else if (l.getLanguage() != null && l.getLanguage() != "") {
+                if (l.getLanguage() != null && l.getLanguage() != "") {
                     s = String.format( "'%s'@%s", escape(l.getLexicalForm(), '\''), l.getLanguage() );
+                } 
+                else if (l.getDatatypeURI() != null && ! l.getDatatypeURI().equals(XSD.xstring.getURI())) {
+                    s = String.format( "'%s'^^<%s>", escape(l.getLexicalForm(), '\''), l.getDatatypeURI() );
                 }
                 else {
                     s = String.format( "'%s'", escape(l.getLexicalForm(), '\'') );

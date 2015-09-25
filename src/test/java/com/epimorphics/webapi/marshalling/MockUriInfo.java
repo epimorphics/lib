@@ -30,7 +30,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.core.header.InBoundHeaders;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 
 /**
  * Partial mock up of UriInfo, just sufficient to create PageInfo instances
@@ -42,7 +42,7 @@ public class MockUriInfo implements UriInfo {
 
     protected String path;
     protected String absolutePath;
-    protected MultivaluedMap<String, String> queryParameters = new InBoundHeaders();
+    protected MultivaluedMap<String, String> queryParameters = new MultivaluedStringMap();
 
     public MockUriInfo(String path) {
         this.path = path;
@@ -152,6 +152,18 @@ public class MockUriInfo implements UriInfo {
 
     @Override
     public List<Object> getMatchedResources() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public URI resolve(URI uri) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public URI relativize(URI uri) {
         // TODO Auto-generated method stub
         return null;
     }

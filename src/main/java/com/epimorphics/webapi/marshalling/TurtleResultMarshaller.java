@@ -33,7 +33,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import com.epimorphics.webapi.ResultPage;
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.util.FileUtils;
 
 
 @Provider

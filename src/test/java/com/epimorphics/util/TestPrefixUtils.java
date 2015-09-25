@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.epimorphics.vocabs.Cube;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 public class TestPrefixUtils {
 

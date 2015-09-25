@@ -28,18 +28,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.epimorphics.util.PrefixUtils;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ReadWrite;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFactory;
-import com.hp.hpl.jena.query.ResultSetRewindable;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.tdb.TDB;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ReadWrite;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFactory;
+import org.apache.jena.query.ResultSetRewindable;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.tdb.TDB;
 
 /**
  * Wrap up a dataset to support script-friendly access. See ModelWrapper and

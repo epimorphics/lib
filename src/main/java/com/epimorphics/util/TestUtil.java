@@ -20,8 +20,8 @@
 
 package com.epimorphics.util;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.StringReader;
 import java.util.Collection;
@@ -29,16 +29,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.StmtIterator;
+
 import com.epimorphics.rdfutil.RDFUtil;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.util.iterator.Map1;
 
 /**
  * Support for testing iterator/list values against and expected set
@@ -191,9 +190,7 @@ public class TestUtil {
     }
 
     private static Set<RDFNode> getValues(Resource expected, Property p) {
-        return expected.listProperties(p).mapWith(new Map1<Statement,RDFNode>() {
-            @Override public RDFNode map1(Statement s) { return s.getObject(); }
-        }).toSet();
+        return expected.listProperties(p).mapWith( s -> s.getObject() ).toSet();
     }
 
     private static Model buildTestModel(Resource r, Property...props) {

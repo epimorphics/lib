@@ -28,9 +28,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.epimorphics.vocabs.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.impl.PrefixMappingImpl;
-import com.hp.hpl.jena.vocabulary.DCTerms;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.impl.PrefixMappingImpl;
+import org.apache.jena.vocabulary.DCTerms;
 
 /**
  * Collection of random utilities for working with prefixes.

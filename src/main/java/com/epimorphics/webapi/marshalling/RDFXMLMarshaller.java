@@ -32,8 +32,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.util.FileUtils;
 
 @Provider
 @Produces("application/rdf+xml")
