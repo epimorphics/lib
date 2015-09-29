@@ -11,6 +11,19 @@ import org.junit.Test;
 
 public class TestAtomicTerms {
 	
+	@Test public void testVariable() {
+		TermVar tv1 = new TermVar("item");
+		
+		assertEquals("item", tv1.getSpelling());
+		assertEquals("item", tv1.getName());
+		assertEquals("?item", tv1.toString());
+		
+		assertEquals(tv1, new TermVar("item"));
+		assertDiffer(tv1, new TermVar("meti"));
+		
+		assertEquals("item".hashCode(), tv1.hashCode());
+	}
+	
 	@Test public void testTermURI() {
 		String spellingA = "http://example.com/term-uri-a";
 		String spellingB = "http://example.com/term-uri-b";
