@@ -9,43 +9,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class TestAtomicTerms {
-	
-	@Test public void testVariable() {
-		TermVar tv1 = new TermVar("item");
-		
-		assertEquals("item", tv1.getSpelling());
-		assertEquals("item", tv1.getName());
-		assertEquals("?item", tv1.toString());
-		
-		assertEquals(tv1, new TermVar("item"));
-		assertDiffer(tv1, new TermVar("meti"));
-		
-		assertEquals("item".hashCode(), tv1.hashCode());
-	}
-	
-	@Test public void testTermURI() {
-		String spellingA = "http://example.com/term-uri-a";
-		String spellingB = "http://example.com/term-uri-b";
-		TermURI tuA = new TermURI(spellingA);
-		TermURI tuB = new TermURI(spellingB);
-		
-		assertTrue(tuA instanceof TermAtomic);
-		
-		assertEquals(tuA, new TermURI(spellingA));
-		assertFalse(tuA.equals(tuB));
-		
-		assertEquals(tuA.hashCode(), new TermURI(spellingA).hashCode());
-		assertFalse(tuA.hashCode() == tuB.hashCode());
-		
-		assertEquals(spellingA, tuA.getURI());
-		assertEquals(spellingB, tuB.getURI());
+import static com.epimorphics.test.utils.Asserts.*;
 
-		assertEquals(spellingA, tuA.getSpelling());
-		assertEquals(spellingB, tuB.getSpelling());
-		
-		assertEquals("<"+spellingA+">", tuA.toString());
-	}
+public class TestTermLiteral {
 	
 	@Test public void testTermLiteral() {
 		String lexical = "abc123";
@@ -68,11 +34,4 @@ public class TestAtomicTerms {
 		
 		assertEquals(given.hashCode(), given.spelling.hashCode() + given.getLanguage().hashCode() + given.getLiteralType().hashCode());
 	}
-
-	private void assertDiffer(Object expected, Object actual) {
-		if (expected.equals(actual)) {
-			fail("actual should be other than '" + expected + "'");
-		}
-	}
-
 }
