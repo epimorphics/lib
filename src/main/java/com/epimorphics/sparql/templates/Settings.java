@@ -1,0 +1,29 @@
+/*                                                                                                                            
+    LICENCE summary to go here.                                                                                        
+    
+    (c) Copyright 2014 Epimorphics Limited
+*/
+package com.epimorphics.sparql.templates;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.epimorphics.sparql.terms.TermSparql;
+
+public class Settings {
+
+	final Map<String, TermSparql> params = new HashMap<String, TermSparql>();
+	
+	public Settings() {
+		
+	}
+	
+	public void putParam(String name, TermSparql ts) {
+		params.put(name, ts);
+	}
+
+	public TermSparql getParam(String name) {
+		return params.get(name);
+	}
+
+}
