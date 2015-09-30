@@ -5,20 +5,17 @@
 */
 package com.epimorphics.sparql.terms;
 
-public class TermLiteral implements TermAtomic {
+import com.epimorphics.sparql.templates.Settings;
 
-	final String spelling;
+public class TermLiteral extends Spelling implements TermAtomic, TermSparql {
+
 	final String lang;
 	final TermURI type;
 	
 	public TermLiteral(String spelling, TermURI type, String lang) {
-		this.spelling = spelling;
+		super(spelling);
 		this.type = type;
 		this.lang = lang;
-	}
-
-	public String getSpelling() {
-		return spelling;
 	}
 
 	public String getLexicalForm() {
@@ -56,6 +53,16 @@ public class TermLiteral implements TermAtomic {
 			&& type.equals(other.type)
 			&& lang.equals(other.lang)
 			;
+	}
+
+	@Override public void toSparql(Settings s, StringBuilder sb) {
+		sb.append("'").append(spelling).append("'");
+		if (lang.length()> 0) sb.append("@").append(lang);
+		if (type != null) {
+			sb.append("^^");
+			type.toSparql(s, sb);
+		}
+		
 	}
 
 }

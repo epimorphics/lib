@@ -5,15 +5,17 @@
 */
 package com.epimorphics.sparql.templates;
 
-public class Parameter implements Element {
+import com.epimorphics.sparql.terms.Spelling;
+import com.epimorphics.sparql.terms.TermSparql;
+
+public class Parameter extends Spelling implements Element {
 
 	public static final String USUAL = null;
 	
-	final String spelling;
 	final String type;
 	
-	Parameter(String spelling, String type) {
-		this.spelling = spelling;
+	public Parameter(String spelling, String type) {
+		super(spelling);
 		this.type = type;
 	}
 	
@@ -27,5 +29,10 @@ public class Parameter implements Element {
 
 	private boolean same(Parameter other) {
 		return spelling.equals(other.spelling);
+	}
+
+	@Override public void subst(StringBuilder sb, Settings s) {
+		TermSparql ts = s.getParam(spelling);
+		ts.toSparql(s, sb);
 	}
 }

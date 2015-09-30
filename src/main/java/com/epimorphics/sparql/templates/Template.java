@@ -46,5 +46,11 @@ public class Template {
 	public List<Element> getElements() {
 		return elements;
 	}
+
+	public String substWith(Settings s) {
+		StringBuilder sb = new StringBuilder();
+		for (Element e: elements) e.subst(sb, s);
+		return sb.toString();
+	}
 	
 }

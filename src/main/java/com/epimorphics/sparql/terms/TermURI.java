@@ -5,34 +5,39 @@
 */
 package com.epimorphics.sparql.terms;
 
-public class TermURI implements TermAtomic {
+import com.epimorphics.sparql.templates.Settings;
 
-	final String URI;
+public class TermURI extends Spelling implements TermAtomic, TermSparql {
 	
 	public TermURI(String URI) {
-		this.URI = URI;
+		super(URI);
 	}
 
 	public String getURI() {
-		return URI;
-	}
-
-	public String getSpelling() {
-		return URI;
+		return spelling;
 	}
 
 	public String toString() {
-		return "<" + URI + ">";
+		return "<" + spelling + ">";
 	}
 	
 	public boolean equals(Object other) {
 		return 
 			other instanceof TermURI 
-			&& this.URI.equals(((TermURI) other).URI)
+			&& this.spelling.equals(((TermURI) other).spelling)
 			;
 	}
 	
 	public int hashCode() {
-		return URI.hashCode();
+		return spelling.hashCode();
+	}
+
+	@Override public void toSparql(Settings s, StringBuilder sb) {
+		String using = s.usePrefix(spelling);
+		if (using.equals(spelling)) {
+			sb.append("<").append(spelling).append(">");			
+		} else {
+			sb.append(using);
+		}
 	}
 }

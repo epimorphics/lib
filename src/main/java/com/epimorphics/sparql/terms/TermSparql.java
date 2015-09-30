@@ -5,8 +5,10 @@
 */
 package com.epimorphics.sparql.terms;
 
+import com.epimorphics.sparql.templates.Settings;
+
 public interface TermSparql {
 	
-	public void toSparql(StringBuilder sb);
+	public void toSparql(Settings s, StringBuilder sb);
 
 }

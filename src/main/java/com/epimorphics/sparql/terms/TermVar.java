@@ -5,16 +5,12 @@
 */
 package com.epimorphics.sparql.terms;
 
-public class TermVar implements TermAtomic {
+import com.epimorphics.sparql.templates.Settings;
 
-	final String spelling;
+public class TermVar extends Spelling implements TermAtomic, TermSparql {
 	
 	public TermVar(String spelling) {
-		this.spelling = spelling;
-	}
-
-	public String getSpelling() {
-		return spelling;
+		super(spelling);
 	}
 
 	public String getName() {
@@ -35,5 +31,9 @@ public class TermVar implements TermAtomic {
 	
 	public int hashCode() {
 		return spelling.hashCode();
+	}
+
+	@Override public void toSparql(Settings s, StringBuilder sb) {
+		sb.append("?").append(spelling);
 	}
 }
