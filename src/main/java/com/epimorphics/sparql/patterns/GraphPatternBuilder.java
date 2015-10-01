@@ -5,17 +5,19 @@
 */
 package com.epimorphics.sparql.patterns;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GraphPatternBasic implements GraphPattern {
-	final List<PatternBase> elements;
+public class GraphPatternBuilder {
+
+	final List<PatternBase> elements = new ArrayList<PatternBase>();
 	
-	public GraphPatternBasic(List<PatternBase> elements) {
-		this.elements = elements;
+	public void addElement(PatternBase t) {
+		elements.add(t);
 	}
-	
-	public List<PatternBase> elements() {
-		return elements;
+
+	public GraphPatternBasic build() {
+		return new GraphPatternBasic(new ArrayList<PatternBase>(elements));
 	}
 	
 }

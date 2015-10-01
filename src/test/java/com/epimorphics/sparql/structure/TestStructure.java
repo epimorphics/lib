@@ -5,44 +5,38 @@
 */
 package com.epimorphics.sparql.structure;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
+
+import com.epimorphics.sparql.templates.Settings;
 
 public class TestStructure {
 
 	
-	public static class Expr {
+	public static class Query {
+
+		public String toSparql(Settings s) {
+			StringBuilder sb = new StringBuilder();
+			toSparql(s, sb);
+			return sb.toString();
+		}
+
+		private void toSparql(Settings s, StringBuilder sb) {
+			sb.append("select * where {}");
+		}
+
+		
 		
 	}
 	
-	public static class Query {
-
-		public void setDistinct(boolean b) {
-			
-		}
-
-		public void setLimitAndOffset(int limit, int offset) {
-			
-		}
-
-//		public void addPattern(GraphPattern gp) {
-//			
-//		}
-
-		public void addOrder(Expr expr, boolean upwards) {
-			
-		}
-		
+	@Test public void testEmptyQuery() {
+		Query q = new Query();
+		String result = q.toSparql(new Settings());
+		assertEquals("select * where {}", result);
 	}
 	
 	@Test public void testQuery() {
-		Query s = new Query();
-		
-		s.setDistinct(true);
-		s.setLimitAndOffset(1, 2);
-		s.addOrder(new Expr(), true);
-//		s.setConstruct();
-//		s.setProject();
-//		s.addPattern(new GraphPattern());
 	}
 	
 	

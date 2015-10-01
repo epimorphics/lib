@@ -5,9 +5,10 @@
 */
 package com.epimorphics.sparql.terms;
 
+import com.epimorphics.sparql.patterns.PatternBase;
 import com.epimorphics.sparql.templates.Settings;
 
-public class TermTriple implements TermSparql {
+public class TermTriple implements TermSparql, PatternBase {
 
 	final TermSparql S, P, O;
 	

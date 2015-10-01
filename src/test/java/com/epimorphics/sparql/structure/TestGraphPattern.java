@@ -7,11 +7,10 @@ package com.epimorphics.sparql.structure;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
+import com.epimorphics.sparql.patterns.GraphPatternBasic;
+import com.epimorphics.sparql.patterns.GraphPatternBuilder;
 import com.epimorphics.sparql.terms.TermLiteral;
 import com.epimorphics.sparql.terms.TermSparql;
 import com.epimorphics.sparql.terms.TermTriple;
@@ -20,34 +19,6 @@ import com.epimorphics.test.utils.MakeCollection;
 
 public class TestGraphPattern {
 
-	static class GraphPatternBuilder {
-
-		final List<TermSparql> elements = new ArrayList<TermSparql>();
-		
-		public void addTriple(TermTriple t) {
-			elements.add(t);
-		}
-
-		public GraphPattern build() {
-			return new GraphPattern(new ArrayList<TermSparql>(elements));
-		}
-		
-	}
-	
-	static class GraphPattern {
-
-		final List<TermSparql> elements;
-		
-		public GraphPattern(List<TermSparql> elements) {
-			this.elements = elements;
-		}
-		
-		public List<TermSparql> elements() {
-			return elements;
-		}
-		
-	}
-	
 	static final TermURI type = new TermURI("http://example.com/type/T");
 	
 	static final TermSparql S = new TermURI("http://example.com/S");
@@ -61,9 +32,9 @@ public class TestGraphPattern {
 		TermTriple SPA = new TermTriple(S, P, A);
 		TermTriple SQB = new TermTriple(S, Q, B);
 
-		b.addTriple(SPA);
-		b.addTriple(SQB);
-		GraphPattern gp = b.build();
+		b.addElement(SPA);
+		b.addElement(SQB);
+		GraphPatternBasic gp = b.build();
 		
 		assertEquals(MakeCollection.list(SPA, SQB), gp.elements());
 	}

@@ -5,17 +5,6 @@
 */
 package com.epimorphics.sparql.patterns;
 
-import java.util.List;
+public interface PatternBase {
 
-public class GraphPatternBasic implements GraphPattern {
-	final List<PatternBase> elements;
-	
-	public GraphPatternBasic(List<PatternBase> elements) {
-		this.elements = elements;
-	}
-	
-	public List<PatternBase> elements() {
-		return elements;
-	}
-	
 }
