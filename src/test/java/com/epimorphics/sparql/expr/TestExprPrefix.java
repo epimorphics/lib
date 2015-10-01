@@ -10,11 +10,11 @@ import org.junit.Test;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
-import com.epimorphics.sparql.terms.TermLiteral;
-import com.epimorphics.sparql.terms.TermURI;
 
 import static com.epimorphics.test.utils.MakeCollection.*;
 import static org.junit.Assert.*;
+
+import static com.epimorphics.sparql.expr.LeafExprs.*;
 
 public class TestExprPrefix {
 
@@ -28,10 +28,5 @@ public class TestExprPrefix {
 		StringBuilder sb = new StringBuilder();
 		ep.toSparql(new Settings(), sb);
 		assertEquals("sameTerm(3, 4)", sb.toString());
-	}
-	
-	private TermExpr integer(int i) {
-		TermURI type = TermLiteral.xsdInteger;
-		return new TermLiteral("" + i, type, "");
 	}
 }

@@ -12,8 +12,8 @@ import org.junit.Test;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
-import com.epimorphics.sparql.terms.TermLiteral;
-import com.epimorphics.sparql.terms.TermURI;
+
+import static com.epimorphics.sparql.expr.LeafExprs.*;
 
 public class TestExprInfix {
 
@@ -29,10 +29,5 @@ public class TestExprInfix {
 		StringBuilder sb = new StringBuilder();
 		t.toSparql(new Settings(), sb);
 		assertEquals("1 = 2", sb.toString());
-	}
-
-	private TermExpr integer(int i) {
-		TermURI type = TermLiteral.xsdInteger;
-		return new TermLiteral("" + i, type, "");
 	}
 }
