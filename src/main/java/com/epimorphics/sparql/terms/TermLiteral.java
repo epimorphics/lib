@@ -5,9 +5,11 @@
 */
 package com.epimorphics.sparql.terms;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+
 import com.epimorphics.sparql.templates.Settings;
 
-public class TermLiteral extends Spelling implements TermAtomic, TermSparql {
+public class TermLiteral extends Spelling implements TermAtomic, TermSparql, TermExpr {
 
 	final String lang;
 	final TermURI type;
@@ -55,14 +57,34 @@ public class TermLiteral extends Spelling implements TermAtomic, TermSparql {
 			;
 	}
 
+	public static final TermURI xsdBoolean = new TermURI(XSDDatatype.XSDboolean.getURI());
+	public static final TermURI xsdString = new TermURI(XSDDatatype.XSDstring.getURI());
+	public static final TermURI xsdInteger = new TermURI(XSDDatatype.XSDinteger.getURI());
+	public static final TermURI xsdDecimal = new TermURI(XSDDatatype.XSDdecimal.getURI());
+	public static final TermURI xsdFloat = new TermURI(XSDDatatype.XSDfloat.getURI());
+	public static final TermURI xsdDouble = new TermURI(XSDDatatype.XSDdouble.getURI());
+	
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		sb.append("'").append(spelling).append("'");
-		if (lang.length()> 0) sb.append("@").append(lang);
-		if (type != null) {
+		
+		if (type == null) {
+			sb.append("'").append(spelling).append("'");
+			if (lang.length()> 0) sb.append("@").append(lang);
+		} else if (type.equals(xsdBoolean)) {
+			sb.append(spelling.equals("true") || spelling.equals("1") ? "true" : "false");
+		} else if (type.equals(xsdInteger)) {
+			sb.append(spelling);
+		} else if (type.equals(xsdString)) {
+			sb.append("'").append(spelling).append("'");
+		} else if (type.equals(xsdDecimal)) {
+			sb.append(spelling);
+		} else if (type.equals(xsdFloat)) {
+			sb.append(spelling);
+		} else if (type.equals(xsdDouble)) {
+			sb.append(spelling);
+		} else {
+			sb.append("'").append(spelling).append("'");
 			sb.append("^^");
 			type.toSparql(s, sb);
-		}
-		
+		}	
 	}
-
 }

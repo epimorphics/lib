@@ -10,15 +10,6 @@ import org.junit.Test;
 public class TestStructure {
 
 	
-	public static class GraphPattern {
-		
-		// union
-		// optional
-		// graph pattern
-		// filter(s)
-		
-	}
-	
 	public static class Expr {
 		
 	}
@@ -33,9 +24,9 @@ public class TestStructure {
 			
 		}
 
-		public void addPattern(GraphPattern gp) {
-			
-		}
+//		public void addPattern(GraphPattern gp) {
+//			
+//		}
 
 		public void addOrder(Expr expr, boolean upwards) {
 			
@@ -43,7 +34,7 @@ public class TestStructure {
 		
 	}
 	
-	@Test public void testStructure() {
+	@Test public void testQuery() {
 		Query s = new Query();
 		
 		s.setDistinct(true);
@@ -51,7 +42,7 @@ public class TestStructure {
 		s.addOrder(new Expr(), true);
 //		s.setConstruct();
 //		s.setProject();
-		s.addPattern(new GraphPattern());
+//		s.addPattern(new GraphPattern());
 	}
 	
 	
