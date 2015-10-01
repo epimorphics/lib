@@ -9,32 +9,23 @@ import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
 
-public class ExprInfix implements TermExpr {
-
-	final TermExpr L, R;
-	final Op op;
+public class ExprInfix extends ExprBase implements TermExpr {
 	
 	public ExprInfix(TermExpr L, Op op, TermExpr R) {
-		this.L = L;
-		this.op = op;
-		this.R = R;
+		super(op, L, R);
 	}
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		L.toSparql(s, sb);
+		getL().toSparql(s, sb);
 		sb.append(" ").append(op.getName()).append(" ");
-		R.toSparql(s, sb);
+		getR().toSparql(s, sb);
 	}
 
 	public TermExpr getL() {
-		return L;
-	}
-
-	public Op getOp() {
-		return op;
+		return operands.get(0);
 	}
 
 	public TermExpr getR() {
-		return null;
+		return operands.get(1);
 	}
 }
