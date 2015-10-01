@@ -3,38 +3,42 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.sparql.terms;
+package com.epimorphics.sparql.expr;
+
+import java.util.Arrays;
+import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
 
-public class ExprInfix implements TermExpr {
+public class ExprPrefix implements TermExpr {
 
-	final TermExpr L, R;
 	final Op op;
+	final List<TermExpr> operands;
 	
-	public ExprInfix(TermExpr L, Op op, TermExpr R) {
-		this.L = L;
+	public ExprPrefix(Op op, TermExpr... args) {
 		this.op = op;
-		this.R = R;
+		this.operands = Arrays.asList(args);
 	}
-
+	
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		L.toSparql(s, sb);
-		sb.append(" ").append(op.getName()).append(" ");
-		R.toSparql(s, sb);
+		sb.append(op.getName());
+		sb.append("(");
+		String gap = "";
+		for (TermExpr x: operands) {
+			sb.append(gap);
+			gap = ", ";
+			x.toSparql(s, sb);
+		}
+		sb.append(")");
 	}
-
-	public TermExpr getL() {
-		return L;
-	}
-
+	
 	public Op getOp() {
 		return op;
 	}
-
-	public TermExpr getR() {
-		return null;
+	public List<TermExpr> getOperands() {
+		return operands;
 	}
+	
 }

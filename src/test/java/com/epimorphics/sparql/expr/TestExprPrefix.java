@@ -5,8 +5,6 @@
 */
 package com.epimorphics.sparql.expr;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import com.epimorphics.sparql.templates.Settings;
@@ -15,22 +13,23 @@ import com.epimorphics.sparql.terms.TermExpr;
 import com.epimorphics.sparql.terms.TermLiteral;
 import com.epimorphics.sparql.terms.TermURI;
 
-public class TestExprInfix {
+import static com.epimorphics.test.utils.MakeCollection.*;
+import static org.junit.Assert.*;
 
-	@Test public void testConstructExprInfix() {
-		Op op = new Op("=");
-		TermExpr L = integer(1), R = integer(2);
-		ExprInfix t = new ExprInfix(L, op, R);
-		
-		assertSame(L, t.getL());
-		assertSame(op, t.getOp());
-		assertSame(R, t.getR());
+public class TestExprPrefix {
+
+	@Test public void testExprPrefix() {
+		Op op = new Op("sameTerm");
+		TermExpr A = integer(3), B = integer(4);
+		ExprPrefix ep = new ExprPrefix(op, A, B);
+		assertSame(op, ep.getOp());
+		assertEquals(list(A, B), ep.getOperands());
 		
 		StringBuilder sb = new StringBuilder();
-		t.toSparql(new Settings(), sb);
-		assertEquals("1 = 2", sb.toString());
+		ep.toSparql(new Settings(), sb);
+		assertEquals("sameTerm(3, 4)", sb.toString());
 	}
-
+	
 	private TermExpr integer(int i) {
 		TermURI type = TermLiteral.xsdInteger;
 		return new TermLiteral("" + i, type, "");
