@@ -22,11 +22,13 @@ public class GraphPatternBasic implements GraphPattern {
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
 		String gap = "";
+		sb.append("{");
 		for (PatternBase p: elements) {
 			sb.append(gap);
 			gap = " ";
 			p.toSparql(s, sb);
 		}
+		sb.append("}");
 	}
 	
 	

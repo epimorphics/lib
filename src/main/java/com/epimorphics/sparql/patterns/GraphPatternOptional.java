@@ -9,9 +9,16 @@ import com.epimorphics.sparql.templates.Settings;
 
 public class GraphPatternOptional implements GraphPattern {
 
+	final GraphPattern operand;
+	
+	public GraphPatternOptional(GraphPattern operand) {
+		this.operand = operand;
+	}
+
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		// TODO Auto-generated method stub
-		
+		sb.append("OPTIONAL {");
+		operand.toSparql(s, sb);
+		sb.append("}");
 	}
 
 }
