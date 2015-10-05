@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
 
 import static com.epimorphics.sparql.expr.LeafExprs.*;

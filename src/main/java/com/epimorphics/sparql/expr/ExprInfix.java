@@ -6,7 +6,6 @@
 package com.epimorphics.sparql.expr;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
 
 public class ExprInfix extends ExprBase implements TermExpr {

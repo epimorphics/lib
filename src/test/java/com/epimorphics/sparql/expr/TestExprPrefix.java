@@ -8,7 +8,6 @@ package com.epimorphics.sparql.expr;
 import org.junit.Test;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
 
 import static com.epimorphics.test.utils.MakeCollection.*;

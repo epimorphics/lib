@@ -8,7 +8,6 @@ package com.epimorphics.sparql.expr;
 import java.util.Arrays;
 import java.util.List;
 
-import com.epimorphics.sparql.terms.Op;
 import com.epimorphics.sparql.terms.TermExpr;
 
 public abstract class ExprBase implements TermExpr {
