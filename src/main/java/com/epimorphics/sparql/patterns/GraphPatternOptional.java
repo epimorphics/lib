@@ -21,4 +21,8 @@ public class GraphPatternOptional implements GraphPattern {
 		sb.append("}");
 	}
 
+	public GraphPattern getPattern() {
+		return operand;
+	}
+
 }

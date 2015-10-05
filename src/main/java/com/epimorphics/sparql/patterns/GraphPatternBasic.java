@@ -10,13 +10,14 @@ import java.util.List;
 import com.epimorphics.sparql.templates.Settings;
 
 public class GraphPatternBasic implements GraphPattern {
+	
 	final List<PatternBase> elements;
 	
 	public GraphPatternBasic(List<PatternBase> elements) {
 		this.elements = elements;
 	}
 	
-	public List<PatternBase> elements() {
+	public List<PatternBase> getElements() {
 		return elements;
 	}
 

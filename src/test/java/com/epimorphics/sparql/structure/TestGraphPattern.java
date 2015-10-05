@@ -47,7 +47,7 @@ public class TestGraphPattern {
 		b.addElement(SQB);
 		GraphPatternBasic gp = b.build();
 		
-		assertEquals(MakeCollection.list(SPA, SQB), gp.elements());
+		assertEquals(MakeCollection.list(SPA, SQB), gp.getElements());
 	}
 	
 	@Test public void testBasicTriplePatternToSparql() {
@@ -76,6 +76,8 @@ public class TestGraphPattern {
 		GraphPattern operand = new GraphPatternBasic(elements);
 		GraphPatternOptional g = new GraphPatternOptional(operand);
 		
+		assertEquals(operand, g.getPattern());
+		
 		String basicResult = renderToSparql(operand);
 		String optionalResult = renderToSparql(g);
 		
@@ -88,6 +90,8 @@ public class TestGraphPattern {
 		GraphPattern y = basics(new TermTriple(A, Q, B));
 		
 		GraphPatternUnion u = new GraphPatternUnion(x, y);
+		
+		assertEquals(MakeCollection.list(x, y), u.getPatterns());
 		
 		String xRendering = renderToSparql(x);
 		String yRendering = renderToSparql(y);
