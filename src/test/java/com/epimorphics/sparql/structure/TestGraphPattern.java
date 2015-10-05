@@ -16,6 +16,7 @@ import com.epimorphics.sparql.expr.LeafExprs;
 import com.epimorphics.sparql.patterns.GraphPattern;
 import com.epimorphics.sparql.patterns.GraphPatternBasic;
 import com.epimorphics.sparql.patterns.GraphPatternBuilder;
+import com.epimorphics.sparql.patterns.GraphPatternNamed;
 import com.epimorphics.sparql.patterns.GraphPatternOptional;
 import com.epimorphics.sparql.patterns.GraphPatternUnion;
 import com.epimorphics.sparql.patterns.PatternBase;
@@ -95,6 +96,19 @@ public class TestGraphPattern {
 		String unionResult = renderToSparql(u);
 		
 		assertEquals(expected, unionResult);
+	}
+	
+	@Test public void testNamedGraphToSparql() {
+		
+		TermURI graph = new TermURI("http://example.com/graph");
+		GraphPattern pattern = basics(new TermTriple(A, P, A));
+		GraphPatternNamed n = new GraphPatternNamed(graph, pattern);
+		assertSame(graph, n.getGraphName());
+		assertSame(pattern, n.getPattern());
+		
+		String expected = "GRAPH " + renderToSparql(graph) + " " + renderToSparql(pattern);
+		String obtained = renderToSparql(n);
+		assertEquals(expected, obtained);
 	}
 
 	private GraphPattern basics(PatternBase... ps) {
