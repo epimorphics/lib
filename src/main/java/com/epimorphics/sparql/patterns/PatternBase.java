@@ -5,6 +5,8 @@
 */
 package com.epimorphics.sparql.patterns;
 
-public interface PatternBase {
+import com.epimorphics.sparql.terms.TermSparql;
+
+public interface PatternBase extends TermSparql {
 
 }

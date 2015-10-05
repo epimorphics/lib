@@ -7,10 +7,17 @@ package com.epimorphics.sparql.structure;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
+import com.epimorphics.sparql.expr.LeafExprs;
 import com.epimorphics.sparql.patterns.GraphPatternBasic;
 import com.epimorphics.sparql.patterns.GraphPatternBuilder;
+import com.epimorphics.sparql.patterns.PatternBase;
+import com.epimorphics.sparql.templates.Settings;
+import com.epimorphics.sparql.terms.TermFilter;
 import com.epimorphics.sparql.terms.TermLiteral;
 import com.epimorphics.sparql.terms.TermSparql;
 import com.epimorphics.sparql.terms.TermTriple;
@@ -24,7 +31,7 @@ public class TestGraphPattern {
 	static final TermSparql S = new TermURI("http://example.com/S");
 	static final TermSparql P = new TermURI("http://example.com/P");
 	static final TermSparql Q = new TermURI("http://example.com/Q");
-	static final TermSparql A = new TermLiteral("17", type, "");
+	static final TermSparql A = LeafExprs.integer(17);
 	static final TermSparql B = new TermLiteral("chat", type, "");
 	
 	@Test public void testBasicTriplesPattern() {
@@ -37,5 +44,28 @@ public class TestGraphPattern {
 		GraphPatternBasic gp = b.build();
 		
 		assertEquals(MakeCollection.list(SPA, SQB), gp.elements());
+	}
+	
+	@Test public void testBasicTriplePatternToSparql() {
+		TermTriple SPA = new TermTriple(S, P, A);
+		TermFilter f = new TermFilter(new TermLiteral("17", TermLiteral.xsdInteger, ""));
+		List<PatternBase> elements = new ArrayList<PatternBase>();
+		elements.add(f);
+		elements.add(SPA);
+		GraphPatternBasic b = new GraphPatternBasic(elements);
+		
+		String renderF = render(f), renderT = render(SPA);
+		String expected = renderF + " " + renderT;
+		StringBuilder sb = new StringBuilder();
+		b.toSparql(new Settings(), sb);
+
+		String result = sb.toString();
+		assertEquals(expected, result);
+	}
+
+	private String render(TermSparql ts) {
+		StringBuilder sb = new StringBuilder();
+		ts.toSparql(new Settings(), sb);
+		return sb.toString();
 	}
 }

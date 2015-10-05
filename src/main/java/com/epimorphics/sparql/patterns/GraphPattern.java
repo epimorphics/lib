@@ -5,6 +5,10 @@
 */
 package com.epimorphics.sparql.patterns;
 
-public interface GraphPattern {
+import com.epimorphics.sparql.terms.TermSparql;
+
+public interface GraphPattern extends TermSparql {
+	
+
 
 }
