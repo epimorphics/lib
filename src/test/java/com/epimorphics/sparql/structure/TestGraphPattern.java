@@ -27,6 +27,7 @@ import com.epimorphics.sparql.terms.TermSparql;
 import com.epimorphics.sparql.terms.TermTriple;
 import com.epimorphics.sparql.terms.TermURI;
 import com.epimorphics.test.utils.MakeCollection;
+import com.epimorphics.test.utils.SparqlUtils;
 
 public class TestGraphPattern {
 
@@ -58,7 +59,7 @@ public class TestGraphPattern {
 		elements.add(SPA);
 		GraphPatternBasic b = new GraphPatternBasic(elements);
 		
-		String renderF = renderToSparql(f), renderT = renderToSparql(SPA);
+		String renderF = SparqlUtils.renderToSparql(f), renderT = SparqlUtils.renderToSparql(SPA);
 		String expected = "{" + renderF + " " + renderT + "}";
 		StringBuilder sb = new StringBuilder();
 		b.toSparql(new Settings(), sb);
@@ -78,26 +79,26 @@ public class TestGraphPattern {
 		
 		assertEquals(operand, g.getPattern());
 		
-		String basicResult = renderToSparql(operand);
-		String optionalResult = renderToSparql(g);
+		String basicResult = SparqlUtils.renderToSparql(operand);
+		String optionalResult = SparqlUtils.renderToSparql(g);
 		
 		assertEquals("OPTIONAL {" + basicResult + "}", optionalResult);		
 	}
 	
 	@Test public void testUnionPatternToSparql() {
 		
-		GraphPattern x = basics(new TermTriple(A, P, A));
-		GraphPattern y = basics(new TermTriple(A, Q, B));
+		GraphPattern x = SparqlUtils.basicPattern(new TermTriple(A, P, A));
+		GraphPattern y = SparqlUtils.basicPattern(new TermTriple(A, Q, B));
 		
 		GraphPatternUnion u = new GraphPatternUnion(x, y);
 		
 		assertEquals(MakeCollection.list(x, y), u.getPatterns());
 		
-		String xRendering = renderToSparql(x);
-		String yRendering = renderToSparql(y);
+		String xRendering = SparqlUtils.renderToSparql(x);
+		String yRendering = SparqlUtils.renderToSparql(y);
 		
 		String expected = "{" + xRendering + " UNION " + yRendering + "}";
-		String unionResult = renderToSparql(u);
+		String unionResult = SparqlUtils.renderToSparql(u);
 		
 		assertEquals(expected, unionResult);
 	}
@@ -105,25 +106,13 @@ public class TestGraphPattern {
 	@Test public void testNamedGraphToSparql() {
 		
 		TermURI graph = new TermURI("http://example.com/graph");
-		GraphPattern pattern = basics(new TermTriple(A, P, A));
+		GraphPattern pattern = SparqlUtils.basicPattern(new TermTriple(A, P, A));
 		GraphPatternNamed n = new GraphPatternNamed(graph, pattern);
 		assertSame(graph, n.getGraphName());
 		assertSame(pattern, n.getPattern());
 		
-		String expected = "GRAPH " + renderToSparql(graph) + " " + renderToSparql(pattern);
-		String obtained = renderToSparql(n);
+		String expected = "GRAPH " + SparqlUtils.renderToSparql(graph) + " " + SparqlUtils.renderToSparql(pattern);
+		String obtained = SparqlUtils.renderToSparql(n);
 		assertEquals(expected, obtained);
-	}
-
-	private GraphPattern basics(PatternBase... ps) {
-		GraphPatternBuilder b = new GraphPatternBuilder();
-		for (PatternBase p: ps) b.addElement(p);
-		return b.build();
-	}
-
-	private String renderToSparql(TermSparql ts) {
-		StringBuilder sb = new StringBuilder();
-		ts.toSparql(new Settings(), sb);
-		return sb.toString();
 	}
 }

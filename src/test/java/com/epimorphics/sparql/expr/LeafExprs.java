@@ -15,4 +15,9 @@ public class LeafExprs {
 		TermURI type = TermLiteral.xsdInteger;
 		return new TermLiteral("" + i, type, "");
 	}
+	
+	public static TermExpr bool(boolean b) {
+		TermURI type = TermLiteral.xsdBoolean;
+		return new TermLiteral(b ? "true" : "false", type, "");
+	}
 }
