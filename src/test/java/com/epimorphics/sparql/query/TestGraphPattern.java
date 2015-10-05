@@ -3,7 +3,7 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.sparql.structure;
+package com.epimorphics.sparql.query;
 
 import static org.junit.Assert.*;
 
