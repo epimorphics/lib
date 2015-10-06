@@ -36,4 +36,8 @@ public class TermVar extends Spelling implements TermExpr, TermAtomic, TermSparq
 	@Override public void toSparql(Settings s, StringBuilder sb) {
 		sb.append("?").append(spelling);
 	}
+	
+	@Override public void toSparql(int precedence, Settings s, StringBuilder sb) {
+		toSparql(s, sb);
+	}
 }

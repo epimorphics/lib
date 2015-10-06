@@ -25,5 +25,4 @@ public class ExprPrefix extends ExprBase implements TermExpr {
 		}
 		sb.append(")");
 	}
-	
 }

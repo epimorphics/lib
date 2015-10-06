@@ -8,6 +8,7 @@ package com.epimorphics.sparql.expr;
 import com.epimorphics.sparql.terms.TermExpr;
 import com.epimorphics.sparql.terms.TermLiteral;
 import com.epimorphics.sparql.terms.TermURI;
+import com.epimorphics.sparql.terms.TermVar;
 
 public class LeafExprs {
 
@@ -19,5 +20,9 @@ public class LeafExprs {
 	public static TermExpr bool(boolean b) {
 		TermURI type = TermLiteral.xsdBoolean;
 		return new TermLiteral(b ? "true" : "false", type, "");
+	}
+	
+	public static TermExpr var(String name) {
+		return new TermVar(name);
 	}
 }

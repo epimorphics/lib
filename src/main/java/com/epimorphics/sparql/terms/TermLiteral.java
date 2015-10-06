@@ -87,4 +87,8 @@ public class TermLiteral extends Spelling implements TermAtomic, TermSparql, Ter
 			type.toSparql(s, sb);
 		}	
 	}
+	
+	@Override public void toSparql(int precedence, Settings s, StringBuilder sb) {
+		toSparql(s, sb);
+	}
 }

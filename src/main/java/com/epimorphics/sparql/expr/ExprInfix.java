@@ -15,9 +15,15 @@ public class ExprInfix extends ExprBase implements TermExpr {
 	}
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		getL().toSparql(s, sb);
+		getL().toSparql(op.precedence, s, sb);
 		sb.append(" ").append(op.getName()).append(" ");
-		getR().toSparql(s, sb);
+		getR().toSparql(op.precedence, s, sb);
+	}
+	
+	@Override public void toSparql(int precedence, Settings s, StringBuilder sb) {
+		if (op.precedence > precedence) sb.append("(");
+		toSparql(s, sb);
+		if (op.precedence > precedence) sb.append(")");
 	}
 
 	public TermExpr getL() {

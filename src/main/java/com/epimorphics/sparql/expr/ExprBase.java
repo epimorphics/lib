@@ -8,6 +8,7 @@ package com.epimorphics.sparql.expr;
 import java.util.Arrays;
 import java.util.List;
 
+import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.TermExpr;
 
 public abstract class ExprBase implements TermExpr {
@@ -26,5 +27,9 @@ public abstract class ExprBase implements TermExpr {
 	
 	public List<TermExpr> getOperands() {
 		return operands;
+	}
+	
+	@Override public void toSparql(int precedence, Settings s, StringBuilder sb) {
+		toSparql(s, sb);
 	}
 }

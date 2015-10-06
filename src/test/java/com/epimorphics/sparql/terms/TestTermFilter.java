@@ -20,7 +20,13 @@ public class TestTermFilter {
 
 			@Override public void toSparql(Settings s, StringBuilder sb) {
 				sb.append("E");
-		}};
+			}
+			
+			@Override public void toSparql(int precedence, Settings s, StringBuilder sb) {
+				toSparql(s, sb);
+			}
+			
+		};
 		
 		TermFilter tf = new TermFilter(e);
 		assertEquals(e, tf.getExpr());
