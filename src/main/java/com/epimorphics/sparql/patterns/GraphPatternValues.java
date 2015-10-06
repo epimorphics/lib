@@ -26,11 +26,18 @@ public class GraphPatternValues implements GraphPattern  {
 	@Override public void toSparql(Settings s, StringBuilder sb) {
 		sb.append("VALUES" );
 		if (vars.size() > 1) {
-			
+			sb.append(" ");
+			sb.append("(");
+			String before = "";
+			for (TermVar v: vars) {
+				sb.append(before);
+				before = " ";
+				v.toSparql(s, sb);
+			}
+			sb.append(")");
 		} else {
 			sb.append(" ");
 			vars.get(0).toSparql(s, sb);
-			
 		}
 		sb.append(" ");
 		sb.append("{");

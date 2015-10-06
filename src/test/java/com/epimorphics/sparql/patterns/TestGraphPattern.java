@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.epimorphics.sparql.expr.ExprPrefix;
+import com.epimorphics.sparql.expr.Op;
 import com.epimorphics.sparql.patterns.GraphPattern;
 import com.epimorphics.sparql.patterns.GraphPatternBasic;
 import com.epimorphics.sparql.patterns.GraphPatternBuilder;
@@ -120,7 +122,7 @@ public class TestGraphPattern {
 		assertEquals(expected, obtained);
 	}
 	
-	@Test public void testValuesPatternToSparql() {
+	@Test public void testSingleValuesPatternToSparql() {
 		TermVar x = new TermVar("x");
 		List<TermVar> vars = list(x);
 		List<TermExpr> data = list(integer(1), integer(2), integer(3));
@@ -129,6 +131,21 @@ public class TestGraphPattern {
 		assertEquals(data, v.getData());
 		String obtained = SparqlUtils.renderToSparql(v);
 		assertEquals("VALUES ?x {1 2 3}", obtained);
+	}
+	
+	@Test public void testMultipleValuesPatternToSparql() {
+		TermVar x = new TermVar("x"), y = new TermVar("y");
+		List<TermVar> vars = list(x, y);
+		List<TermExpr> data = list(twople(1,2), twople(3, 4));
+		GraphPatternValues v = new GraphPatternValues(vars, data);
+		assertEquals(vars, v.getVars());
+		assertEquals(data, v.getData());
+		String obtained = SparqlUtils.renderToSparql(v);
+		assertEquals("VALUES (?x ?y) {(1, 2) (3, 4)}", obtained);
+	}
+
+	private TermExpr twople(int i, int j) {
+		return new ExprPrefix(Op.Tuple, integer(i), integer(j));
 	}
 	
 	
