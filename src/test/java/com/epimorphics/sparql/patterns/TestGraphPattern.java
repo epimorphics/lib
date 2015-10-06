@@ -39,11 +39,11 @@ public class TestGraphPattern {
 
 	static final TermURI type = new TermURI("http://example.com/type/T");
 	
-	static final TermSparql S = new TermURI("http://example.com/S");
-	static final TermSparql P = new TermURI("http://example.com/P");
-	static final TermSparql Q = new TermURI("http://example.com/Q");
-	static final TermSparql A = integer(17);
-	static final TermSparql B = new TermLiteral("chat", type, "");
+	static final TermAtomic S = new TermURI("http://example.com/S");
+	static final TermAtomic P = new TermURI("http://example.com/P");
+	static final TermAtomic Q = new TermURI("http://example.com/Q");
+	static final TermAtomic A = integer(17);
+	static final TermAtomic B = new TermLiteral("chat", type, "");
 	
 	@Test public void testBasicTriplesPattern() {
 		GraphPatternBuilder b = new GraphPatternBuilder();

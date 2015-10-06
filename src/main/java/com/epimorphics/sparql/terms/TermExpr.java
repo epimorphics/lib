@@ -7,7 +7,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public interface TermExpr extends TermSparql {
+public interface TermExpr extends TermAtomic {
 	
 	public void toSparql(int precedence, Settings s, StringBuilder sb);
 

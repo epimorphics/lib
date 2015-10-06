@@ -5,6 +5,6 @@
 */
 package com.epimorphics.sparql.terms;
 
-public interface TermAtomic {
+public interface TermAtomic extends TermSparql {
 
 }

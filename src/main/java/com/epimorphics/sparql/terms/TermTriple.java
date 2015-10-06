@@ -10,23 +10,23 @@ import com.epimorphics.sparql.templates.Settings;
 
 public class TermTriple implements TermSparql, PatternBase {
 
-	final TermSparql S, P, O;
+	final TermAtomic S, P, O;
 	
-	public TermTriple(TermSparql S, TermSparql P, TermSparql O) {
+	public TermTriple(TermAtomic S, TermAtomic P, TermAtomic O) {
 		this.S = S;
 		this.P = P;
 		this.O = O;
 	}
 
-	public TermSparql getS() {
+	public TermAtomic getS() {
 		return S;
 	}
 
-	public TermSparql getP() {
+	public TermAtomic getP() {
 		return P;
 	}
 
-	public TermSparql getO() {
+	public TermAtomic getO() {
 		return O;
 	}
 	
