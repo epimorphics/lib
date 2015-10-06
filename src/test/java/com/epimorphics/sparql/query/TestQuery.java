@@ -9,7 +9,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.epimorphics.sparql.expr.ExprInfix;
 import com.epimorphics.sparql.expr.LeafExprs;
+import com.epimorphics.sparql.expr.Op;
 import com.epimorphics.sparql.patterns.GraphPattern;
 import com.epimorphics.sparql.patterns.GraphPatternBasic;
 import com.epimorphics.sparql.query.Query;
@@ -95,5 +97,32 @@ public class TestQuery {
 		String result = q.toSparql(new Settings());
 		assertEquals("SELECT ?other (?e AS ?it) WHERE {}", result);
 	}	
+	
+	@Test public void testOrderByClause() {
+		Query q = new Query();
+		q.addOrder(Query.Order.ASC, new TermVar("it"));
+		String result = q.toSparql(new Settings());
+		String expected = "SELECT * WHERE {} ORDER BY ASC ?it";
+		assertEquals(expected, result);
+	}
+	
+	@Test public void testOrderByDESCClause() {
+		Query q = new Query();
+		q.addOrder(Query.Order.DESC, new TermVar("it"));
+		String result = q.toSparql(new Settings());
+		String expected = "SELECT * WHERE {} ORDER BY DESC ?it";
+		assertEquals(expected, result);
+	}
+	
+	@Test public void testMultipleOrderByClauses() {
+		Query q = new Query();
+		TermVar A = new TermVar("A"), B = new TermVar("B");
+		TermExpr e = new ExprInfix(A, Op.opEq, B);
+		q.addOrder(Query.Order.DESC, new TermVar("it"));
+		q.addOrder(Query.Order.ASC, e);
+		String result = q.toSparql(new Settings());
+		String expected = "SELECT * WHERE {} ORDER BY DESC ?it ASC (?A = ?B)";
+		assertEquals(expected, result);
+	}
 	
 }
