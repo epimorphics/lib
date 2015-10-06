@@ -7,7 +7,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class TermVar extends Spelling implements TermAtomic, TermSparql {
+public class TermVar extends Spelling implements TermExpr, TermAtomic, TermSparql, TermProjection {
 	
 	public TermVar(String spelling) {
 		super(spelling);

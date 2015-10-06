@@ -5,8 +5,13 @@
 */
 package com.epimorphics.sparql.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.epimorphics.sparql.patterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
+import com.epimorphics.sparql.terms.TermProjection;
+import com.epimorphics.sparql.terms.TermVar;
 
 public class Query {
 	
@@ -19,6 +24,8 @@ public class Query {
 	
 	protected int limit = -1;
 	protected int offset = -1;
+	
+	final List<TermProjection> selectedVars = new ArrayList<TermProjection>();
 
 	public String toSparql(Settings s) {
 		StringBuilder sb = new StringBuilder();
@@ -27,7 +34,16 @@ public class Query {
 	}
 
 	private void toSparql(Settings s, StringBuilder sb) {
-		sb.append("SELECT * WHERE ");
+		sb.append("SELECT");
+		if (selectedVars.isEmpty()) {
+			sb.append(" *");
+		} else {
+			for (TermProjection x: selectedVars) {
+				sb.append(" ");
+				x.toSparql(s, sb);
+			}
+		}
+		sb.append(" WHERE ");
 		where.toSparql(s, sb);
 		if (limit > -1) sb.append(" LIMIT ").append(limit);
 		if (offset > -1) sb.append(" OFFSET ").append(offset);
@@ -46,6 +62,10 @@ public class Query {
 	public void setOffset(int offset) {
 		this.offset = offset;
 		
+	}
+
+	public void addProjection(TermProjection x) {
+		selectedVars.add(x);
 	}
 	
 }
