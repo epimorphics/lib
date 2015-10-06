@@ -8,7 +8,6 @@ package com.epimorphics.sparql.propertypaths;
 
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.TermURI;
-import com.epimorphics.sparql.terms.TestTermTriple;
 
 public class PropertyPathProperty implements PropertyPath {
 

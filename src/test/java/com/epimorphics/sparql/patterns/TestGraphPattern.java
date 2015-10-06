@@ -14,21 +14,8 @@ import org.junit.Test;
 
 import com.epimorphics.sparql.expr.ExprPrefix;
 import com.epimorphics.sparql.expr.Op;
-import com.epimorphics.sparql.patterns.GraphPattern;
-import com.epimorphics.sparql.patterns.GraphPatternBasic;
-import com.epimorphics.sparql.patterns.GraphPatternBuilder;
-import com.epimorphics.sparql.patterns.GraphPatternNamed;
-import com.epimorphics.sparql.patterns.GraphPatternOptional;
-import com.epimorphics.sparql.patterns.GraphPatternUnion;
-import com.epimorphics.sparql.patterns.PatternBase;
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TermAtomic;
-import com.epimorphics.sparql.terms.TermExpr;
-import com.epimorphics.sparql.terms.TermFilter;
-import com.epimorphics.sparql.terms.TermLiteral;
-import com.epimorphics.sparql.terms.TermSparql;
-import com.epimorphics.sparql.terms.TermTriple;
-import com.epimorphics.sparql.terms.TermURI;
+import com.epimorphics.sparql.terms.*;
 import com.epimorphics.sparql.terms.TermVar;
 import com.epimorphics.test.utils.SparqlUtils;
 

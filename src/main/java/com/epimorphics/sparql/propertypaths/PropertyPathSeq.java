@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TestTermTriple;
 
 public class PropertyPathSeq implements PropertyPath {
 	
