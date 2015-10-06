@@ -3,7 +3,7 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.sparql.query;
+package com.epimorphics.sparql.patterns;
 
 import static org.junit.Assert.*;
 
@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.epimorphics.sparql.expr.LeafExprs;
 import com.epimorphics.sparql.patterns.GraphPattern;
 import com.epimorphics.sparql.patterns.GraphPatternBasic;
 import com.epimorphics.sparql.patterns.GraphPatternBuilder;
@@ -21,13 +20,18 @@ import com.epimorphics.sparql.patterns.GraphPatternOptional;
 import com.epimorphics.sparql.patterns.GraphPatternUnion;
 import com.epimorphics.sparql.patterns.PatternBase;
 import com.epimorphics.sparql.templates.Settings;
+import com.epimorphics.sparql.terms.TermAtomic;
+import com.epimorphics.sparql.terms.TermExpr;
 import com.epimorphics.sparql.terms.TermFilter;
 import com.epimorphics.sparql.terms.TermLiteral;
 import com.epimorphics.sparql.terms.TermSparql;
 import com.epimorphics.sparql.terms.TermTriple;
 import com.epimorphics.sparql.terms.TermURI;
-import com.epimorphics.test.utils.MakeCollection;
+import com.epimorphics.sparql.terms.TermVar;
 import com.epimorphics.test.utils.SparqlUtils;
+
+import static com.epimorphics.test.utils.MakeCollection.*;
+import static com.epimorphics.sparql.expr.LeafExprs.*;
 
 public class TestGraphPattern {
 
@@ -36,7 +40,7 @@ public class TestGraphPattern {
 	static final TermSparql S = new TermURI("http://example.com/S");
 	static final TermSparql P = new TermURI("http://example.com/P");
 	static final TermSparql Q = new TermURI("http://example.com/Q");
-	static final TermSparql A = LeafExprs.integer(17);
+	static final TermSparql A = integer(17);
 	static final TermSparql B = new TermLiteral("chat", type, "");
 	
 	@Test public void testBasicTriplesPattern() {
@@ -48,7 +52,7 @@ public class TestGraphPattern {
 		b.addElement(SQB);
 		GraphPatternBasic gp = b.build();
 		
-		assertEquals(MakeCollection.list(SPA, SQB), gp.getElements());
+		assertEquals(list(SPA, SQB), gp.getElements());
 	}
 	
 	@Test public void testBasicTriplePatternToSparql() {
@@ -73,7 +77,7 @@ public class TestGraphPattern {
 	@Test public void testOptionalPatternToSparql() {
 		
 		PatternBase x = new TermTriple(S, P, A);
-		List<PatternBase> elements = MakeCollection.list(x);
+		List<PatternBase> elements = list(x);
 		GraphPattern operand = new GraphPatternBasic(elements);
 		GraphPatternOptional g = new GraphPatternOptional(operand);
 		
@@ -92,7 +96,7 @@ public class TestGraphPattern {
 		
 		GraphPatternUnion u = new GraphPatternUnion(x, y);
 		
-		assertEquals(MakeCollection.list(x, y), u.getPatterns());
+		assertEquals(list(x, y), u.getPatterns());
 		
 		String xRendering = SparqlUtils.renderToSparql(x);
 		String yRendering = SparqlUtils.renderToSparql(y);
@@ -115,4 +119,20 @@ public class TestGraphPattern {
 		String obtained = SparqlUtils.renderToSparql(n);
 		assertEquals(expected, obtained);
 	}
+	
+	@Test public void testValuesPatternToSparql() {
+		TermVar x = new TermVar("x");
+		List<TermVar> vars = list(x);
+		List<TermExpr> data = list(integer(1), integer(2), integer(3));
+		GraphPatternValues v = new GraphPatternValues(vars, data);
+		assertEquals(vars, v.getVars());
+		assertEquals(data, v.getData());
+		String obtained = SparqlUtils.renderToSparql(v);
+		assertEquals("VALUES ?x {1 2 3}", obtained);
+	}
+	
+	
+	
+	
+	
 }
