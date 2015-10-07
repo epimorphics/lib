@@ -26,6 +26,7 @@ public class TestTermTriple {
 	
 	static final TermURI P = new TermURI("http://example.com/properties/P");
 	static final TermURI Q = new TermURI("http://example.com/properties/Q");
+	static final TermURI R = new TermURI("http://example.com/properties/R");
 
 	static final TermLiteral O = new TermLiteral("chat", type, "");
 
@@ -102,6 +103,20 @@ public class TestTermTriple {
 		PropertyPath seq = new PropertyPathSeq(new PropertyPathProperty(P), new PropertyPathProperty(Q));
 		PropertyPath repSeq = new PropertyPathRep(seq, PropertyPath.Repeat.OPTIONAL);
 		assertEquals("(" + pp + "/" + pq + ")?", renderToSparql(repSeq));
+	}
+	
+	@Test public void testPrecedenceSeqOfAlt() {
+		String pp = "<" + P.getURI() + ">";
+		String pq = "<" + Q.getURI() + ">";
+		String pr = "<" + R.getURI() + ">";
+		String ps = "<" + S.getURI() + ">";
+		
+		PropertyPath altA = new PropertyPathAlt(new PropertyPathProperty(P), new PropertyPathProperty(Q));
+		PropertyPath altB = new PropertyPathAlt(new PropertyPathProperty(R), new PropertyPathProperty(S));
+		PropertyPath seq = new PropertyPathSeq(altA, altB);
+		String altAres = "(" + pp + "|" + pq + ")"; 
+		String altBres = "(" + pr + "|" + ps + ")";
+		assertEquals(altAres + "/" + altBres, renderToSparql(seq));
 	}
 	
 }
