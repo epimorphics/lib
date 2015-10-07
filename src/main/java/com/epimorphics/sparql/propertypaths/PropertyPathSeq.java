@@ -21,13 +21,13 @@ public class PropertyPathSeq extends PropertyPathBase implements PropertyPath {
 	
 	@Override public void coreToSparql(Settings s, StringBuilder sb) {
 		if (paths.size() == 1) {
-			paths.get(0).toSparql(s, sb);
+			paths.get(0).toSparql(precedence(), s, sb);
 		} else {
 			String sep = "";
 			for (PropertyPath p: paths) {
 				sb.append(sep);
 				sep = "/";
-				p.toSparql(s, sb);
+				p.toSparql(precedence(), s, sb);
 			}
 		}
 	}
