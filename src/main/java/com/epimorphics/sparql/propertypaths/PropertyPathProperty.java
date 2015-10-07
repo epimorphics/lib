@@ -8,9 +8,8 @@ package com.epimorphics.sparql.propertypaths;
 
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.TermURI;
-import com.epimorphics.sparql.terms.TestTermTriple;
 
-public class PropertyPathProperty implements PropertyPath {
+public class PropertyPathProperty extends PropertyPathBase implements PropertyPath {
 
 	final TermURI property;
 	
@@ -18,8 +17,12 @@ public class PropertyPathProperty implements PropertyPath {
 		this.property = property;
 	}
 	
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void coreToSparql(Settings s, StringBuilder sb) {
 		property.toSparql(s, sb);
+	}
+
+	@Override public int precedence() {
+		return PROP_PRECEDENCE;
 	}
 	
 }

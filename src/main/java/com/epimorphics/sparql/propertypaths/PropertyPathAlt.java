@@ -10,9 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TestTermTriple;
 
-public class PropertyPathAlt implements PropertyPath {
+public class PropertyPathAlt extends PropertyPathBase implements PropertyPath {
 
 	final List<PropertyPath> paths;
 	
@@ -20,9 +19,9 @@ public class PropertyPathAlt implements PropertyPath {
 		this.paths = Arrays.asList(paths);
 	}
 	
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void coreToSparql(Settings s, StringBuilder sb) {
 		if (paths.size() == 1) {
-			paths.get(0).toSparql(s, sb);
+			paths.get(0).toSparql(precedence(), s, sb);
 		} else {
 			String sep = "";
 			for (PropertyPath p: paths) {
@@ -31,6 +30,10 @@ public class PropertyPathAlt implements PropertyPath {
 				p.toSparql(s, sb);
 			}
 		}
+	}
+
+	@Override public int precedence() {
+		return ALT_PRECEDENCE;
 	}
 	
 }

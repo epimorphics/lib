@@ -7,9 +7,8 @@
 package com.epimorphics.sparql.propertypaths;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TestTermTriple;
 
-public class PropertyPathInv implements PropertyPath {
+public class PropertyPathInv extends PropertyPathBase implements PropertyPath {
 
 	final PropertyPath path;
 	
@@ -17,9 +16,13 @@ public class PropertyPathInv implements PropertyPath {
 		this.path = path;
 	}
 	
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void coreToSparql(Settings s, StringBuilder sb) {
 		sb.append("^");
-		path.toSparql(s, sb);
+		path.toSparql(precedence(), s, sb);
+	}
+
+	@Override public int precedence() {
+		return INV_PRECEDENCE;
 	}
 	
 }

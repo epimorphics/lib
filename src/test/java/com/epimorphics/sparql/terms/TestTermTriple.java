@@ -15,7 +15,8 @@ import com.epimorphics.sparql.propertypaths.PropertyPathInv;
 import com.epimorphics.sparql.propertypaths.PropertyPathProperty;
 import com.epimorphics.sparql.propertypaths.PropertyPathRep;
 import com.epimorphics.sparql.propertypaths.PropertyPathSeq;
-import com.epimorphics.test.utils.SparqlUtils;
+
+import static com.epimorphics.test.utils.SparqlUtils.*;
 
 public class TestTermTriple {
 
@@ -40,39 +41,46 @@ public class TestTermTriple {
 	}
 	
 	@Test public void testTripleToSparql() {
-		String result = SparqlUtils.renderToSparql(SPO);
+		String result = renderToSparql(SPO);
 		assertEquals("<http://example.com/S> <http://example.com/properties/P> 'chat'^^<http://example.com/type/T> .", result);
 	}
 	
 	@Test public void testPrimitive() {
 		TermURI P = new TermURI("http://example.com/properties/P");
 		PropertyPath p = new PropertyPathProperty(P);
-		assertEquals("<" + P.getURI() + ">", SparqlUtils.renderToSparql(p));
+		assertEquals("<" + P.getURI() + ">", renderToSparql(p));
 	}
 	
 	@Test public void testRepetition() {
 		PropertyPath p = new PropertyPathProperty(P);
-		assertEquals("<" + P.getURI() + ">+", SparqlUtils.renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.ONEMORE)));
-		assertEquals("<" + P.getURI() + ">*", SparqlUtils.renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.ZEROMORE)));
-		assertEquals("<" + P.getURI() + ">?", SparqlUtils.renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.OPTIONAL)));
+		assertEquals("<" + P.getURI() + ">+", renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.ONEMORE)));
+		assertEquals("<" + P.getURI() + ">*", renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.ZEROMORE)));
+		assertEquals("<" + P.getURI() + ">?", renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.OPTIONAL)));
 	}
 	
 	@Test public void testInverse() {
 		PropertyPath p = new PropertyPathProperty(P);
 		PropertyPath q = new PropertyPathInv(p);
-		assertEquals("^<" + P.getURI() + ">", SparqlUtils.renderToSparql(q));
+		assertEquals("^<" + P.getURI() + ">", renderToSparql(q));
 	}
 	
 	@Test public void testSeq() {
 		PropertyPath pq = new PropertyPathSeq(new PropertyPathProperty(P), new PropertyPathProperty(Q));
 		String expected = "<" + P.getURI() + ">/<" + Q.getURI() + ">";
-		assertEquals(expected, SparqlUtils.renderToSparql(pq));
+		assertEquals(expected, renderToSparql(pq));
 	}
 	
 	@Test public void testAlt() {
 		PropertyPath pq = new PropertyPathAlt(new PropertyPathProperty(P), new PropertyPathProperty(Q));
 		String expected = "<" + P.getURI() + ">|<" + Q.getURI() + ">";
-		assertEquals(expected, SparqlUtils.renderToSparql(pq));
+		assertEquals(expected, renderToSparql(pq));
+	}
+	
+	@Test public void testPrecedence() {
+		String pp = "<" + P.getURI() + ">", pq = "<" + Q.getURI() + ">";
+		PropertyPath alt = new PropertyPathAlt(new PropertyPathProperty(P), new PropertyPathProperty(Q));
+		PropertyPath invAlt = new PropertyPathInv(alt);
+		assertEquals("^(" + pp + "|" + pq + ")", renderToSparql(invAlt));
 	}
 	
 }
