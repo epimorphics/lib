@@ -76,11 +76,18 @@ public class TestTermTriple {
 		assertEquals(expected, renderToSparql(pq));
 	}
 	
-	@Test public void testPrecedence() {
+	@Test public void testPrecedenceEnvOfAlt() {
 		String pp = "<" + P.getURI() + ">", pq = "<" + Q.getURI() + ">";
 		PropertyPath alt = new PropertyPathAlt(new PropertyPathProperty(P), new PropertyPathProperty(Q));
 		PropertyPath invAlt = new PropertyPathInv(alt);
 		assertEquals("^(" + pp + "|" + pq + ")", renderToSparql(invAlt));
+	}
+	
+	@Test public void testPrecedenceRepOfAlt() {
+		String pp = "<" + P.getURI() + ">", pq = "<" + Q.getURI() + ">";
+		PropertyPath alt = new PropertyPathAlt(new PropertyPathProperty(P), new PropertyPathProperty(Q));
+		PropertyPath repAlt = new PropertyPathRep(alt, PropertyPath.Repeat.OPTIONAL);
+		assertEquals("(" + pp + "|" + pq + ")?", renderToSparql(repAlt));
 	}
 	
 }

@@ -19,7 +19,7 @@ public class PropertyPathRep extends PropertyPathBase implements PropertyPath {
 	}
 	
 	@Override public void coreToSparql(Settings s, StringBuilder sb) {
-		path.toSparql(s, sb);
+		path.toSparql(precedence(), s, sb);
 		sb.append(rep);
 	}
 
