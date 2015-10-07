@@ -18,22 +18,19 @@ public class TestTermURI {
 	@Test public void testTermURI() {
 		String spellingA = "http://example.com/term-uri-a";
 		String spellingB = "http://example.com/term-uri-b";
-		TermURI tuA = new TermURI(spellingA);
-		TermURI tuB = new TermURI(spellingB);
+		URI tuA = new URI(spellingA);
+		URI tuB = new URI(spellingB);
 		
 		assertTrue(tuA instanceof TermAtomic);
 		
-		assertEquals(tuA, new TermURI(spellingA));
+		assertEquals(tuA, new URI(spellingA));
 		assertFalse(tuA.equals(tuB));
 		
-		assertEquals(tuA.hashCode(), new TermURI(spellingA).hashCode());
+		assertEquals(tuA.hashCode(), new URI(spellingA).hashCode());
 		assertFalse(tuA.hashCode() == tuB.hashCode());
 		
 		assertEquals(spellingA, tuA.getURI());
 		assertEquals(spellingB, tuB.getURI());
-
-		assertEquals(spellingA, tuA.getSpelling());
-		assertEquals(spellingB, tuB.getSpelling());
 		
 		assertEquals("<"+spellingA+">", tuA.toString());
 	}
@@ -42,7 +39,7 @@ public class TestTermURI {
 		Settings s = new Settings();
 		s.setPrefix("ex", "http://example.com/");
 		
-		TermURI tu = new TermURI("http://example.com/alpha");
+		URI tu = new URI("http://example.com/alpha");
 		StringBuilder sb = new StringBuilder();
 		tu.toSparql(s, sb);
 		assertEquals("ex:alpha", sb.toString());

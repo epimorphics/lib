@@ -8,22 +8,22 @@ package com.epimorphics.sparql.query;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epimorphics.sparql.expr.ExprInfix;
-import com.epimorphics.sparql.patterns.GraphPattern;
+import com.epimorphics.sparql.exprs.Infix;
+import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TermExpr;
-import com.epimorphics.sparql.terms.TermProjection;
-import com.epimorphics.sparql.terms.TermSparql;
+import com.epimorphics.sparql.terms.IsExpr;
+import com.epimorphics.sparql.terms.Projection;
+import com.epimorphics.sparql.terms.IsSparqler;
 
 public class Query {
 	
 	public static enum Order {DESC, ASC}
 	
-	public static class OrderCondition implements TermSparql {
+	public static class OrderCondition implements IsSparqler {
 		final Order order;
-		final TermExpr expr;
+		final IsExpr expr;
 		
-		public OrderCondition(Order order, TermExpr expr) {
+		public OrderCondition(Order order, IsExpr expr) {
 			this.order = order;
 			this.expr = expr;
 		}
@@ -32,9 +32,9 @@ public class Query {
 			sb.append(" ");
 			sb.append(order);
 			sb.append(" ");
-			if (expr instanceof ExprInfix) sb.append("(");
+			if (expr instanceof Infix) sb.append("(");
 			expr.toSparql(s, sb);
-			if (expr instanceof ExprInfix) sb.append(")");
+			if (expr instanceof Infix) sb.append(")");
 		}
 	}
 	
@@ -48,7 +48,7 @@ public class Query {
 	protected int limit = -1;
 	protected int offset = -1;
 	
-	final List<TermProjection> selectedVars = new ArrayList<TermProjection>();
+	final List<Projection> selectedVars = new ArrayList<Projection>();
 	
 	final List<OrderCondition> orderBy = new ArrayList<OrderCondition>();
 
@@ -63,7 +63,7 @@ public class Query {
 		if (selectedVars.isEmpty()) {
 			sb.append(" *");
 		} else {
-			for (TermProjection x: selectedVars) {
+			for (Projection x: selectedVars) {
 				sb.append(" ");
 				x.toSparql(s, sb);
 			}
@@ -95,11 +95,11 @@ public class Query {
 		this.offset = offset;
 	}
 
-	public void addProjection(TermProjection x) {
+	public void addProjection(Projection x) {
 		selectedVars.add(x);
 	}
 
-	public void addOrder(Order o, TermExpr e) {
+	public void addOrder(Order o, IsExpr e) {
 		orderBy.add(new OrderCondition(o, e));
 	}
 	

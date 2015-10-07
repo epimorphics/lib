@@ -3,30 +3,26 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-
-package com.epimorphics.sparql.query;
+package com.epimorphics.sparql.graphpatterns;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.IsExpr;
-import com.epimorphics.sparql.terms.Projection;
-import com.epimorphics.sparql.terms.Var;
 
-public class TermAs implements Projection {
+public class Optional implements GraphPattern {
 
-	final IsExpr e;
-	final Var v;
+	final GraphPattern operand;
 	
-	public TermAs(IsExpr e, Var v) {
-		this.e = e;
-		this.v = v;
+	public Optional(GraphPattern operand) {
+		this.operand = operand;
 	}
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		sb.append("(");
-		e.toSparql(s, sb);
-		sb.append(" AS ");
-		v.toSparql(s, sb);
-		sb.append(")");
+		sb.append("OPTIONAL {");
+		operand.toSparql(s, sb);
+		sb.append("}");
 	}
-	
+
+	public GraphPattern getPattern() {
+		return operand;
+	}
+
 }

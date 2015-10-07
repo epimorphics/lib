@@ -3,8 +3,10 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.sparql.terms;
+package com.epimorphics.sparql.graphpatterns;
 
-public interface TermAtomic extends IsSparqler {
+import com.epimorphics.sparql.terms.IsSparqler;
+
+public interface Common extends IsSparqler {
 
 }

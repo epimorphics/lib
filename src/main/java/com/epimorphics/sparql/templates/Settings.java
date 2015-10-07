@@ -10,21 +10,21 @@ import java.util.Map;
 
 import org.apache.jena.shared.PrefixMapping;
 
-import com.epimorphics.sparql.terms.TermSparql;
+import com.epimorphics.sparql.terms.IsSparqler;
 
 public class Settings {
 
-	final Map<String, TermSparql> params = new HashMap<String, TermSparql>();
+	final Map<String, IsSparqler> params = new HashMap<String, IsSparqler>();
 	final PrefixMapping pm = PrefixMapping.Factory.create();
 	
 	public Settings() {
 	}
 	
-	public void putParam(String name, TermSparql ts) {
+	public void putParam(String name, IsSparqler ts) {
 		params.put(name, ts);
 	}
 
-	public TermSparql getParam(String name) {
+	public IsSparqler getParam(String name) {
 		return params.get(name);
 	}
 

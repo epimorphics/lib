@@ -3,30 +3,26 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-
-package com.epimorphics.sparql.query;
+package com.epimorphics.sparql.exprs;
 
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
-import com.epimorphics.sparql.terms.Projection;
-import com.epimorphics.sparql.terms.Var;
 
-public class TermAs implements Projection {
-
-	final IsExpr e;
-	final Var v;
+public class Call extends Common implements IsExpr {
 	
-	public TermAs(IsExpr e, Var v) {
-		this.e = e;
-		this.v = v;
+	public Call(Op op, IsExpr... args) {
+		super(op, args);
 	}
-
+	
 	@Override public void toSparql(Settings s, StringBuilder sb) {
+		sb.append(op.getName());
 		sb.append("(");
-		e.toSparql(s, sb);
-		sb.append(" AS ");
-		v.toSparql(s, sb);
+		String gap = "";
+		for (IsExpr x: operands) {
+			sb.append(gap);
+			gap = ", ";
+			x.toSparql(s, sb);
+		}
 		sb.append(")");
 	}
-	
 }

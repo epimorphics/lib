@@ -5,6 +5,10 @@
 */
 package com.epimorphics.sparql.terms;
 
-public interface TermAtomic extends IsSparqler {
+import com.epimorphics.sparql.templates.Settings;
+
+public interface IsExpr extends TermAtomic {
+	
+	public void toSparql(int precedence, Settings s, StringBuilder sb);
 
 }

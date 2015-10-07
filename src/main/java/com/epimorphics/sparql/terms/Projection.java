@@ -3,8 +3,9 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
+
 package com.epimorphics.sparql.terms;
 
-public interface TermAtomic extends IsSparqler {
+public interface Projection extends IsSparqler {
 
 }

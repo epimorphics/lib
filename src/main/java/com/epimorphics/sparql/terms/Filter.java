@@ -3,30 +3,38 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
+package com.epimorphics.sparql.terms;
 
-package com.epimorphics.sparql.query;
-
+import com.epimorphics.sparql.graphpatterns.Common;
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.IsExpr;
-import com.epimorphics.sparql.terms.Projection;
-import com.epimorphics.sparql.terms.Var;
 
-public class TermAs implements Projection {
+public class Filter implements Common, IsSparqler {
 
 	final IsExpr e;
-	final Var v;
 	
-	public TermAs(IsExpr e, Var v) {
+	public Filter(IsExpr e) {
 		this.e = e;
-		this.v = v;
+	}
+	
+	public String toString() {
+		return "FILTER(" + e.toString() + ")";
+	}
+
+	public IsExpr getExpr() {
+		return e;
+	}
+	
+	public boolean equals(Object other) {
+		return other instanceof Filter && same((Filter) other);
+	}
+
+	private boolean same(Filter other) {
+		return e.equals(other.e);
 	}
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		sb.append("(");
+		sb.append("FILTER(");
 		e.toSparql(s, sb);
-		sb.append(" AS ");
-		v.toSparql(s, sb);
 		sb.append(")");
 	}
-	
 }

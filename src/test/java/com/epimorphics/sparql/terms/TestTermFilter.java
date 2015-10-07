@@ -14,7 +14,7 @@ import com.epimorphics.sparql.templates.Settings;
 public class TestTermFilter {
 
 	@Test public void testTermFilter() {
-		TermExpr e = new TermExpr() { 
+		IsExpr e = new IsExpr() { 
 			
 			public String toString() {return "E";}
 
@@ -28,9 +28,9 @@ public class TestTermFilter {
 			
 		};
 		
-		TermFilter tf = new TermFilter(e);
+		Filter tf = new Filter(e);
 		assertEquals(e, tf.getExpr());
-		assertEquals(tf, new TermFilter(e));
+		assertEquals(tf, new Filter(e));
 		StringBuilder sb = new StringBuilder();
 		tf.toSparql(new Settings(), sb);
 		assertEquals("FILTER(E)", sb.toString());

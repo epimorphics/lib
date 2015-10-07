@@ -5,12 +5,12 @@
 */
 package com.epimorphics.sparql.templates;
 
-import com.epimorphics.sparql.terms.Spelling;
-
-public class PlainText extends Spelling implements Element {
+public class PlainText implements Element {
 	
-	PlainText(String spelling) {
-		super(spelling);
+	final String text;
+	
+	PlainText(String text) {
+		this.text = text;
 	}
 	
 	public boolean equals(Object other) {
@@ -18,14 +18,14 @@ public class PlainText extends Spelling implements Element {
 	}
 	
 	public String toString() {
-		return "lit(" + spelling + ")";
+		return "lit(" + text + ")";
 	}
 
 	private boolean same(PlainText other) {
-		return spelling.equals(other.spelling);
+		return text.equals(other.text);
 	}
 
 	@Override public void subst(StringBuilder sb, Settings s) {
-		sb.append(spelling);
+		sb.append(text);
 	}
 }
