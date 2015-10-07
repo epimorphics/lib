@@ -101,7 +101,7 @@ public class TestQuery {
 	
 	@Test public void testOrderByClause() {
 		Query q = new Query();
-		q.addOrder(Query.Order.ASC, new Var("it"));
+		q.addOrder(Order.ASC, new Var("it"));
 		String result = q.toSparql(new Settings());
 		String expected = "SELECT * WHERE {} ORDER BY ASC(?it)";
 		assertEqualSparql(expected, result);
@@ -109,7 +109,7 @@ public class TestQuery {
 	
 	@Test public void testOrderByDESCClause() {
 		Query q = new Query();
-		q.addOrder(Query.Order.DESC, new Var("it"));
+		q.addOrder(Order.DESC, new Var("it"));
 		String result = q.toSparql(new Settings());
 		String expected = "SELECT * WHERE {} ORDER BY DESC(?it)";
 		assertEqualSparql(expected, result);
@@ -119,8 +119,8 @@ public class TestQuery {
 		Query q = new Query();
 		Var A = new Var("A"), B = new Var("B");
 		IsExpr e = new Infix(A, Op.opEq, B);
-		q.addOrder(Query.Order.DESC, new Var("it"));
-		q.addOrder(Query.Order.ASC, e);
+		q.addOrder(Order.DESC, new Var("it"));
+		q.addOrder(Order.ASC, e);
 		String result = q.toSparql(new Settings());
 		String expected = "SELECT * WHERE {} ORDER BY DESC(?it) ASC(?A = ?B)";
 		assertEqualSparql(expected, result);

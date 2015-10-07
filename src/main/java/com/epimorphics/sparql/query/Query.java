@@ -8,41 +8,15 @@ package com.epimorphics.sparql.query;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epimorphics.sparql.exprs.Infix;
+import com.epimorphics.sparql.graphpatterns.Empty;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Projection;
-import com.epimorphics.sparql.terms.IsSparqler;
 
 public class Query {
 	
-	public static enum Order {DESC, ASC}
-	
-	public static class OrderCondition implements IsSparqler {
-		final Order order;
-		final IsExpr expr;
-		
-		public OrderCondition(Order order, IsExpr expr) {
-			this.order = order;
-			this.expr = expr;
-		}
-
-		@Override public void toSparql(Settings s, StringBuilder sb) {
-			sb.append(" ");
-			sb.append(order);
-			sb.append("(");
-			expr.toSparql(s, sb);
-			sb.append(")");
-		}
-	}
-	
-	protected GraphPattern where = new GraphPattern() {
-		
-		@Override public void toSparql(Settings s, StringBuilder sb) {
-			sb.append("{}");
-		}
-	};
+	protected GraphPattern where = new Empty();
 	
 	protected int limit = -1;
 	protected int offset = -1;
