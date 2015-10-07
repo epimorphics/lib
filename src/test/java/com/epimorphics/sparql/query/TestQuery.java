@@ -7,6 +7,7 @@ package com.epimorphics.sparql.query;
 
 import static org.junit.Assert.*;
 
+import org.apache.jena.query.QueryFactory;
 import org.junit.Test;
 
 import com.epimorphics.sparql.exprs.Infix;
@@ -28,7 +29,7 @@ public class TestQuery {
 	@Test public void testEmptyQuery() {
 		Query q = new Query();
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {}", result);
+		assertEqualSparql("SELECT * WHERE {}", result);
 	}
 	
 	@Test public void testQueryWithTriplePattern() {
@@ -39,21 +40,21 @@ public class TestQuery {
 		
 		q.setPattern(where);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {FILTER(true)}", result);
+		assertEqualSparql("SELECT * WHERE {FILTER(true)}", result);
 	}
 	
 	@Test public void testQueryRespectsLimit() {
 		Query q = new Query();
 		q.setLimit(21);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {} LIMIT 21", result);
+		assertEqualSparql("SELECT * WHERE {} LIMIT 21", result);
 	}
 	
 	@Test public void testQueryRespectsOffset() {
 		Query q = new Query();
 		q.setOffset(1066);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {} OFFSET 1066", result);
+		assertEqualSparql("SELECT * WHERE {} OFFSET 1066", result);
 	}
 	
 	@Test public void testQueryRespectsLimitAndOffset() {
@@ -61,14 +62,14 @@ public class TestQuery {
 		q.setLimit(21);
 		q.setOffset(1829);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {} LIMIT 21 OFFSET 1829", result);
+		assertEqualSparql("SELECT * WHERE {} LIMIT 21 OFFSET 1829", result);
 	}
 	
 	@Test public void testSelectSingleVariableProjection() {
 		Query q = new Query();
 		q.addProjection(new Var("it"));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT ?it WHERE {}", result);
+		assertEqualSparql("SELECT ?it WHERE {}", result);
 	}
 	
 	@Test public void testSelectMultipleVariablesProjection() {
@@ -76,7 +77,7 @@ public class TestQuery {
 		q.addProjection(new Var("it"));
 		q.addProjection(new Var("that"));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT ?it ?that WHERE {}", result);
+		assertEqualSparql("SELECT ?it ?that WHERE {}", result);
 	}
 	
 	@Test public void testSelectBoundVariableProjection() {
@@ -85,7 +86,7 @@ public class TestQuery {
 		Var it = new Var("it");
 		q.addProjection(new TermAs(e, it));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT (?e AS ?it) WHERE {}", result);
+		assertEqualSparql("SELECT (?e AS ?it) WHERE {}", result);
 	}
 	
 	@Test public void testSelectMixedProjection() {
@@ -95,23 +96,23 @@ public class TestQuery {
 		q.addProjection(new Var("other"));
 		q.addProjection(new TermAs(e, it));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT ?other (?e AS ?it) WHERE {}", result);
+		assertEqualSparql("SELECT ?other (?e AS ?it) WHERE {}", result);
 	}	
 	
 	@Test public void testOrderByClause() {
 		Query q = new Query();
 		q.addOrder(Query.Order.ASC, new Var("it"));
 		String result = q.toSparql(new Settings());
-		String expected = "SELECT * WHERE {} ORDER BY ASC ?it";
-		assertEquals(expected, result);
+		String expected = "SELECT * WHERE {} ORDER BY ASC(?it)";
+		assertEqualSparql(expected, result);
 	}
 	
 	@Test public void testOrderByDESCClause() {
 		Query q = new Query();
 		q.addOrder(Query.Order.DESC, new Var("it"));
 		String result = q.toSparql(new Settings());
-		String expected = "SELECT * WHERE {} ORDER BY DESC ?it";
-		assertEquals(expected, result);
+		String expected = "SELECT * WHERE {} ORDER BY DESC(?it)";
+		assertEqualSparql(expected, result);
 	}
 	
 	@Test public void testMultipleOrderByClauses() {
@@ -121,7 +122,13 @@ public class TestQuery {
 		q.addOrder(Query.Order.DESC, new Var("it"));
 		q.addOrder(Query.Order.ASC, e);
 		String result = q.toSparql(new Settings());
-		String expected = "SELECT * WHERE {} ORDER BY DESC ?it ASC (?A = ?B)";
+		String expected = "SELECT * WHERE {} ORDER BY DESC(?it) ASC(?A = ?B)";
+		assertEqualSparql(expected, result);
+	}
+
+	private void assertEqualSparql(String expected, String result) {
+		QueryFactory.create(expected);
+		QueryFactory.create(result);
 		assertEquals(expected, result);
 	}
 	

@@ -31,10 +31,9 @@ public class Query {
 		@Override public void toSparql(Settings s, StringBuilder sb) {
 			sb.append(" ");
 			sb.append(order);
-			sb.append(" ");
-			if (expr instanceof Infix) sb.append("(");
+			sb.append("(");
 			expr.toSparql(s, sb);
-			if (expr instanceof Infix) sb.append(")");
+			sb.append(")");
 		}
 	}
 	
