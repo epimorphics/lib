@@ -84,7 +84,7 @@ public class TestQuery {
 		Query q = new Query();
 		IsExpr e = new Var("e");
 		Var it = new Var("it");
-		q.addProjection(new TermAs(e, it));
+		q.addProjection(new As(e, it));
 		String result = q.toSparql(new Settings());
 		assertEqualSparql("SELECT (?e AS ?it) WHERE {}", result);
 	}
@@ -94,7 +94,7 @@ public class TestQuery {
 		IsExpr e = new Var("e");
 		Var it = new Var("it");
 		q.addProjection(new Var("other"));
-		q.addProjection(new TermAs(e, it));
+		q.addProjection(new As(e, it));
 		String result = q.toSparql(new Settings());
 		assertEqualSparql("SELECT ?other (?e AS ?it) WHERE {}", result);
 	}	

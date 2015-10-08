@@ -7,7 +7,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class URI implements TermAtomic, IsSparqler {
+public class URI implements TermAtomic, IsExpr, IsSparqler {
 	
 	final String URI;
 	
@@ -41,5 +41,9 @@ public class URI implements TermAtomic, IsSparqler {
 		} else {
 			sb.append(using);
 		}
+	}
+
+	@Override public void toSparql(int precedence, Settings s, StringBuilder sb) {
+		toSparql(s, sb);
 	}
 }

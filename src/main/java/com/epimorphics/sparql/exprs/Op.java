@@ -75,8 +75,11 @@ public class Op {
 	public static final Op opLess = new Op(OpType.INFIX, 3, "<");
 	public static final Op opGreater = new Op(OpType.INFIX, 3, ">");
 	
-	public static final Op opEq = new Op(OpType.INFIX, 4, "=");
-	public static final Op opNe = new Op(OpType.INFIX, 4, "!=");
+	public static final Op opIn = new Op(OpType.INFIX, 3, "IN");
+	public static final Op opNotIn = new Op(OpType.INFIX, 3, "NOT IN");
+	
+	public static final Op opEq = new Op(OpType.INFIX, 3, "=");
+	public static final Op opNe = new Op(OpType.INFIX, 3, "!=");
 	
 	public static final Op opAnd = new Op(OpType.INFIX, 5, "&&");
 	public static final Op opOr = new Op(OpType.INFIX, 5, "||");

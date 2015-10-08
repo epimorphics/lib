@@ -21,6 +21,11 @@ public abstract class Common implements IsExpr {
 		this.operands = Arrays.asList(args);
 	}
 	
+	public Common(Op op, List<IsExpr> args) {
+		this.op = op;
+		this.operands = args;
+	}
+	
 	public Op getOp() {
 		return op;
 	}

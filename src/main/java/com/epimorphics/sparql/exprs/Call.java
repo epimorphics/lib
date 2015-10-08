@@ -5,12 +5,18 @@
 */
 package com.epimorphics.sparql.exprs;
 
+import java.util.List;
+
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 
 public class Call extends Common implements IsExpr {
 	
 	public Call(Op op, IsExpr... args) {
+		super(op, args);
+	}
+	
+	public Call(Op op, List<IsExpr> args) {
 		super(op, args);
 	}
 	

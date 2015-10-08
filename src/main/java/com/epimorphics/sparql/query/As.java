@@ -11,12 +11,12 @@ import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.Var;
 
-public class TermAs implements Projection {
+public class As implements Projection {
 
 	final IsExpr e;
 	final Var v;
 	
-	public TermAs(IsExpr e, Var v) {
+	public As(IsExpr e, Var v) {
 		this.e = e;
 		this.v = v;
 	}

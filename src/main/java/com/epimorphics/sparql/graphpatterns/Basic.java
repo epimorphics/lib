@@ -5,6 +5,7 @@
 */
 package com.epimorphics.sparql.graphpatterns;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
@@ -15,6 +16,10 @@ public class Basic implements GraphPattern {
 	
 	public Basic(List<Common> elements) {
 		this.elements = elements;
+	}	
+	
+	public Basic(Common... elements) {
+		this.elements = Arrays.asList(elements);
 	}
 	
 	public List<Common> getElements() {

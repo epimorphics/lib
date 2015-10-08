@@ -8,7 +8,6 @@ package com.epimorphics.sparql.query;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epimorphics.sparql.graphpatterns.Empty;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
@@ -16,14 +15,14 @@ import com.epimorphics.sparql.terms.Projection;
 
 public class Query {
 	
-	protected GraphPattern where = new Empty();
-	
-	protected int limit = -1;
-	protected int offset = -1;
+	protected long limit = -1;
+	protected long offset = -1;
 	
 	final List<Projection> selectedVars = new ArrayList<Projection>();
 	
 	final List<OrderCondition> orderBy = new ArrayList<OrderCondition>();
+	
+	final List<GraphPattern> where = new ArrayList<GraphPattern>();
 
 	public String toSparql(Settings s) {
 		StringBuilder sb = new StringBuilder();
@@ -42,7 +41,7 @@ public class Query {
 			}
 		}
 		sb.append(" WHERE ");
-		where.toSparql(s, sb);
+		whereToSparql(s, sb);
 		
 		if (orderBy.size() > 0) {
 			sb.append(" ORDER BY" );
@@ -55,16 +54,31 @@ public class Query {
 		if (offset > -1) sb.append(" OFFSET ").append(offset);
 		sb.append("");
 	}
-
-	public void setPattern(GraphPattern where) {
-		this.where = where;
+	
+	protected void whereToSparql(Settings s, StringBuilder sb) {
+		if (where.size() == 1) {
+			where.get(0).toSparql(s, sb);
+		} else {
+			sb.append("{");
+			for (GraphPattern element: where) element.toSparql(s, sb);
+			sb.append("}");
+		}
 	}
 
-	public void setLimit(int limit) {
+	public void setPattern(GraphPattern where) {
+		this.where.clear();
+		addPattern(where);
+	}
+	
+	public void addPattern(GraphPattern wherePart) {
+		where.add(wherePart);
+	}
+
+	public void setLimit(long limit) {
 		this.limit = limit;
 	}
 
-	public void setOffset(int offset) {
+	public void setOffset(long offset) {
 		this.offset = offset;
 	}
 
