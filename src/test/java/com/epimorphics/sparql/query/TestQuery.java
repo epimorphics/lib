@@ -18,8 +18,12 @@ import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.query.Query;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
+import com.epimorphics.sparql.terms.TermAtomic;
+import com.epimorphics.sparql.terms.Triple;
+import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Filter;
 import com.epimorphics.sparql.terms.Var;
+import com.epimorphics.test.utils.SparqlUtils;
 
 import static com.epimorphics.test.utils.MakeCollection.*;
 
@@ -124,6 +128,27 @@ public class TestQuery {
 		String result = q.toSparql(new Settings());
 		String expected = "SELECT * WHERE {} ORDER BY DESC(?it) ASC(?A = ?B)";
 		assertEqualSparql(expected, result);
+	}
+	
+	@Test public void testPrefixGeneration() {
+		Query q = new Query();
+		Settings s = new Settings();
+		s.setPrefix("ex", "http://localhost/exemplar/");
+		
+		TermAtomic S = new URI("http://localhost/exemplar/S");
+		TermAtomic P = new URI("http://localhost/exemplar/O");
+		TermAtomic O = new URI("http://localhost/exemplar/P");
+		q.addPattern(new Basic(new Triple(S, P, O)));
+		String result = q.toSparql(s);
+		
+		assertTrue(s.getUsedPrefixes().contains("ex"));
+		assertIn("PREFIX ex: <http://localhost/exemplar/>", result);	
+	}
+
+	private void assertIn(String searchFor, String searchIn) {
+		if (!searchIn.contains(searchFor)) {
+			fail("The string \n'" + searchFor + "' should be present in\n'" + searchIn + "'");
+		}
 	}
 
 	private void assertEqualSparql(String expected, String result) {

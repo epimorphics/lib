@@ -14,8 +14,12 @@ import com.epimorphics.sparql.terms.IsSparqler;
 public class SparqlUtils {
 
 	public static String renderToSparql(IsSparqler ts) {
+		return renderToSparql(new Settings(), ts);
+	}
+	
+	public static String renderToSparql(Settings s, IsSparqler ts) {
 		StringBuilder sb = new StringBuilder();
-		ts.toSparql(new Settings(), sb);
+		ts.toSparql(s, sb);
 		return sb.toString();
 	}
 

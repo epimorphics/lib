@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.epimorphics.sparql.templates.Settings;
+import com.epimorphics.test.utils.SparqlUtils;
 
 public class TestTermURI {
 	
@@ -40,8 +41,10 @@ public class TestTermURI {
 		s.setPrefix("ex", "http://example.com/");
 		
 		URI tu = new URI("http://example.com/alpha");
-		StringBuilder sb = new StringBuilder();
-		tu.toSparql(s, sb);
-		assertEquals("ex:alpha", sb.toString());
+		String obtained = SparqlUtils.renderToSparql(s, tu);
+		
+		assertEquals("ex:alpha", obtained);
+		
+		assertTrue("usedPrefixes must contain used prefix", s.getUsedPrefixes().contains("ex"));
 	}
 }

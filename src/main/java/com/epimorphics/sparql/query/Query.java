@@ -7,6 +7,7 @@ package com.epimorphics.sparql.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
@@ -27,7 +28,18 @@ public class Query {
 	public String toSparql(Settings s) {
 		StringBuilder sb = new StringBuilder();
 		toSparql(s, sb);
-		return sb.toString();
+		StringBuilder other = new StringBuilder();
+		assemblePrefixes(s, other);
+		other.append(sb);
+		return other.toString();
+	}
+
+	private void assemblePrefixes(Settings s, StringBuilder sb) {
+		Map<String, String> prefixes = s.getPrefixes();
+		for (String prefix: s.getUsedPrefixes()) {
+			String uri = prefixes.get(prefix);
+			sb.append("PREFIX ").append(prefix).append(": <").append(uri).append(">\n");
+		}
 	}
 
 	private void toSparql(Settings s, StringBuilder sb) {
