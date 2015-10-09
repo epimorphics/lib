@@ -10,25 +10,27 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.sparql.propertypaths.PropertyPath;
-import com.epimorphics.sparql.propertypaths.PropertyPathAlt;
-import com.epimorphics.sparql.propertypaths.PropertyPathInv;
-import com.epimorphics.sparql.propertypaths.PropertyPathProperty;
-import com.epimorphics.sparql.propertypaths.PropertyPathRep;
-import com.epimorphics.sparql.propertypaths.PropertyPathSeq;
-import com.epimorphics.test.utils.SparqlUtils;
+import com.epimorphics.sparql.propertypaths.Alt;
+import com.epimorphics.sparql.propertypaths.Inv;
+import com.epimorphics.sparql.propertypaths.Property;
+import com.epimorphics.sparql.propertypaths.Rep;
+import com.epimorphics.sparql.propertypaths.Seq;
+
+import static com.epimorphics.test.utils.SparqlUtils.*;
 
 public class TestTermTriple {
 
-	static final TermURI type = new TermURI("http://example.com/type/T");
+	static final URI type = new URI("http://example.com/type/T");
 	
-	static final TermURI S = new TermURI("http://example.com/S");
+	static final URI S = new URI("http://example.com/S");
 	
-	static final TermURI P = new TermURI("http://example.com/properties/P");
-	static final TermURI Q = new TermURI("http://example.com/properties/Q");
+	static final URI P = new URI("http://example.com/properties/P");
+	static final URI Q = new URI("http://example.com/properties/Q");
+	static final URI R = new URI("http://example.com/properties/R");
 
-	static final TermLiteral O = new TermLiteral("chat", type, "");
+	static final Literal O = new Literal("chat", type, "");
 
-	static final TermTriple SPO = new TermTriple(S, P, O);
+	static final Triple SPO = new Triple(S, P, O);
 
 	@Test public void testTripleConstruction() {
 		
@@ -36,43 +38,85 @@ public class TestTermTriple {
 		assertSame(P, SPO.getP());
 		assertSame(O, SPO.getO());
 		
-		assertEquals(SPO, new TermTriple(S, P, O));
+		assertEquals(SPO, new Triple(S, P, O));
 	}
 	
 	@Test public void testTripleToSparql() {
-		String result = SparqlUtils.renderToSparql(SPO);
+		String result = renderToSparql(SPO);
 		assertEquals("<http://example.com/S> <http://example.com/properties/P> 'chat'^^<http://example.com/type/T> .", result);
 	}
 	
 	@Test public void testPrimitive() {
-		TermURI P = new TermURI("http://example.com/properties/P");
-		PropertyPath p = new PropertyPathProperty(P);
-		assertEquals("<" + P.getURI() + ">", SparqlUtils.renderToSparql(p));
+		URI P = new URI("http://example.com/properties/P");
+		PropertyPath p = new Property(P);
+		assertEquals("<" + P.getURI() + ">", renderToSparql(p));
 	}
 	
 	@Test public void testRepetition() {
-		PropertyPath p = new PropertyPathProperty(P);
-		assertEquals("<" + P.getURI() + ">+", SparqlUtils.renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.ONEMORE)));
-		assertEquals("<" + P.getURI() + ">*", SparqlUtils.renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.ZEROMORE)));
-		assertEquals("<" + P.getURI() + ">?", SparqlUtils.renderToSparql(new PropertyPathRep(p, PropertyPath.Repeat.OPTIONAL)));
+		PropertyPath p = new Property(P);
+		assertEquals("<" + P.getURI() + ">+", renderToSparql(new Rep(p, PropertyPath.Repeat.ONEMORE)));
+		assertEquals("<" + P.getURI() + ">*", renderToSparql(new Rep(p, PropertyPath.Repeat.ZEROMORE)));
+		assertEquals("<" + P.getURI() + ">?", renderToSparql(new Rep(p, PropertyPath.Repeat.OPTIONAL)));
 	}
 	
 	@Test public void testInverse() {
-		PropertyPath p = new PropertyPathProperty(P);
-		PropertyPath q = new PropertyPathInv(p);
-		assertEquals("^<" + P.getURI() + ">", SparqlUtils.renderToSparql(q));
+		PropertyPath p = new Property(P);
+		PropertyPath q = new Inv(p);
+		assertEquals("^<" + P.getURI() + ">", renderToSparql(q));
 	}
 	
 	@Test public void testSeq() {
-		PropertyPath pq = new PropertyPathSeq(new PropertyPathProperty(P), new PropertyPathProperty(Q));
+		PropertyPath pq = new Seq(new Property(P), new Property(Q));
 		String expected = "<" + P.getURI() + ">/<" + Q.getURI() + ">";
-		assertEquals(expected, SparqlUtils.renderToSparql(pq));
+		assertEquals(expected, renderToSparql(pq));
 	}
 	
 	@Test public void testAlt() {
-		PropertyPath pq = new PropertyPathAlt(new PropertyPathProperty(P), new PropertyPathProperty(Q));
+		PropertyPath pq = new Alt(new Property(P), new Property(Q));
 		String expected = "<" + P.getURI() + ">|<" + Q.getURI() + ">";
-		assertEquals(expected, SparqlUtils.renderToSparql(pq));
+		assertEquals(expected, renderToSparql(pq));
+	}
+	
+	@Test public void testPrecedenceEnvOfAlt() {
+		String pp = "<" + P.getURI() + ">", pq = "<" + Q.getURI() + ">";
+		PropertyPath alt = new Alt(new Property(P), new Property(Q));
+		PropertyPath invAlt = new Inv(alt);
+		assertEquals("^(" + pp + "|" + pq + ")", renderToSparql(invAlt));
+	}
+	
+	@Test public void testPrecedenceEnvOfSeq() {
+		String pp = "<" + P.getURI() + ">", pq = "<" + Q.getURI() + ">";
+		PropertyPath seq = new Seq(new Property(P), new Property(Q));
+		PropertyPath invSeq = new Inv(seq);
+		assertEquals("^(" + pp + "/" + pq + ")", renderToSparql(invSeq));
+	}
+	
+	@Test public void testPrecedenceRepOfAlt() {
+		String pp = "<" + P.getURI() + ">", pq = "<" + Q.getURI() + ">";
+		PropertyPath alt = new Alt(new Property(P), new Property(Q));
+		PropertyPath repAlt = new Rep(alt, PropertyPath.Repeat.OPTIONAL);
+		assertEquals("(" + pp + "|" + pq + ")?", renderToSparql(repAlt));
+	}
+	
+	@Test public void testPrecedenceRepOfSeq() {
+		String pp = "<" + P.getURI() + ">", pq = "<" + Q.getURI() + ">";
+		PropertyPath seq = new Seq(new Property(P), new Property(Q));
+		PropertyPath repSeq = new Rep(seq, PropertyPath.Repeat.OPTIONAL);
+		assertEquals("(" + pp + "/" + pq + ")?", renderToSparql(repSeq));
+	}
+	
+	@Test public void testPrecedenceSeqOfAlt() {
+		String pp = "<" + P.getURI() + ">";
+		String pq = "<" + Q.getURI() + ">";
+		String pr = "<" + R.getURI() + ">";
+		String ps = "<" + S.getURI() + ">";
+		
+		PropertyPath altA = new Alt(new Property(P), new Property(Q));
+		PropertyPath altB = new Alt(new Property(R), new Property(S));
+		PropertyPath seq = new Seq(altA, altB);
+		String altAres = "(" + pp + "|" + pq + ")"; 
+		String altBres = "(" + pr + "|" + ps + ")";
+		assertEquals(altAres + "/" + altBres, renderToSparql(seq));
 	}
 	
 }

@@ -3,8 +3,13 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.sparql.terms;
+package com.epimorphics.sparql.graphpatterns;
 
-public interface TermAtomic extends IsSparqler {
+import com.epimorphics.sparql.templates.Settings;
 
+public final class Empty implements GraphPattern {
+	
+	@Override public void toSparql(Settings s, StringBuilder sb) {
+		sb.append("{}");
+	}
 }

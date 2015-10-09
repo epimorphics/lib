@@ -3,8 +3,6 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.sparql.terms;
+package com.epimorphics.sparql.query;
 
-public interface TermAtomic extends IsSparqler {
-
-}
+public enum Order {DESC, ASC}

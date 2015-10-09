@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.sparql.terms.TermVar;
+import com.epimorphics.sparql.terms.Var;
 
 public class TestSparqlTemplateBind {
 
@@ -17,7 +17,7 @@ public class TestSparqlTemplateBind {
 		Template t = new Template("($alpha)");
 		
 		Settings s = new Settings();
-		s.putParam("alpha", new TermVar("v"));
+		s.putParam("alpha", new Var("v"));
 		
 		String result = t.substWith(s);
 		

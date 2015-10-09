@@ -7,18 +7,19 @@ package com.epimorphics.sparql.query;
 
 import static org.junit.Assert.*;
 
+import org.apache.jena.query.QueryFactory;
 import org.junit.Test;
 
-import com.epimorphics.sparql.expr.ExprInfix;
-import com.epimorphics.sparql.expr.LeafExprs;
-import com.epimorphics.sparql.expr.Op;
-import com.epimorphics.sparql.patterns.GraphPattern;
-import com.epimorphics.sparql.patterns.GraphPatternBasic;
+import com.epimorphics.sparql.exprs.Infix;
+import com.epimorphics.sparql.exprs.LeafExprs;
+import com.epimorphics.sparql.exprs.Op;
+import com.epimorphics.sparql.graphpatterns.GraphPattern;
+import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.query.Query;
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TermExpr;
-import com.epimorphics.sparql.terms.TermFilter;
-import com.epimorphics.sparql.terms.TermVar;
+import com.epimorphics.sparql.terms.IsExpr;
+import com.epimorphics.sparql.terms.Filter;
+import com.epimorphics.sparql.terms.Var;
 
 import static com.epimorphics.test.utils.MakeCollection.*;
 
@@ -28,32 +29,32 @@ public class TestQuery {
 	@Test public void testEmptyQuery() {
 		Query q = new Query();
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {}", result);
+		assertEqualSparql("SELECT * WHERE {}", result);
 	}
 	
 	@Test public void testQueryWithTriplePattern() {
 		Query q = new Query();
 		
-		TermFilter filter = new TermFilter(LeafExprs.bool(true));
-		GraphPattern where = new GraphPatternBasic(list(filter));
+		Filter filter = new Filter(LeafExprs.bool(true));
+		GraphPattern where = new Basic(list(filter));
 		
 		q.setPattern(where);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {FILTER(true)}", result);
+		assertEqualSparql("SELECT * WHERE {FILTER(true)}", result);
 	}
 	
 	@Test public void testQueryRespectsLimit() {
 		Query q = new Query();
 		q.setLimit(21);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {} LIMIT 21", result);
+		assertEqualSparql("SELECT * WHERE {} LIMIT 21", result);
 	}
 	
 	@Test public void testQueryRespectsOffset() {
 		Query q = new Query();
 		q.setOffset(1066);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {} OFFSET 1066", result);
+		assertEqualSparql("SELECT * WHERE {} OFFSET 1066", result);
 	}
 	
 	@Test public void testQueryRespectsLimitAndOffset() {
@@ -61,67 +62,73 @@ public class TestQuery {
 		q.setLimit(21);
 		q.setOffset(1829);
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT * WHERE {} LIMIT 21 OFFSET 1829", result);
+		assertEqualSparql("SELECT * WHERE {} LIMIT 21 OFFSET 1829", result);
 	}
 	
 	@Test public void testSelectSingleVariableProjection() {
 		Query q = new Query();
-		q.addProjection(new TermVar("it"));
+		q.addProjection(new Var("it"));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT ?it WHERE {}", result);
+		assertEqualSparql("SELECT ?it WHERE {}", result);
 	}
 	
 	@Test public void testSelectMultipleVariablesProjection() {
 		Query q = new Query();
-		q.addProjection(new TermVar("it"));
-		q.addProjection(new TermVar("that"));
+		q.addProjection(new Var("it"));
+		q.addProjection(new Var("that"));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT ?it ?that WHERE {}", result);
+		assertEqualSparql("SELECT ?it ?that WHERE {}", result);
 	}
 	
 	@Test public void testSelectBoundVariableProjection() {
 		Query q = new Query();
-		TermExpr e = new TermVar("e");
-		TermVar it = new TermVar("it");
-		q.addProjection(new TermAs(e, it));
+		IsExpr e = new Var("e");
+		Var it = new Var("it");
+		q.addProjection(new As(e, it));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT (?e AS ?it) WHERE {}", result);
+		assertEqualSparql("SELECT (?e AS ?it) WHERE {}", result);
 	}
 	
 	@Test public void testSelectMixedProjection() {
 		Query q = new Query();
-		TermExpr e = new TermVar("e");
-		TermVar it = new TermVar("it");
-		q.addProjection(new TermVar("other"));
-		q.addProjection(new TermAs(e, it));
+		IsExpr e = new Var("e");
+		Var it = new Var("it");
+		q.addProjection(new Var("other"));
+		q.addProjection(new As(e, it));
 		String result = q.toSparql(new Settings());
-		assertEquals("SELECT ?other (?e AS ?it) WHERE {}", result);
+		assertEqualSparql("SELECT ?other (?e AS ?it) WHERE {}", result);
 	}	
 	
 	@Test public void testOrderByClause() {
 		Query q = new Query();
-		q.addOrder(Query.Order.ASC, new TermVar("it"));
+		q.addOrder(Order.ASC, new Var("it"));
 		String result = q.toSparql(new Settings());
-		String expected = "SELECT * WHERE {} ORDER BY ASC ?it";
-		assertEquals(expected, result);
+		String expected = "SELECT * WHERE {} ORDER BY ASC(?it)";
+		assertEqualSparql(expected, result);
 	}
 	
 	@Test public void testOrderByDESCClause() {
 		Query q = new Query();
-		q.addOrder(Query.Order.DESC, new TermVar("it"));
+		q.addOrder(Order.DESC, new Var("it"));
 		String result = q.toSparql(new Settings());
-		String expected = "SELECT * WHERE {} ORDER BY DESC ?it";
-		assertEquals(expected, result);
+		String expected = "SELECT * WHERE {} ORDER BY DESC(?it)";
+		assertEqualSparql(expected, result);
 	}
 	
 	@Test public void testMultipleOrderByClauses() {
 		Query q = new Query();
-		TermVar A = new TermVar("A"), B = new TermVar("B");
-		TermExpr e = new ExprInfix(A, Op.opEq, B);
-		q.addOrder(Query.Order.DESC, new TermVar("it"));
-		q.addOrder(Query.Order.ASC, e);
+		Var A = new Var("A"), B = new Var("B");
+		IsExpr e = new Infix(A, Op.opEq, B);
+		q.addOrder(Order.DESC, new Var("it"));
+		q.addOrder(Order.ASC, e);
 		String result = q.toSparql(new Settings());
-		String expected = "SELECT * WHERE {} ORDER BY DESC ?it ASC (?A = ?B)";
+		String expected = "SELECT * WHERE {} ORDER BY DESC(?it) ASC(?A = ?B)";
+		assertEqualSparql(expected, result);
+	}
+
+	private void assertEqualSparql(String expected, String result) {
+		QueryFactory.create(expected);
+		QueryFactory.create(result);
 		assertEquals(expected, result);
 	}
 	
