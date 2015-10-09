@@ -16,6 +16,7 @@ import com.epimorphics.sparql.exprs.Call;
 import com.epimorphics.sparql.exprs.ExprCommon;
 import com.epimorphics.sparql.exprs.Op;
 import com.epimorphics.sparql.graphpatterns.Basic;
+import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.Builder;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Named;
@@ -25,7 +26,8 @@ import com.epimorphics.sparql.graphpatterns.Union;
 import com.epimorphics.sparql.graphpatterns.Values;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.*;
-import com.epimorphics.test.utils.SparqlUtils;
+
+import static com.epimorphics.test.utils.SparqlUtils.*;
 
 import static com.epimorphics.sparql.exprs.LeafExprs.*;
 import static com.epimorphics.test.utils.MakeCollection.*;
@@ -60,7 +62,7 @@ public class TestGraphPattern {
 		elements.add(SPA);
 		Basic b = new Basic(elements);
 		
-		String renderF = SparqlUtils.renderToSparql(f), renderT = SparqlUtils.renderToSparql(SPA);
+		String renderF = renderToSparql(f), renderT = renderToSparql(SPA);
 		String expected = "{" + renderF + " " + renderT + "}";
 		StringBuilder sb = new StringBuilder();
 		b.toSparql(new Settings(), sb);
@@ -80,26 +82,26 @@ public class TestGraphPattern {
 		
 		assertEquals(operand, g.getPattern());
 		
-		String basicResult = SparqlUtils.renderToSparql(operand);
-		String optionalResult = SparqlUtils.renderToSparql(g);
+		String basicResult = renderToSparql(operand);
+		String optionalResult = renderToSparql(g);
 		
 		assertEquals("OPTIONAL {" + basicResult + "}", optionalResult);		
 	}
 	
 	@Test public void testUnionPatternToSparql() {
 		
-		GraphPattern x = SparqlUtils.basicPattern(new Triple(A, P, A));
-		GraphPattern y = SparqlUtils.basicPattern(new Triple(A, Q, B));
+		GraphPattern x = basicPattern(new Triple(A, P, A));
+		GraphPattern y = basicPattern(new Triple(A, Q, B));
 		
 		Union u = new Union(x, y);
 		
 		assertEquals(list(x, y), u.getPatterns());
 		
-		String xRendering = SparqlUtils.renderToSparql(x);
-		String yRendering = SparqlUtils.renderToSparql(y);
+		String xRendering = renderToSparql(x);
+		String yRendering = renderToSparql(y);
 		
 		String expected = "{" + xRendering + " UNION " + yRendering + "}";
-		String unionResult = SparqlUtils.renderToSparql(u);
+		String unionResult = renderToSparql(u);
 		
 		assertEquals(expected, unionResult);
 	}
@@ -107,13 +109,13 @@ public class TestGraphPattern {
 	@Test public void testNamedGraphToSparql() {
 		
 		URI graph = new URI("http://example.com/graph");
-		GraphPattern pattern = SparqlUtils.basicPattern(new Triple(A, P, A));
+		GraphPattern pattern = basicPattern(new Triple(A, P, A));
 		Named n = new Named(graph, pattern);
 		assertSame(graph, n.getGraphName());
 		assertSame(pattern, n.getPattern());
 		
-		String expected = "GRAPH " + SparqlUtils.renderToSparql(graph) + " " + SparqlUtils.renderToSparql(pattern);
-		String obtained = SparqlUtils.renderToSparql(n);
+		String expected = "GRAPH " + renderToSparql(graph) + " " + renderToSparql(pattern);
+		String obtained = renderToSparql(n);
 		assertEquals(expected, obtained);
 	}
 	
@@ -124,7 +126,7 @@ public class TestGraphPattern {
 		Values v = new Values(vars, data);
 		assertEquals(vars, v.getVars());
 		assertEquals(data, v.getData());
-		String obtained = SparqlUtils.renderToSparql(v);
+		String obtained = renderToSparql(v);
 		assertEquals("VALUES ?x {1 2 3}", obtained);
 	}
 	
@@ -135,8 +137,21 @@ public class TestGraphPattern {
 		Values v = new Values(vars, data);
 		assertEquals(vars, v.getVars());
 		assertEquals(data, v.getData());
-		String obtained = SparqlUtils.renderToSparql(v);
+		String obtained = renderToSparql(v);
 		assertEquals("VALUES (?x ?y) {(1, 2) (3, 4)}", obtained);
+	}
+	
+	@Test public void testConstructBindPattern() {
+		Var x = new Var("x");
+		IsExpr e = new Var("Expression");
+		Bind b = new Bind(e, x);
+		
+		assertSame(x, b.getVar());
+		assertSame(e, b.getExpr());
+		
+		String obtained = renderToSparql(b);
+		String expected = "BIND(?Expression AS ?x)";
+		assertEquals(expected, obtained);
 	}
 
 	private IsExpr twople(int i, int j) {
