@@ -5,6 +5,7 @@
 */
 package com.epimorphics.sparql.terms;
 
+import static com.epimorphics.util.SparqlUtils.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -15,8 +16,6 @@ import com.epimorphics.sparql.propertypaths.Inv;
 import com.epimorphics.sparql.propertypaths.Property;
 import com.epimorphics.sparql.propertypaths.Rep;
 import com.epimorphics.sparql.propertypaths.Seq;
-
-import static com.epimorphics.test.utils.SparqlUtils.*;
 
 public class TestTermTriple {
 

@@ -25,7 +25,7 @@ import com.epimorphics.sparql.graphpatterns.Union;
 import com.epimorphics.sparql.graphpatterns.Values;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.*;
-import com.epimorphics.test.utils.SparqlUtils;
+import com.epimorphics.util.SparqlUtils;
 
 import static com.epimorphics.sparql.exprs.LeafExprs.*;
 import static com.epimorphics.test.utils.MakeCollection.*;

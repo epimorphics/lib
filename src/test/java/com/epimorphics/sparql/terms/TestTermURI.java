@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.test.utils.SparqlUtils;
+import com.epimorphics.util.SparqlUtils;
 
 public class TestTermURI {
 	
