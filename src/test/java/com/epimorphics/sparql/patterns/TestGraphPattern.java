@@ -18,6 +18,7 @@ import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.Builder;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
+import com.epimorphics.sparql.graphpatterns.GraphPatternText;
 import com.epimorphics.sparql.graphpatterns.Named;
 import com.epimorphics.sparql.graphpatterns.Optional;
 import com.epimorphics.sparql.graphpatterns.PatternCommon;
@@ -151,6 +152,12 @@ public class TestGraphPattern {
 		String obtained = renderToSparql(b);
 		String expected = "BIND(?Expression AS ?x)";
 		assertEquals(expected, obtained);
+	}
+	
+	@Test public void testCreateGraphPatternFragment() {
+		GraphPattern p = new GraphPatternText("fragment");
+		String result = renderToSparql(p);
+		assertEquals("fragment", result);
 	}
 
 	private IsExpr twople(int i, int j) {
