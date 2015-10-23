@@ -23,7 +23,7 @@ import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Filter;
 import com.epimorphics.sparql.terms.Var;
-import com.epimorphics.test.utils.SparqlUtils;
+import com.epimorphics.util.SparqlUtils;
 
 import static com.epimorphics.test.utils.MakeCollection.*;
 

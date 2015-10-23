@@ -13,7 +13,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.epimorphics.sparql.exprs.Call;
-import com.epimorphics.sparql.exprs.ExprCommon;
 import com.epimorphics.sparql.exprs.Op;
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.Bind;
@@ -27,7 +26,7 @@ import com.epimorphics.sparql.graphpatterns.Values;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.*;
 
-import static com.epimorphics.test.utils.SparqlUtils.*;
+import static com.epimorphics.util.SparqlUtils.*;
 
 import static com.epimorphics.sparql.exprs.LeafExprs.*;
 import static com.epimorphics.test.utils.MakeCollection.*;

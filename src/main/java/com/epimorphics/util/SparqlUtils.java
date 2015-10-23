@@ -3,10 +3,10 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.test.utils;
+package com.epimorphics.util;
 
-import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Builder;
+import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.PatternCommon;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsSparqler;
