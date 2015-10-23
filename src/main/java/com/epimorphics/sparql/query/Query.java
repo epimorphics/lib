@@ -13,6 +13,7 @@ import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Projection;
+import com.epimorphics.sparql.terms.Triple;
 
 public class Query {
 	
@@ -24,10 +25,21 @@ public class Query {
 	final List<OrderCondition> orderBy = new ArrayList<OrderCondition>();
 	
 	final List<GraphPattern> where = new ArrayList<GraphPattern>();
+	
+	final List<Triple> constructions = new ArrayList<Triple>();
 
-	public String toSparql(Settings s) {
+	public String toSparqlSelect(Settings s) {
 		StringBuilder sb = new StringBuilder();
-		toSparql(s, sb);
+		toSparqlSelect(s, sb);
+		StringBuilder other = new StringBuilder();
+		assemblePrefixes(s, other);
+		other.append(sb);
+		return other.toString();
+	}
+	
+	public String toSparqlConstruct(Settings s) {
+		StringBuilder sb = new StringBuilder();
+		toSparqlConstruct(s, sb);
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
@@ -42,7 +54,19 @@ public class Query {
 		}
 	}
 
-	private void toSparql(Settings s, StringBuilder sb) {
+	private void toSparqlConstruct(Settings s, StringBuilder sb) {
+		sb.append("CONSTRUCT {");
+		String before = "";
+		for (Triple t: constructions) {
+			sb.append(before);
+			t.toSparql(s, sb);
+			before = " ";
+		}
+		sb.append("}");
+		appendWhereAndModifiers(s, sb);
+	}
+	
+	private void toSparqlSelect(Settings s, StringBuilder sb) {
 		sb.append("SELECT");
 		if (selectedVars.isEmpty()) {
 			sb.append(" *");
@@ -52,6 +76,10 @@ public class Query {
 				x.toSparql(s, sb);
 			}
 		}
+		appendWhereAndModifiers(s, sb);
+	}
+
+	private void appendWhereAndModifiers(Settings s, StringBuilder sb) {
 		sb.append(" WHERE ");
 		whereToSparql(s, sb);
 		
@@ -100,6 +128,10 @@ public class Query {
 
 	public void addOrder(Order o, IsExpr e) {
 		orderBy.add(new OrderCondition(o, e));
+	}
+
+	public void construct(Triple t) {
+		constructions.add(t);
 	}
 	
 }
