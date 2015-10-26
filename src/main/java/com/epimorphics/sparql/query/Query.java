@@ -13,6 +13,7 @@ import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Projection;
+import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
 
 public class Query {
@@ -31,10 +32,21 @@ public class Query {
 	final List<GraphPattern> where = new ArrayList<GraphPattern>();
 	
 	final List<Triple> constructions = new ArrayList<Triple>();
+	
+	final List<TermAtomic> describeElements = new ArrayList<TermAtomic>();
 
 	public String toSparqlSelect(Settings s) {
 		StringBuilder sb = new StringBuilder();
 		toSparqlSelect(s, sb);
+		StringBuilder other = new StringBuilder();
+		assemblePrefixes(s, other);
+		other.append(sb);
+		return other.toString();
+	}
+	
+	public String toSparqlDescribe(Settings s) {
+		StringBuilder sb = new StringBuilder();
+		toSparqlDescribe(s, sb);
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
@@ -85,11 +97,28 @@ public class Query {
 		}
 		appendWhereAndModifiers(s, sb);
 	}
+	
+	public void toSparqlDescribe(Settings s, StringBuilder sb) {
+		sb.append("DESCRIBE");
+		for (TermAtomic t: describeElements) {
+			sb.append(" ");
+			t.toSparql(s, sb);
+		}
+		if (where.size() > 0) appendWhere(s, sb);
+		appendModifiers(s, sb);
+	}
 
 	private void appendWhereAndModifiers(Settings s, StringBuilder sb) {
+		appendWhere(s, sb);
+		appendModifiers(s, sb);
+	}
+
+	private void appendWhere(Settings s, StringBuilder sb) {
 		sb.append(" WHERE ");
 		whereToSparql(s, sb);
-		
+	}
+
+	private void appendModifiers(Settings s, StringBuilder sb) {
 		if (orderBy.size() > 0) {
 			sb.append(" ORDER BY" );
 			for (OrderCondition oc: orderBy) {
@@ -99,7 +128,6 @@ public class Query {
 		
 		if (limit > -1) sb.append(" LIMIT ").append(limit);
 		if (offset > -1) sb.append(" OFFSET ").append(offset);
-		sb.append("");
 	}
 	
 	protected void whereToSparql(Settings s, StringBuilder sb) {
@@ -143,6 +171,10 @@ public class Query {
 
 	public void construct(Triple t) {
 		constructions.add(t);
+	}
+
+	public void addDescribeElements(List<TermAtomic> elements) {
+		describeElements.addAll(elements);
 	}
 	
 }
