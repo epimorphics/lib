@@ -70,7 +70,7 @@ public class Query {
 		appendWhereAndModifiers(s, sb);
 	}
 	
-	private void toSparqlSelect(Settings s, StringBuilder sb) {
+	public void toSparqlSelect(Settings s, StringBuilder sb) {
 		sb.append("SELECT");
 		if (distinction != Distinction.NONE) {
 			sb.append(" ").append(distinction);
@@ -111,7 +111,6 @@ public class Query {
 			sb.append("}");
 		}
 	}
-
 
 	public void setDistinction(Distinction d) {
 		this.distinction = d;
