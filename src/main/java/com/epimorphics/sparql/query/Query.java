@@ -17,8 +17,12 @@ import com.epimorphics.sparql.terms.Triple;
 
 public class Query {
 	
+	static public enum Distinction {NONE, DISTINCT, REDUCED}
+	
 	protected long limit = -1;
 	protected long offset = -1;
+
+	protected Distinction distinction = Distinction.NONE;
 	
 	final List<Projection> selectedVars = new ArrayList<Projection>();
 	
@@ -68,6 +72,9 @@ public class Query {
 	
 	private void toSparqlSelect(Settings s, StringBuilder sb) {
 		sb.append("SELECT");
+		if (distinction != Distinction.NONE) {
+			sb.append(" ").append(distinction);
+		}
 		if (selectedVars.isEmpty()) {
 			sb.append(" *");
 		} else {
@@ -105,6 +112,11 @@ public class Query {
 		}
 	}
 
+
+	public void setDistinction(Distinction d) {
+		this.distinction = d;
+	}
+	
 	public void setPattern(GraphPattern where) {
 		this.where.clear();
 		addPattern(where);

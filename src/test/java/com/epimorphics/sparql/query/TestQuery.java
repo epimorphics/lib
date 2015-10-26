@@ -28,6 +28,19 @@ public class TestQuery extends SharedFixtures {
 		assertEqualSparql("SELECT * WHERE {}", result);
 	}
 
+	@Test public void testRespectsDistinct() {
+		Query q = new Query();
+		q.setDistinction(Query.Distinction.DISTINCT);
+		String result = q.toSparqlSelect(new Settings());
+		assertEqualSparql("SELECT DISTINCT * WHERE {}", result);
+	}
+
+	@Test public void testRespectsReduced() {
+		Query q = new Query();
+		q.setDistinction(Query.Distinction.REDUCED);
+		String result = q.toSparqlSelect(new Settings());
+		assertEqualSparql("SELECT REDUCED * WHERE {}", result);
+	}
 	
 	@Test public void testQueryWithTriplePattern() {
 		Query q = new Query();
