@@ -19,7 +19,7 @@
  *
  *****************************************************************/
 
-package com.epimorphics.webapi.marshalling;
+package com.epimorphics.webapi.test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
