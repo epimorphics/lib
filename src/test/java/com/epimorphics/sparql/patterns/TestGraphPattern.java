@@ -18,6 +18,7 @@ import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.Builder;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
+import com.epimorphics.sparql.graphpatterns.Minus;
 import com.epimorphics.sparql.graphpatterns.Named;
 import com.epimorphics.sparql.graphpatterns.Optional;
 import com.epimorphics.sparql.graphpatterns.PatternCommon;
@@ -150,6 +151,21 @@ public class TestGraphPattern {
 		
 		String obtained = renderToSparql(b);
 		String expected = "BIND(?Expression AS ?x)";
+		assertEquals(expected, obtained);
+	}
+	
+	@Test public void testConstructMinusPattern() {
+		Triple T = new Triple(S, P, A);
+		Triple U = new Triple(S, Q, B);
+		GraphPattern A = new Basic(list(T));
+		GraphPattern B = new Basic(list(U));
+		GraphPattern M = new Minus(A, B);
+		String expected = 
+			renderToSparql((A)) 
+			+ " MINUS "
+			+ renderToSparql(B)
+			;
+		String obtained = renderToSparql(M);
 		assertEquals(expected, obtained);
 	}
 
