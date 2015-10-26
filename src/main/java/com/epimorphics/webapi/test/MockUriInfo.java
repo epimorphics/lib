@@ -32,6 +32,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 
+import com.epimorphics.util.EpiException;
+
 /**
  * Partial mock up of UriInfo, just sufficient to create PageInfo instances
  * for testing ResultPage processing.
@@ -42,13 +44,24 @@ public class MockUriInfo implements UriInfo {
 
     protected String path;
     protected String absolutePath;
+    protected URI requestUri;
     protected MultivaluedMap<String, String> queryParameters = new MultivaluedStringMap();
+    protected MultivaluedMap<String, String> pathParameters = new MultivaluedStringMap();
 
     public MockUriInfo(String path) {
+        this("http://localhost/", path);
+    }
+    
+    public MockUriInfo(String base, String path) {
         this.path = path;
+        try {
+            requestUri = new URI(base + path);
+        } catch (URISyntaxException e) {
+            throw new EpiException(e);
+        }
         if (path.contains("?")) {
             String[] parts = path.split("\\?");
-            absolutePath = parts[0];
+            absolutePath = base + parts[0];
             String[] queries = parts[1].split("&");
             for (String query : queries) {
                 String[] comps = query.split("=");
@@ -81,8 +94,7 @@ public class MockUriInfo implements UriInfo {
 
     @Override
     public URI getRequestUri() {
-        // TODO Auto-generated method stub
-        return null;
+        return requestUri;
     }
 
     @Override
@@ -118,14 +130,12 @@ public class MockUriInfo implements UriInfo {
 
     @Override
     public MultivaluedMap<String, String> getPathParameters() {
-        // TODO Auto-generated method stub
-        return null;
+        return pathParameters;
     }
 
     @Override
     public MultivaluedMap<String, String> getPathParameters(boolean decode) {
-        // TODO Auto-generated method stub
-        return null;
+        return pathParameters;
     }
 
     @Override
