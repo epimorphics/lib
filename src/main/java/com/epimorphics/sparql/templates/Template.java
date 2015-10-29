@@ -28,13 +28,13 @@ public class Template {
 		if (lit.length() > 0) elements.add(new PlainText(lit));
 		
 		int scan = dollar + 1;
-		while (scan < content.length() && Character.isLetter(content.charAt(scan))) scan += 1;
+		while (scan < content.length() && isLettery(content.charAt(scan))) scan += 1;
 		
 		int colon = scan;
 		
 		if (scan < content.length() && content.charAt(scan) == ':') {
 			scan += 1;
-			while (scan < content.length() && Character.isLetter(content.charAt(scan))) scan += 1;
+			while (scan < content.length() && isLettery(content.charAt(scan))) scan += 1;
 		}
 		
 		String spelling = content.substring(dollar+1, colon);
@@ -43,6 +43,10 @@ public class Template {
 		return content.substring(scan);
 	}
 	
+	private boolean isLettery(char ch) {
+		return ch == '_' || Character.isLetter(ch);
+	}
+
 	public List<Element> getElements() {
 		return elements;
 	}
@@ -51,6 +55,14 @@ public class Template {
 		StringBuilder sb = new StringBuilder();
 		for (Element e: elements) e.subst(sb, s);
 		return sb.toString();
+	}
+
+	public boolean startsWith(String queryType) {
+		return elements.size() > 0 && startsWith(elements.get(0), queryType);
+	}
+
+	private boolean startsWith(Element element, String queryType) {
+		return element instanceof PlainText && ((PlainText) element).text.startsWith(queryType);
 	}
 	
 }

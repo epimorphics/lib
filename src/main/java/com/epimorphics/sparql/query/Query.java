@@ -11,7 +11,9 @@ import java.util.Map;
 
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
+import com.epimorphics.sparql.templates.Template;
 import com.epimorphics.sparql.terms.IsExpr;
+import com.epimorphics.sparql.terms.IsSparqler;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
@@ -25,6 +27,8 @@ public class Query {
 
 	protected Distinction distinction = Distinction.NONE;
 	
+	protected Template template = null;
+	
 	final List<Projection> selectedVars = new ArrayList<Projection>();
 	
 	final List<OrderCondition> orderBy = new ArrayList<OrderCondition>();
@@ -36,6 +40,7 @@ public class Query {
 	final List<TermAtomic> describeElements = new ArrayList<TermAtomic>();
 
 	public String toSparqlSelect(Settings s) {
+		if (template != null) return templateToSparql("SELECT ", s);
 		StringBuilder sb = new StringBuilder();
 		toSparqlSelect(s, sb);
 		StringBuilder other = new StringBuilder();
@@ -43,8 +48,9 @@ public class Query {
 		other.append(sb);
 		return other.toString();
 	}
-	
+
 	public String toSparqlDescribe(Settings s) {
+		if (template != null) return templateToSparql("DESCRIBE ", s);
 		StringBuilder sb = new StringBuilder();
 		toSparqlDescribe(s, sb);
 		StringBuilder other = new StringBuilder();
@@ -52,14 +58,41 @@ public class Query {
 		other.append(sb);
 		return other.toString();
 	}
-	
+
 	public String toSparqlConstruct(Settings s) {
+		if (template != null) return templateToSparql("CONSTRUCT ", s);
 		StringBuilder sb = new StringBuilder();
 		toSparqlConstruct(s, sb);
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
 		return other.toString();
+	}
+	
+	private String templateToSparql(String queryType, Settings s) {
+		if (!template.startsWith(queryType)) 
+			throw new IllegalArgumentException("template does not start with " + queryType + " but " + template.toString());
+		fillParams(s);
+		return template.substWith(s);
+	}
+
+	static class Seq implements IsSparqler {
+		
+		final Query that;
+		final List<GraphPattern> patterns;
+		
+		Seq(Query that, List<GraphPattern> patterns) {
+			this.that = that;
+			this.patterns = patterns;
+		}
+
+		@Override public void toSparql(Settings s, StringBuilder sb) {
+			that.whereToSparql(s, sb);
+		}
+	}
+	
+	private void fillParams(Settings s) {
+		s.putParam("_graphPattern", new Seq(this, where));
 	}
 
 	private void assemblePrefixes(Settings s, StringBuilder sb) {
@@ -140,6 +173,14 @@ public class Query {
 		}
 	}
 
+	public void setTemplate(String templateString) {
+		setTemplate(new Template(templateString));
+	}
+
+	public void setTemplate(Template t) {
+		this.template = t;
+	}
+	
 	public void setDistinction(Distinction d) {
 		this.distinction = d;
 	}
