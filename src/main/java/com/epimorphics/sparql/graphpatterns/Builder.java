@@ -8,16 +8,18 @@ package com.epimorphics.sparql.graphpatterns;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.epimorphics.sparql.terms.TripleOrFilter;
+
 public class Builder {
 
-	final List<PatternCommon> elements = new ArrayList<PatternCommon>();
+	final List<TripleOrFilter> elements = new ArrayList<TripleOrFilter>();
 	
-	public void addElement(PatternCommon t) {
+	public void addElement(TripleOrFilter t) {
 		elements.add(t);
 	}
 
 	public Basic build() {
-		return new Basic(new ArrayList<PatternCommon>(elements));
+		return new Basic(new ArrayList<TripleOrFilter>(elements));
 	}
 	
 }

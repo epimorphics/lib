@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Union;
 import com.epimorphics.sparql.terms.Triple;
@@ -20,8 +21,8 @@ public class TestUnionPatterns extends SharedFixtures {
 	
 	@Test public void testUnionPatternToSparql() {
 		
-		GraphPattern x = basicPattern(new Triple(A, P, A));
-		GraphPattern y = basicPattern(new Triple(A, Q, B));
+		GraphPattern x = new Basic(new Triple(A, P, A));
+		GraphPattern y = new Basic(new Triple(A, Q, B));
 		
 		Union u = new Union(x, y);
 		

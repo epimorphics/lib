@@ -8,7 +8,7 @@ package com.epimorphics.sparql.terms;
 import com.epimorphics.sparql.graphpatterns.PatternCommon;
 import com.epimorphics.sparql.templates.Settings;
 
-public class Filter implements PatternCommon, IsSparqler {
+public class Filter implements PatternCommon, IsSparqler, TripleOrFilter {
 
 	final IsExpr e;
 	

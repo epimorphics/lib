@@ -16,6 +16,7 @@ import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Optional;
 import com.epimorphics.sparql.graphpatterns.PatternCommon;
 import com.epimorphics.sparql.terms.Triple;
+import com.epimorphics.sparql.terms.TripleOrFilter;
 
 import static com.epimorphics.util.SparqlUtils.*;
 import static com.epimorphics.test.utils.MakeCollection.*;
@@ -24,8 +25,8 @@ public class TestOptionalPatterns extends SharedFixtures {
 	
 	@Test public void testOptionalPatternToSparql() {
 		
-		PatternCommon x = new Triple(S, P, A);
-		List<PatternCommon> elements = list(x);
+		TripleOrFilter x = new Triple(S, P, A);
+		List<TripleOrFilter> elements = list(x);
 		GraphPattern operand = new Basic(elements);
 		Optional g = new Optional(operand);
 		

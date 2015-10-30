@@ -9,27 +9,28 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
+import com.epimorphics.sparql.terms.TripleOrFilter;
 
 public class Basic implements GraphPattern {
 	
-	final List<PatternCommon> elements;
+	final List<TripleOrFilter> elements;
 	
-	public Basic(List<PatternCommon> elements) {
+	public Basic(List<TripleOrFilter> elements) {
 		this.elements = elements;
 	}	
 	
-	public Basic(PatternCommon... elements) {
+	public Basic(TripleOrFilter... elements) {
 		this.elements = Arrays.asList(elements);
 	}
 	
-	public List<PatternCommon> getElements() {
+	public List<TripleOrFilter> getElements() {
 		return elements;
 	}
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
 		String gap = "";
 		sb.append("{");
-		for (PatternCommon p: elements) {
+		for (TripleOrFilter p: elements) {
 			sb.append(gap);
 			gap = " ";
 			p.toSparql(s, sb);

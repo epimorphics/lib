@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Named;
 import com.epimorphics.sparql.terms.Triple;
@@ -21,7 +22,7 @@ public class TestNamedGraphPatterns extends SharedFixtures {
 	@Test public void testNamedGraphToSparql() {
 		
 		URI graph = new URI("http://example.com/graph");
-		GraphPattern pattern = basicPattern(new Triple(A, P, A));
+		GraphPattern pattern = new Basic(new Triple(A, P, A));
 		Named n = new Named(graph, pattern);
 		assertSame(graph, n.getGraphName());
 		assertSame(pattern, n.getPattern());

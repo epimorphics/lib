@@ -19,6 +19,7 @@ import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Filter;
 import com.epimorphics.sparql.terms.Literal;
 import com.epimorphics.sparql.terms.Triple;
+import com.epimorphics.sparql.terms.TripleOrFilter;
 
 import static com.epimorphics.util.SparqlUtils.*;
 import static com.epimorphics.test.utils.MakeCollection.*;
@@ -40,7 +41,7 @@ public class TestBasicPatterns extends SharedFixtures {
 	@Test public void testBasicTriplePatternToSparql() {
 		Triple SPA = new Triple(S, P, A);
 		Filter f = new Filter(new Literal("17", Literal.xsdInteger, ""));
-		List<PatternCommon> elements = new ArrayList<PatternCommon>();
+		List<TripleOrFilter> elements = new ArrayList<TripleOrFilter>();
 		elements.add(f);
 		elements.add(SPA);
 		Basic b = new Basic(elements);
