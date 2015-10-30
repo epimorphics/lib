@@ -13,7 +13,7 @@ import com.epimorphics.sparql.terms.Triple;
 
 public class TestTemplatedGraphPattern extends SharedFixtures {
 
-	@Test public void testMe() {
+	@Test public void testGraphPatternSubstitution() {
 		Query q = new Query();
 		q.setTemplate("SELECT * WHERE $_graphPattern #END");
 		q.addPattern(new Basic(new Triple(S, P, V)));
