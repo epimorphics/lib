@@ -13,7 +13,6 @@ import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.templates.Template;
 import com.epimorphics.sparql.terms.IsExpr;
-import com.epimorphics.sparql.terms.IsSparqler;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
@@ -76,23 +75,10 @@ public class Query {
 		return template.substWith(s);
 	}
 
-	static class Seq implements IsSparqler {
-		
-		final Query that;
-		final List<GraphPattern> patterns;
-		
-		Seq(Query that, List<GraphPattern> patterns) {
-			this.that = that;
-			this.patterns = patterns;
-		}
-
-		@Override public void toSparql(Settings s, StringBuilder sb) {
-			that.whereToSparql(s, sb);
-		}
-	}
-	
 	private void fillParams(Settings s) {
-		s.putParam("_graphPattern", new Seq(this, where));
+		s.putParam("_graphPattern", new SubstPattern(this));
+		s.putParam("_sort", new SubstSort(this));
+		s.putParam("_modifiers", new SubstMod(this));
 	}
 
 	private void assemblePrefixes(Settings s, StringBuilder sb) {
@@ -138,12 +124,12 @@ public class Query {
 			t.toSparql(s, sb);
 		}
 		if (where.size() > 0) appendWhere(s, sb);
-		appendModifiers(s, sb);
+		appendOrderAndModifiers(s, sb);
 	}
 
 	private void appendWhereAndModifiers(Settings s, StringBuilder sb) {
 		appendWhere(s, sb);
-		appendModifiers(s, sb);
+		appendOrderAndModifiers(s, sb);
 	}
 
 	private void appendWhere(Settings s, StringBuilder sb) {
@@ -151,14 +137,17 @@ public class Query {
 		whereToSparql(s, sb);
 	}
 
-	private void appendModifiers(Settings s, StringBuilder sb) {
+	private void appendOrderAndModifiers(Settings s, StringBuilder sb) {
 		if (orderBy.size() > 0) {
 			sb.append(" ORDER BY" );
 			for (OrderCondition oc: orderBy) {
 				oc.toSparql(s, sb);
 			}
 		}
-		
+		appendLimitAndOffset(s, sb);
+	}
+
+	void appendLimitAndOffset(Settings s, StringBuilder sb) {
 		if (limit > -1) sb.append(" LIMIT ").append(limit);
 		if (offset > -1) sb.append(" OFFSET ").append(offset);
 	}

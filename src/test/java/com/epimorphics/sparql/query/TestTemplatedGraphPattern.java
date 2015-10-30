@@ -27,4 +27,28 @@ public class TestTemplatedGraphPattern extends SharedFixtures {
 		assertEqualSparql(expected, obtained);
 	}
 	
+	@Test public void testSortSubstitution() {
+		Query q = new Query();
+		q.setTemplate("SELECT * WHERE {} ORDER BY$_sort #END");
+		q.addOrder(Order.ASC, P);
+		String expected = 
+			"SELECT * WHERE {} ORDER BY ASC(_P) #END"
+			.replace("_P", P.toString())	
+			;
+		String obtained = q.toSparqlSelect(new Settings());
+		assertEqualSparql(expected, obtained);
+	}
+	
+	@Test public void testModifierSubstitution() {
+		Query q = new Query();
+		q.setTemplate("SELECT * WHERE {} $_modifiers #END");
+		q.setLimit(10);
+		q.setOffset(20);
+		String expected = 
+			"SELECT * WHERE {}  LIMIT 10 OFFSET 20 #END"
+			;
+		String obtained = q.toSparqlSelect(new Settings());
+		assertEqualSparql(expected, obtained);
+	}
+	
 }

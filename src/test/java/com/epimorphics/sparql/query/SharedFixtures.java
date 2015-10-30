@@ -17,12 +17,12 @@ import com.epimorphics.sparql.terms.Var;
 
 public class SharedFixtures {
 
-	static final TermAtomic S = new URI("http://example.com/S");
-	static final TermAtomic P = new URI("http://example.com/P");
-	static final TermAtomic Q = new URI("http://example.com/Q");
+	static final URI S = new URI("http://example.com/S");
+	static final URI P = new URI("http://example.com/P");
+	static final URI Q = new URI("http://example.com/Q");
 	
-	static final TermAtomic V = new Var("V");
-	static final TermAtomic W = new Var("W");
+	static final Var V = new Var("V");
+	static final Var W = new Var("W");
 	
 	static final TermAtomic A = integer(17);
 	
