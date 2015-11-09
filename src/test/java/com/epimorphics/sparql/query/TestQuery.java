@@ -28,6 +28,14 @@ public class TestQuery extends SharedFixtures {
 		assertEqualSparql("SELECT * WHERE {}", result);
 	}
 
+	@Test public void testRespectsRawModifier() {
+		Query q = new Query();
+		String fragment = "ORDER BY ?phone";
+		assertSame(q, q.addRawModifier(fragment));
+		String result = q.toSparqlSelect(new Settings());
+		assertEqualSparql("SELECT * WHERE {}_X".replace("_X", fragment), result);
+	}
+	
 	@Test public void testRespectsDistinct() {
 		Query q = new Query();
 		q.setDistinction(Query.Distinction.DISTINCT);

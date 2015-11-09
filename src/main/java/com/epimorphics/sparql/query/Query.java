@@ -43,6 +43,8 @@ public class Query {
 	final List<Triple> constructions = new ArrayList<Triple>();
 	
 	final List<TermAtomic> describeElements = new ArrayList<TermAtomic>();
+	
+	final List<String> rawModifiers = new ArrayList<String>();
 
 	/**
 		copy() returns a copy of this query. The array-valued instance
@@ -56,6 +58,7 @@ public class Query {
 		q.template = template;
 		q.selectedVars.addAll(selectedVars);
 		q.orderBy.addAll(orderBy);
+		q.rawModifiers.addAll(rawModifiers);
 		q.earlyWhere.addAll(earlyWhere);
 		q.laterWhere.addAll(laterWhere);
 		q.constructions.addAll(constructions);
@@ -163,8 +166,9 @@ public class Query {
 	}
 
 	private void appendOrderAndModifiers(Settings s, StringBuilder sb) {
-		if (orderBy.size() > 0) {
-			sb.append(" ORDER BY" );
+		if (orderBy.size() > 0 || rawModifiers.size() > 0) {
+			if (rawModifiers.isEmpty()) sb.append(" ORDER BY" );
+			for (String r: rawModifiers) sb.append(r);
 			for (OrderCondition oc: orderBy) {
 				oc.toSparql(s, sb);
 			}
@@ -241,6 +245,11 @@ public class Query {
 
 	public Query addOrder(Order o, IsExpr e) {
 		orderBy.add(new OrderCondition(o, e));
+		return this;
+	}
+	
+	public Query addRawModifier(String text) {
+		rawModifiers.add(text);
 		return this;
 	}
 
