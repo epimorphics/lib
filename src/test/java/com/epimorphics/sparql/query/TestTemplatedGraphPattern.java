@@ -16,7 +16,7 @@ public class TestTemplatedGraphPattern extends SharedFixtures {
 	@Test public void testGraphPatternSubstitution() {
 		Query q = new Query();
 		q.setTemplate("SELECT * WHERE $_graphPattern #END");
-		q.addPattern(new Basic(new Triple(S, P, V)));
+		q.addEarlyPattern(new Basic(new Triple(S, P, V)));
 		String expected = 
 			"SELECT * WHERE {_S _P _V .} #END"
 			.replace("_S", S.toString())	
