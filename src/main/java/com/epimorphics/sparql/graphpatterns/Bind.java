@@ -10,7 +10,7 @@ import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Var;
 
-public class Bind implements PatternCommon {
+public class Bind implements PatternCommon, GraphPattern {
 
 	final Var x;
 	final IsExpr e;
