@@ -18,7 +18,7 @@ public class PlainText implements Element {
 	}
 	
 	public String toString() {
-		return "lit(" + text + ")";
+		return "\"" + text + "\"";
 	}
 
 	private boolean same(PlainText other) {

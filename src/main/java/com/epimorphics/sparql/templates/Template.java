@@ -13,13 +13,18 @@ public class Template {
 	final List<Element> elements = new ArrayList<Element>();
 	
 	public Template(String content) {
-		
 		while (true) {
 			int dollar = content.indexOf('$');
 			if (dollar < 0) break;
 			content = parseParameter(content, dollar);
 		}
 		if (content.length() > 0) elements.add(new PlainText(content));		
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		for (Element e: elements) sb.append(e.toString());
+		return sb.toString();
 	}
 	
 	protected String parseParameter(String content, int dollar) {
