@@ -33,6 +33,8 @@ public class SharedFixtures {
 	}
 
 	protected static void assertEqualSparql(String expected, String result) {
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + result);
 		QueryFactory.create(expected);
 		QueryFactory.create(result);
 		assertEquals(expected, result);

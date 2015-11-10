@@ -28,6 +28,14 @@ public class TestQuery extends SharedFixtures {
 		assertEqualSparql("SELECT * WHERE {}", result);
 	}
 
+	@Test public void testRespectsRawModifier() {
+		Query q = new Query();
+		String fragment = "ORDER BY ?phone";
+		assertSame(q, q.addRawModifier(fragment));
+		String result = q.toSparqlSelect(new Settings());
+		assertEqualSparql("SELECT * WHERE {}_X".replace("_X", fragment), result);
+	}
+	
 	@Test public void testRespectsDistinct() {
 		Query q = new Query();
 		q.setDistinction(Query.Distinction.DISTINCT);
@@ -48,7 +56,7 @@ public class TestQuery extends SharedFixtures {
 		Filter filter = new Filter(LeafExprs.bool(true));
 		GraphPattern where = new Basic(list(filter));
 		
-		q.setPattern(where);
+		q.setEarlyPattern(where);
 		String result = q.toSparqlSelect(new Settings());
 		assertEqualSparql("SELECT * WHERE {FILTER(true)}", result);
 	}
@@ -61,7 +69,7 @@ public class TestQuery extends SharedFixtures {
 		TermAtomic S = new URI("http://localhost/exemplar/S");
 		TermAtomic P = new URI("http://localhost/exemplar/O");
 		TermAtomic O = new URI("http://localhost/exemplar/P");
-		q.addPattern(new Basic(new Triple(S, P, O)));
+		q.addEarlyPattern(new Basic(new Triple(S, P, O)));
 		String result = q.toSparqlSelect(s);
 		
 		assertTrue(s.getUsedPrefixes().contains("ex"));

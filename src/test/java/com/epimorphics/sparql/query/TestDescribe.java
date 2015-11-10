@@ -34,7 +34,7 @@ public class TestDescribe extends SharedFixtures {
 		Query q = new Query();
 		q.addDescribeElements(list(V));
 		
-		q.addPattern(new Basic(list(new Triple(S, P, V))));
+		q.addEarlyPattern(new Basic(list(new Triple(S, P, V))));
 		
 		String obtained = q.toSparqlDescribe(new Settings());
 		String expected = 

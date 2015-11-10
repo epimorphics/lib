@@ -6,6 +6,7 @@
 package com.epimorphics.sparql.patterns;
 
 import static com.epimorphics.test.utils.MakeCollection.list;
+//import static com.epimorphics.util.SparqlUtils.basicPattern;
 import static com.epimorphics.util.SparqlUtils.renderToSparql;
 import static org.junit.Assert.assertEquals;
 

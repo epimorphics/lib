@@ -62,6 +62,7 @@ public class MockUriInfo implements UriInfo {
         if (path.contains("?")) {
             String[] parts = path.split("\\?");
             absolutePath = base + parts[0];
+            this.path = parts[0];
             String[] queries = parts[1].split("&");
             for (String query : queries) {
                 String[] comps = query.split("=");

@@ -14,7 +14,6 @@ import org.junit.Test;
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Optional;
-import com.epimorphics.sparql.graphpatterns.PatternCommon;
 import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.sparql.terms.TripleOrFilter;
 

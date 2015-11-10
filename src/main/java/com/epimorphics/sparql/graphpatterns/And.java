@@ -3,7 +3,6 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-
 package com.epimorphics.sparql.graphpatterns;
 
 import java.util.Arrays;
