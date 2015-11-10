@@ -147,9 +147,13 @@ public class Query {
 	
 	public void toSparqlDescribe(Settings s, StringBuilder sb) {
 		sb.append("DESCRIBE");
-		for (TermAtomic t: describeElements) {
-			sb.append(" ");
-			t.toSparql(s, sb);
+		if (describeElements.isEmpty()) {
+			sb.append(" *");
+		} else {
+			for (TermAtomic t: describeElements) {
+				sb.append(" ");
+				t.toSparql(s, sb);
+			}
 		}
 		if (earlyWhere.size() > 0) appendWhere(s, sb);
 		appendOrderAndModifiers(s, sb);

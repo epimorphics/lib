@@ -12,7 +12,7 @@ import com.epimorphics.sparql.templates.Settings;
 	A GraphPatternText is a graph pattern that contains arbitrary text
 	that is substituted directly into the SPARQL query.
 */
-public class GraphPatternText implements PatternCommon, GraphPattern {
+public class GraphPatternText extends GraphPattern {
 
 	final String text;
 	

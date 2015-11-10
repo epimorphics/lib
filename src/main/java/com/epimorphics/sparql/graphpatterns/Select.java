@@ -8,7 +8,7 @@ package com.epimorphics.sparql.graphpatterns;
 import com.epimorphics.sparql.query.Query;
 import com.epimorphics.sparql.templates.Settings;
 
-public class Select implements PatternCommon, GraphPattern {
+public class Select extends GraphPattern {
 
 	final Query q;
 	

@@ -5,8 +5,10 @@
 */
 package com.epimorphics.sparql.graphpatterns;
 
+import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsSparqler;
 
-public interface GraphPattern extends IsSparqler {
+public abstract class GraphPattern implements IsSparqler {
 
+	
 }

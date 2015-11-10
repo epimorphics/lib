@@ -11,7 +11,7 @@ import java.util.List;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.TripleOrFilter;
 
-public class Basic implements GraphPattern {
+public class Basic extends GraphPattern {
 	
 	final List<TripleOrFilter> elements;
 	

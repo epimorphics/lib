@@ -6,10 +6,9 @@
 package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
-import com.epimorphics.sparql.graphpatterns.PatternCommon;
 import com.epimorphics.sparql.templates.Settings;
 
-public class Triple implements IsSparqler, PatternCommon, TripleOrFilter, GraphPattern {
+public class Triple extends GraphPattern implements IsSparqler, TripleOrFilter {
 
 	final TermAtomic S, P, O;
 	

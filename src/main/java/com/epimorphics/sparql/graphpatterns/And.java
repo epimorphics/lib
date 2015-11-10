@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class And implements GraphPattern {
+public class And extends GraphPattern {
 
 	final List<GraphPattern> elements;
 	

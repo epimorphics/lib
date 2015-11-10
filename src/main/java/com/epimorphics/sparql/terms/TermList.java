@@ -9,10 +9,9 @@ package com.epimorphics.sparql.terms;
 import java.util.Arrays;
 import java.util.List;
 
-import com.epimorphics.sparql.graphpatterns.PatternCommon;
 import com.epimorphics.sparql.templates.Settings;
 
-public class TermList implements PatternCommon, IsSparqler {
+public class TermList implements IsSparqler {
 
 	final List<TermAtomic> terms;
 	

@@ -7,7 +7,7 @@ package com.epimorphics.sparql.graphpatterns;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Exists implements PatternCommon, GraphPattern {
+public class Exists extends GraphPattern  {
 
 	final boolean exists;
 	final GraphPattern P;

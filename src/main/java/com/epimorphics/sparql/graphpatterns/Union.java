@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Union implements GraphPattern {
+public class Union extends GraphPattern {
 
 	final List<GraphPattern> patterns = new ArrayList<GraphPattern>();
 	

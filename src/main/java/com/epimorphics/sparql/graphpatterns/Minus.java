@@ -7,7 +7,7 @@ package com.epimorphics.sparql.graphpatterns;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Minus implements PatternCommon, GraphPattern {
+public class Minus extends GraphPattern {
 
 	final GraphPattern A;
 	final GraphPattern B;

@@ -8,7 +8,7 @@ package com.epimorphics.sparql.graphpatterns;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.URI;
 
-public class Named implements GraphPattern {
+public class Named extends GraphPattern {
 
 	final GraphPattern pattern;
 	final URI graphName;

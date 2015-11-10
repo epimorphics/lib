@@ -13,7 +13,7 @@ import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Var;
 
-public class Values implements GraphPattern  {
+public class Values extends GraphPattern  {
 
 	final List<Var> vars;
 	final List<IsExpr> data;

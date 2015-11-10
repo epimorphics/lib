@@ -7,7 +7,7 @@ package com.epimorphics.sparql.graphpatterns;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public final class Empty implements GraphPattern {
+public final class Empty extends GraphPattern {
 	
 	@Override public void toSparql(Settings s, StringBuilder sb) {
 		sb.append("{}");

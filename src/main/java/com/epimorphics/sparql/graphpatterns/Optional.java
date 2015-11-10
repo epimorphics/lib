@@ -7,7 +7,7 @@ package com.epimorphics.sparql.graphpatterns;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Optional implements GraphPattern {
+public class Optional extends GraphPattern {
 
 	final GraphPattern operand;
 	
