@@ -34,8 +34,8 @@ public class TestUnionPatterns extends SharedFixtures {
 		String expected = "{" + xRendering + " UNION " + yRendering + "}";
 		String unionResult = "{" + renderToSparql(u) + "}";
 		
-		System.err.println(">> expected: " + expected);
-		System.err.println(">> obtained: " + unionResult);
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + unionResult);
 		assertEquals(expected, unionResult);
 	}
 	

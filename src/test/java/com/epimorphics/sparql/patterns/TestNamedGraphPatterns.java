@@ -29,8 +29,8 @@ public class TestNamedGraphPatterns extends SharedFixtures {
 		
 		String expected = "GRAPH " + renderToSparql(graph) + " {" + renderToSparql(pattern) + "}";
 		String obtained = renderToSparql(n);
-		System.err.println(">> expected: " + expected);
-		System.err.println(">> obtained: " + obtained);
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + obtained);
 		assertEquals(expected, obtained);
 	}
 }

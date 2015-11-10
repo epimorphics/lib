@@ -48,8 +48,8 @@ public class TestBasicPatterns extends SharedFixtures {
 		b.toSparql(new Settings(), sb);
 
 		String obtained = sb.toString();
-		System.err.println(">> expected: " + expected);
-		System.err.println(">> obtained: " + obtained);	
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + obtained);	
 		assertEquals(expected, obtained);
 	}
 

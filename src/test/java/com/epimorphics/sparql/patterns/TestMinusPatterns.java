@@ -31,8 +31,8 @@ public class TestMinusPatterns extends SharedFixtures {
 			+ "{" + renderToSparql(B) + "}"
 			;
 		String obtained = renderToSparql(M);
-		System.err.println(">> expected: " + expected);
-		System.err.println(">> obtained: " + obtained);
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + obtained);
 		assertEquals(expected, obtained);
 	}
 }
