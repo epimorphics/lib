@@ -17,11 +17,18 @@ public class Exists extends GraphPattern  {
 		this.P = P;
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void toSparqlUnWrapped(Settings s, StringBuilder sb) {
 		sb.append("IF");
 		if (!exists) sb.append(" NOT");
 		sb.append(" EXISTS ");
-		P.toSparql(s, sb);
+		P.toSparqlUnWrapped(s, sb);
+	}
+
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+		sb.append("IF");
+		if (!exists) sb.append(" NOT");
+		sb.append(" EXISTS ");
+		P.toSparqlUnWrapped(s, sb);
 	}
 	
 }

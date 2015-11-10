@@ -27,15 +27,13 @@ public class Basic extends GraphPattern {
 		return elements;
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		String gap = "";
-		sb.append("{");
 		for (TripleOrFilter p: elements) {
 			sb.append(gap);
 			gap = " ";
 			p.toSparql(s, sb);
 		}
-		sb.append("}");
 	}
 	
 	

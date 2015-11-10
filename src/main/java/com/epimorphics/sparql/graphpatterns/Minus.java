@@ -17,10 +17,9 @@ public class Minus extends GraphPattern {
 		this.B = B;
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
-		A.toSparql(s, sb);
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+		A.toSparqlUnWrapped(s, sb);
 		sb.append(" MINUS ");
-		B.toSparql(s, sb);
-	}
-	
+		B.toSparqlUnWrapped(s, sb);
+	}	
 }

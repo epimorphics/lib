@@ -21,17 +21,15 @@ public class And extends GraphPattern {
 	public And(List<GraphPattern> args) {
 		this.elements = args;
 	}
-	
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		if (elements.size() == 1) {
 			elements.get(0).toSparql(s, sb);
 		} else {
-			sb.append(" {");
 			for (GraphPattern g: elements) {
 				sb.append(" ");
-				g.toSparql(s, sb);
+				g.toSparqlUnWrapped(s, sb);
 			}
-			sb.append(" }");
 		}
 	}
 

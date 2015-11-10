@@ -26,11 +26,13 @@ public class TestMinusPatterns extends SharedFixtures {
 		GraphPattern B = new Basic(list(U));
 		GraphPattern M = new Minus(A, B);
 		String expected = 
-			renderToSparql((A)) 
+			"{" + renderToSparql((A)) + "}" 
 			+ " MINUS "
-			+ renderToSparql(B)
+			+ "{" + renderToSparql(B) + "}"
 			;
 		String obtained = renderToSparql(M);
+		System.err.println(">> expected: " + expected);
+		System.err.println(">> obtained: " + obtained);
 		assertEquals(expected, obtained);
 	}
 }

@@ -46,7 +46,7 @@ public class Triple extends GraphPattern implements IsSparqler, TripleOrFilter {
 		return S.hashCode() ^ P.hashCode() + O.hashCode();
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		S.toSparql(s, sb);
 		sb.append(" ");
 		P.toSparql(s, sb);

@@ -38,22 +38,19 @@ public class TestBasicPatterns extends SharedFixtures {
 	}
 	
 	@Test public void testBasicTriplePatternToSparql() {
-		Triple SPA = new Triple(S, P, A);
 		Filter f = new Filter(new Literal("17", Literal.xsdInteger, ""));
-		List<TripleOrFilter> elements = new ArrayList<TripleOrFilter>();
-		elements.add(f);
-		elements.add(SPA);
-		Basic b = new Basic(elements);
+		Triple SPA = new Triple(S, P, A);
+		Basic b = new Basic(f, SPA);
 		
 		String renderF = renderToSparql(f), renderT = renderToSparql(SPA);
-		String expected = "{" + renderF + " " + renderT + "}";
+		String expected = renderF + " " + renderT;
 		StringBuilder sb = new StringBuilder();
 		b.toSparql(new Settings(), sb);
 
-		String result = sb.toString();
-//		System.err.println(">> expected: " + expected);
-//		System.err.println(">> obtained: " + result);	
-		assertEquals(expected, result);
+		String obtained = sb.toString();
+		System.err.println(">> expected: " + expected);
+		System.err.println(">> obtained: " + obtained);	
+		assertEquals(expected, obtained);
 	}
 
 }

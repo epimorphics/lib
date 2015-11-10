@@ -26,11 +26,11 @@ public class Named extends GraphPattern {
 		return graphName;
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		sb.append("GRAPH ");
 		graphName.toSparql(s, sb);
 		sb.append(" ");
-		pattern.toSparql(s, sb);
+		pattern.toSparqlUnWrapped(s, sb);
 	}
 
 }

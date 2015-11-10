@@ -19,8 +19,8 @@ public class GraphPatternText extends GraphPattern {
 	public GraphPatternText(String text) {
 		this.text = text;
 	}
-	
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		sb.append(text);
 	}
 

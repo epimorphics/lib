@@ -15,14 +15,13 @@ public class Optional extends GraphPattern {
 		this.operand = operand;
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
-		sb.append("OPTIONAL {");
-		operand.toSparql(s, sb);
-		sb.append("}");
-	}
-
 	public GraphPattern getPattern() {
 		return operand;
+	}
+
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+		sb.append("OPTIONAL ");
+		operand.toSparqlUnWrapped(s, sb);
 	}
 
 }

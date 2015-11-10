@@ -23,8 +23,7 @@ public class TestExistsPatterns extends SharedFixtures {
 		GraphPattern G = new Basic(list(new Triple(S, P, V)));
 		GraphPattern E = new Exists(false, G);
 		String expected =
-			"IF NOT EXISTS "
-			+ renderToSparql(G)
+			"IF NOT EXISTS {" + renderToSparql(G) + "}"
 			;
 		String obtained = renderToSparql(E);
 		assertEquals(expected, obtained);
@@ -34,10 +33,11 @@ public class TestExistsPatterns extends SharedFixtures {
 		GraphPattern G = new Basic(list(new Triple(S, P, V)));
 		GraphPattern E = new Exists(true, G);
 		String expected =
-			"IF EXISTS "
-			+ renderToSparql(G)
+			"IF EXISTS {" + renderToSparql(G) + "}"
 			;
 		String obtained = renderToSparql(E);
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + obtained);
 		assertEquals(expected, obtained);
 	}
 	

@@ -28,12 +28,14 @@ public class TestUnionPatterns extends SharedFixtures {
 		
 		assertEquals(list(x, y), u.getPatterns());
 		
-		String xRendering = renderToSparql(x);
-		String yRendering = renderToSparql(y);
+		String xRendering = "{" + renderToSparql(x) + "}";
+		String yRendering = "{" + renderToSparql(y) + "}";
 		
 		String expected = "{" + xRendering + " UNION " + yRendering + "}";
-		String unionResult = renderToSparql(u);
+		String unionResult = "{" + renderToSparql(u) + "}";
 		
+		System.err.println(">> expected: " + expected);
+		System.err.println(">> obtained: " + unionResult);
 		assertEquals(expected, unionResult);
 	}
 	

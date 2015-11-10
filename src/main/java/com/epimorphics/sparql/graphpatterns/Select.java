@@ -16,7 +16,7 @@ public class Select extends GraphPattern {
 		this.q = q;
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		sb.append("{");
 		q.toSparqlSelect(s, sb);
 		sb.append("}");

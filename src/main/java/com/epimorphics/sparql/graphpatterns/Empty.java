@@ -12,4 +12,8 @@ public final class Empty extends GraphPattern {
 	@Override public void toSparql(Settings s, StringBuilder sb) {
 		sb.append("{}");
 	}
+
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+		sb.append("");		
+	}
 }

@@ -23,7 +23,7 @@ public class Values extends GraphPattern  {
 		this.data = new ArrayList<IsExpr>(data);
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		sb.append("VALUES" );
 		if (vars.size() > 1) {
 			sb.append(" ");

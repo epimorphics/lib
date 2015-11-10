@@ -20,19 +20,19 @@ public class Bind extends GraphPattern {
 		this.x = x;
 	}
 
-	@Override public void toSparql(Settings s, StringBuilder sb) {
-		sb.append("BIND(");
-		e.toSparql(s, sb);
-		sb.append(" AS ");
-		x.toSparql(s, sb);
-		sb.append(")");
-	}
-
 	public Var getVar() {
 		return x;
 	}
 
 	public IsExpr getExpr() {
 		return e;
+	}
+
+	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+		sb.append("BIND(");
+		e.toSparql(s, sb);
+		sb.append(" AS ");
+		x.toSparql(s, sb);
+		sb.append(")");
 	}
 }
