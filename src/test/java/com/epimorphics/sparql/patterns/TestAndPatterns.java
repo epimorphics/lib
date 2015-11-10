@@ -26,8 +26,8 @@ public class TestAndPatterns extends SharedFixtures {
 		GraphPattern A = new And(G, E);
 		String expected = " { " + renderToSparql(G) + " " + renderToSparql(E) + " }";
 		String obtained = renderToSparql(A);
-		System.err.println(">> expected: " + expected);
-		System.err.println(">> obtained: " + obtained);
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + obtained);
 		assertEquals(expected, obtained);
 	}
 }
