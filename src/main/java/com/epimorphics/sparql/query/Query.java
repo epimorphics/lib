@@ -148,7 +148,7 @@ public class Query {
 	public void toSparqlDescribe(Settings s, StringBuilder sb) {
 		sb.append("DESCRIBE");
 		if (describeElements.isEmpty()) {
-			sb.append(" *");
+			sb.append(" ?id");
 		} else {
 			for (TermAtomic t: describeElements) {
 				sb.append(" ");
