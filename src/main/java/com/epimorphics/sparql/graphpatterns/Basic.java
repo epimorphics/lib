@@ -27,6 +27,10 @@ public class Basic extends GraphPattern {
 		return elements;
 	}
 
+	public String toString() {
+		return "Basic{" + elements + "}";
+	}
+	
 	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		String gap = "";
 		for (TripleOrFilter p: elements) {

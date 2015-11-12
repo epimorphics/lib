@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.templates.Template;
@@ -155,7 +156,7 @@ public class Query {
 				t.toSparql(s, sb);
 			}
 		}
-		if (earlyWhere.size() > 0) appendWhere(s, sb);
+		if (earlyWhere.size() > 0 || laterWhere.size() > 0) appendWhere(s, sb);
 		appendOrderAndModifiers(s, sb);
 	}
 
@@ -186,12 +187,19 @@ public class Query {
 	}
 	
 	protected void whereToSparql(Settings s, StringBuilder sb) {
-		List<GraphPattern> all = new ArrayList<GraphPattern>();
-		all.addAll(earlyWhere);
-		all.addAll(laterWhere);
-		whereToSparql(s, sb, all);
+		List<GraphPattern> early = new ArrayList<GraphPattern>();
+		List<GraphPattern> later = new ArrayList<GraphPattern>();
+		split(earlyWhere, early, later);
+		split(laterWhere, early, later);
+		early.addAll(later);
+		whereToSparql(s, sb, early);
 	}
-	
+
+	private void split(List<GraphPattern> from, List<GraphPattern> early, List<GraphPattern> later) {
+		for (GraphPattern f: from) 
+			if (f instanceof Bind) early.add(f); else later.add(f);
+	}
+
 	protected void whereToSparql(Settings s, StringBuilder sb, List<GraphPattern> patterns) {
 //		if (patterns.size() == 1) {
 //			patterns.get(0).toSparql(s, sb);

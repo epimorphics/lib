@@ -27,6 +27,10 @@ public class Bind extends GraphPattern {
 	public IsExpr getExpr() {
 		return e;
 	}
+	
+	public String toString() {
+		return "Bind{" + e + " AS " + x + "}";
+	}
 
 	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
 		sb.append("BIND(");
