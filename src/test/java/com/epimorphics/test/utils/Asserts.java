@@ -18,8 +18,8 @@ public class Asserts {
 	// Assert that the substring appears in the subject.
 	public static void assertContains(String subject, String substring) {
 		if (subject.contains(substring)) return;
-//		System.err.println(">> query: " + subject);
-//		System.err.println(">> subst: " + substring);
+		System.err.println(">> subject:   " + subject);
+		System.err.println(">> substring: " + substring);
 		fail("subject\n" + subject + "\nshould contain\n" + substring + "\n");
 	}
 
