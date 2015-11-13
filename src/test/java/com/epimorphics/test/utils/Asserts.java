@@ -20,7 +20,7 @@ public class Asserts {
 		if (subject.contains(substring)) return;
 //		System.err.println(">> query: " + subject);
 //		System.err.println(">> subst: " + substring);
-		fail("query\n" + subject + "\nshould contain\n" + substring + "\n");
+		fail("subject\n" + subject + "\nshould contain\n" + substring + "\n");
 	}
 
 }
