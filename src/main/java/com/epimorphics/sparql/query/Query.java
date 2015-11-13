@@ -9,14 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.RDFNode;
+
 import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.templates.Template;
 import com.epimorphics.sparql.terms.IsExpr;
+import com.epimorphics.sparql.terms.Literal;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
+import com.epimorphics.sparql.terms.URI;
+import com.epimorphics.util.SparqlUtils;
 
 /**
 	A Query is a representation of a SPARQL query.
@@ -101,9 +107,23 @@ public class Query {
 		if (!template.startsWith(queryType)) 
 			throw new IllegalArgumentException("template does not start with " + queryType + " but " + template.toString());
 		fillParams(s);
-		return template.substWith(s);
+		return doBinding(template.substWith(s));
+	}	
+
+	private String doBinding(String target) {
+		for (GraphPattern e: earlyWhere) 
+			if (e instanceof Bind)
+				target = doBinding(target, (Bind) e);			
+		return target;
 	}
 
+	private String doBinding(String target, Bind e) {
+		return target.replace
+			( "?" + e.getVar().getName()
+			, SparqlUtils.renderToSparql(e.getExpr())
+			);
+	}
+    
 	private void fillParams(Settings s) {
 		s.putParam("_graphPattern", new SubstPattern(this));
 		s.putParam("_sort", new SubstSort(this));
@@ -187,6 +207,10 @@ public class Query {
 	}
 	
 	protected void whereToSparql(Settings s, StringBuilder sb) {
+//		List<GraphPattern> all = new ArrayList<GraphPattern>();
+//		all.addAll(earlyWhere);
+//		all.addAll(laterWhere);
+//		whereToSparql(s, sb, all);
 		List<GraphPattern> early = new ArrayList<GraphPattern>();
 		List<GraphPattern> later = new ArrayList<GraphPattern>();
 		split(earlyWhere, early, later);
