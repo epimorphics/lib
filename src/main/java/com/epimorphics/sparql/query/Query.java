@@ -80,6 +80,7 @@ public class Query {
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
+		System.err.println(">> SELECTING: \n\n" + other + "\n\n");
 		return other.toString();
 	}
 

@@ -5,10 +5,9 @@
 */
 package com.epimorphics.sparql.terms;
 
-import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 
-public class Triple extends GraphPattern implements IsSparqler, TripleOrFilter {
+public class Triple implements IsSparqler, TripleOrFilter {
 
 	final TermAtomic S, P, O;
 	
@@ -46,7 +45,7 @@ public class Triple extends GraphPattern implements IsSparqler, TripleOrFilter {
 		return S.hashCode() ^ P.hashCode() + O.hashCode();
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+	@Override public void toSparql(Settings s, StringBuilder sb) {
 		S.toSparql(s, sb);
 		sb.append(" ");
 		P.toSparql(s, sb);
