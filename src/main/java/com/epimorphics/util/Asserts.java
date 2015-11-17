@@ -3,7 +3,7 @@
     
     (c) Copyright 2015 Epimorphics Limited
 */
-package com.epimorphics.test.utils;
+package com.epimorphics.util;
 
 import static org.junit.Assert.*;
 

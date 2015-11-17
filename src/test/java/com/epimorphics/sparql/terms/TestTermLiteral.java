@@ -5,11 +5,10 @@
 */
 package com.epimorphics.sparql.terms;
 
+import static com.epimorphics.util.Asserts.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import static com.epimorphics.test.utils.Asserts.*;
 
 public class TestTermLiteral {
 	
