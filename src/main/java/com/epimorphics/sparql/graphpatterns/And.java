@@ -28,9 +28,17 @@ public class And extends GraphPattern {
 		} else {
 			for (GraphPattern g: elements) {
 				sb.append(" ");
-				g.toSparqlUnWrapped(s, sb);
+				g.toSparqlWrapped(s, sb);
 			}
 		}
+	}
+	
+	@Override public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("And{");
+		for (GraphPattern g: elements) sb.append(g);
+		sb.append("}");
+		return sb.toString();
 	}
 
 }

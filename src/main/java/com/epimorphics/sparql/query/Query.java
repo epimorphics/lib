@@ -9,19 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.jena.graph.Node;
-import org.apache.jena.rdf.model.RDFNode;
-
 import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.templates.Template;
 import com.epimorphics.sparql.terms.IsExpr;
-import com.epimorphics.sparql.terms.Literal;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
-import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.util.SparqlUtils;
 
 /**
@@ -80,7 +75,6 @@ public class Query {
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
-		System.err.println(">> SELECTING: \n\n" + other + "\n\n");
 		return other.toString();
 	}
 
@@ -264,7 +258,7 @@ public class Query {
 	}
 	
 	public Query addLaterPattern(GraphPattern p) {
-		earlyWhere.add(p);
+		laterWhere.add(p);
 		return this;
 	}
 
@@ -296,6 +290,10 @@ public class Query {
 
 	public void addDescribeElements(List<TermAtomic> elements) {
 		describeElements.addAll(elements);
+	}
+
+	public List<GraphPattern> getEarly() {
+		return earlyWhere;
 	}
 	
 }
