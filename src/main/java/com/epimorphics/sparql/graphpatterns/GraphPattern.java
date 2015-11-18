@@ -10,15 +10,41 @@ import com.epimorphics.sparql.terms.IsSparqler;
 
 public abstract class GraphPattern implements IsSparqler {
 
-	public void toSparql(Settings s, StringBuilder sb) {
-		toSparqlWrapped(s, sb);
+	public enum Rank
+		{ NoBraces
+		, Optional
+		, Values
+		, Select
+		, Bind
+		, Text
+		, Named
+		, Zero
+		, Empty
+		, Basic
+		, Minus
+		, Union
+		, And
+		, Exists
+		, Max
+		}
+	
+	public final void toSparql(Settings s, StringBuilder sb) {
+		toPatternString(Rank.Zero, s, sb);
+	}
+
+	protected void toPatternString(Rank r, Settings s, StringBuilder sb) {
+		if (needsBraces(r)) sb.append("{");
+		toPatternString(s, sb);
+		if (needsBraces(r)) sb.append("}");
+	}
+
+	protected boolean needsBraces(Rank context) {
+		return context.ordinal() > ordinal();
 	}
 	
-	public abstract void toSparqlWrapped(Settings s, StringBuilder sb);
+	protected abstract int ordinal();
+
+	public abstract void toPatternString(Settings s, StringBuilder sb);
+
 	
-	public void toSparqlUnWrapped(Settings s, StringBuilder sb) {
-		sb.append("{");
-		toSparqlWrapped(s, sb);
-		sb.append("}");
-	}
 }

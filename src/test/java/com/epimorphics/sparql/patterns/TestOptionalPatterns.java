@@ -15,11 +15,9 @@ import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Optional;
 import com.epimorphics.sparql.query.Query;
-import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.sparql.terms.TripleOrFilter;
 
-import static com.epimorphics.util.SparqlUtils.*;
 import static com.epimorphics.test.utils.MakeCollection.*;
 
 public class TestOptionalPatterns extends SharedFixtures {
@@ -33,8 +31,8 @@ public class TestOptionalPatterns extends SharedFixtures {
 		
 		assertEquals(operand, g.getPattern());
 		
-		String basicResult = renderToSparql(operand);
-		String optionalResult = renderToSparql(g);
+		String basicResult = toPatternString(operand);
+		String optionalResult = toPatternString(g);
 		
 		assertEquals("OPTIONAL {" + basicResult + "}", optionalResult);		
 	}
@@ -50,13 +48,18 @@ public class TestOptionalPatterns extends SharedFixtures {
 		
 		q.addEarlyPattern(g);
 				
-		String basicResult = renderToSparql(operand);
-		String optionalResult = q.toSparqlSelect(new Settings());
+		String basicResult = toPatternString(operand);
+		String optionalResult = toPatternString(g);
+
+		String expected = "OPTIONAL {" + basicResult + "}";
 		
-		assertEquals("SELECT * WHERE {OPTIONAL {" + basicResult + "}}", optionalResult);		
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + optionalResult);
+		
+		assertEquals(expected, optionalResult);		
 	}
-	
-	@Test public void testNestecOptionalPatternToFullSparql() {
+
+	@Test public void testNestedOptionalPatternToFullSparql() {
 		
 		Query q = new Query();
 		
@@ -68,9 +71,9 @@ public class TestOptionalPatterns extends SharedFixtures {
 		
 		q.addEarlyPattern(g2);
 				
-		String optionalResult = q.toSparqlSelect(new Settings());
+		String optionalResult = toPatternString(g2);
 		
-		String expected = "SELECT * WHERE {OPTIONAL {OPTIONAL {<http://example.com/S> <http://example.com/P> 17 .}}}";
+		String expected = "OPTIONAL {OPTIONAL {<http://example.com/S> <http://example.com/P> 17 .}}";
 		
 //		System.err.println(">> expected: " + expected);
 //		System.err.println(">> obtained: " + optionalResult);

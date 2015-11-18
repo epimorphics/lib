@@ -31,13 +31,17 @@ public class Basic extends GraphPattern {
 		return "Basic{" + elements + "}";
 	}
 	
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
 		String gap = "";
 		for (TripleOrFilter p: elements) {
 			sb.append(gap);
 			gap = " ";
 			p.toSparql(s, sb);
 		}
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Basic.ordinal();
 	}
 	
 	

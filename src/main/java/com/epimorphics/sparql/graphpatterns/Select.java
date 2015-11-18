@@ -16,10 +16,12 @@ public class Select extends GraphPattern {
 		this.q = q;
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
-		sb.append("{");
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
 		q.toSparqlSelect(s, sb);
-		sb.append("}");
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Select.ordinal();
 	}
 	
 }

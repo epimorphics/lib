@@ -22,13 +22,17 @@ public class Union extends GraphPattern {
 		return patterns;
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
 		String between = "";
 		for (GraphPattern a: patterns) {
 			sb.append(between);
-			a.toSparqlUnWrapped(s, sb);
+			a.toPatternString(Rank.Union, s, sb);
 			between = " UNION ";
 		}
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Union.ordinal();
 	}
 
 }

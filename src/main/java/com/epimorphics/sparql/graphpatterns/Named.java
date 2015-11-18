@@ -5,6 +5,8 @@
 */
 package com.epimorphics.sparql.graphpatterns;
 
+import org.apache.jena.shared.BrokenException;
+
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.URI;
 
@@ -26,11 +28,21 @@ public class Named extends GraphPattern {
 		return graphName;
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+	@Override public void toPatternString(Rank ignored, Settings s, StringBuilder sb) {
 		sb.append("GRAPH ");
 		graphName.toSparql(s, sb);
 		sb.append(" ");
-		pattern.toSparqlUnWrapped(s, sb);
+		sb.append("{");
+		pattern.toPatternString(Rank.Zero, s, sb);
+		sb.append("}");
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Named.ordinal();
+	}
+
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
+		throw new BrokenException("not reachable");
 	}
 
 }

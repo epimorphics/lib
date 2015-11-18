@@ -5,7 +5,6 @@
 */
 package com.epimorphics.sparql.patterns;
 
-import static com.epimorphics.util.SparqlUtils.renderToSparql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -25,7 +24,7 @@ public class TestBindPatterns extends SharedFixtures {
 		assertSame(x, b.getVar());
 		assertSame(e, b.getExpr());
 		
-		String obtained = renderToSparql(b);
+		String obtained = toPatternString(b);
 		String expected = "BIND(?Expression AS ?x)";
 		assertEquals(expected, obtained);
 	}

@@ -19,19 +19,14 @@ public class Optional extends GraphPattern {
 		return operand;
 	}
 
-	@Override public void toSparqlUnWrapped(Settings s, StringBuilder sb) {
-		eitherSparql(s, sb);
-	}
-
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
-		eitherSparql(s, sb);
-	}
-
-	private void eitherSparql(Settings s, StringBuilder sb) {
-		sb.append("OPTIONAL ");
-		sb.append("{");
-		operand.toSparqlWrapped(s, sb);
+	public void toPatternString(Settings s, StringBuilder sb) {
+		sb.append("OPTIONAL {");
+		operand.toPatternString(Rank.NoBraces, s, sb);
 		sb.append("}");
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Optional.ordinal();
 	}
 
 }

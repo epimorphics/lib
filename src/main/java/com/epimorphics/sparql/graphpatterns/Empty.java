@@ -8,12 +8,12 @@ package com.epimorphics.sparql.graphpatterns;
 import com.epimorphics.sparql.templates.Settings;
 
 public final class Empty extends GraphPattern {
-	
-	@Override public void toSparql(Settings s, StringBuilder sb) {
-		sb.append("{}");
+
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
+		sb.append("");		
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
-		sb.append("");		
+	@Override protected int ordinal() {
+		return Rank.Empty.ordinal();
 	}
 }

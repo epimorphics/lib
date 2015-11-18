@@ -20,12 +20,16 @@ public class GraphPatternText extends GraphPattern {
 		this.text = text;
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
 		sb.append(text);
 	}
 	
 	public String toString() {
 		return "Text{" + text + "}";
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Text.ordinal();
 	}
 
 }

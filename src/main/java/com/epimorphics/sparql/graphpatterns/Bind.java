@@ -32,11 +32,15 @@ public class Bind extends GraphPattern {
 		return "Bind{" + e + " AS " + x + "}";
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
 		sb.append("BIND(");
 		e.toSparql(s, sb);
 		sb.append(" AS ");
 		x.toSparql(s, sb);
 		sb.append(")");
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Bind.ordinal();
 	}
 }

@@ -7,6 +7,8 @@ package com.epimorphics.sparql.patterns;
 
 import static com.epimorphics.sparql.exprs.LeafExprs.integer;
 
+import com.epimorphics.sparql.graphpatterns.GraphPattern;
+import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Literal;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.URI;
@@ -24,5 +26,11 @@ public class SharedFixtures {
 	static final TermAtomic B = new Literal("chat", type, "");
 	
 	static final Var V = new Var("V");
+	
+	String toPatternString(GraphPattern p) {
+		StringBuilder sb = new StringBuilder();
+		p.toPatternString(new Settings(), sb);
+		return sb.toString();
+	}
 	
 }

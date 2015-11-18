@@ -26,6 +26,8 @@ public class TestExistsPatterns extends SharedFixtures {
 			"IF NOT EXISTS {" + renderToSparql(G) + "}"
 			;
 		String obtained = renderToSparql(E);
+//		System.err.println(">> expected: " + expected);
+//		System.err.println(">> obtained: " + obtained);
 		assertEquals(expected, obtained);
 	}
 	

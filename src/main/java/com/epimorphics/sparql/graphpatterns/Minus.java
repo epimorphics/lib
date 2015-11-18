@@ -17,9 +17,13 @@ public class Minus extends GraphPattern {
 		this.B = B;
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
-		A.toSparqlUnWrapped(s, sb);
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
+		A.toPatternString(Rank.Max, s, sb);
 		sb.append(" MINUS ");
-		B.toSparqlUnWrapped(s, sb);
-	}	
+		B.toPatternString(Rank.Max, s, sb);
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Minus.ordinal();
+	}
 }

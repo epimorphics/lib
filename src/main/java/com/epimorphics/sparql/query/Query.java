@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.epimorphics.sparql.graphpatterns.And;
 import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
@@ -220,13 +221,10 @@ public class Query {
 	}
 
 	protected void whereToSparql(Settings s, StringBuilder sb, List<GraphPattern> patterns) {
-//		if (patterns.size() == 1) {
-//			patterns.get(0).toSparql(s, sb);
-//		} else {
-			sb.append("{");
-			for (GraphPattern element: patterns) element.toSparql(s, sb);
-			sb.append("}");
-//		}
+		sb.append("{");
+		// for (GraphPattern element: patterns) element.toSparql(s, sb);
+		And.create(patterns).toSparql(s, sb);
+		sb.append("}");
 	}
 
 	public Query setTemplate(String templateString) {

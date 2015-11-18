@@ -9,6 +9,8 @@ package com.epimorphics.sparql.graphpatterns;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.shared.BrokenException;
+
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Var;
@@ -23,7 +25,7 @@ public class Values extends GraphPattern  {
 		this.data = new ArrayList<IsExpr>(data);
 	}
 
-	@Override public void toSparqlWrapped(Settings s, StringBuilder sb) {
+	@Override public void toPatternString(Rank ignored, Settings s, StringBuilder sb) {
 		sb.append("VALUES" );
 		if (vars.size() > 1) {
 			sb.append(" ");
@@ -56,6 +58,14 @@ public class Values extends GraphPattern  {
 
 	public List<IsExpr> getData() {
 		return data;
+	}
+
+	@Override protected int ordinal() {
+		return Rank.Values.ordinal();
+	}
+
+	@Override public void toPatternString(Settings s, StringBuilder sb) {
+		throw new BrokenException("not reachable");
 	}
 
 }
