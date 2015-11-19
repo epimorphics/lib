@@ -110,7 +110,7 @@ public class AbstractSparqlQuery {
 	}	
 
 	private String doBinding(String target) {
-		for (GraphPattern e: earlyWhere) 
+		for (GraphPattern e: preBindings) 
 			if (e instanceof Bind)
 				target = doBinding(target, (Bind) e);			
 		return target;
@@ -210,6 +210,10 @@ public class AbstractSparqlQuery {
 		all.addAll(preBindings);
 		all.addAll(earlyWhere);
 		all.addAll(laterWhere);
+		
+//		System.err.println(">> whereToSparql");
+//		System.err.println(">> ALL: " + all);
+		
 		whereToSparql(s, sb, all);
 	}
 
