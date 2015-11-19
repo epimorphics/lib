@@ -15,7 +15,6 @@ import com.epimorphics.sparql.graphpatterns.Exists;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.terms.Triple;
 
-import static com.epimorphics.util.SparqlUtils.*;
 import static com.epimorphics.test.utils.MakeCollection.*;
 
 public class TestAndPatterns extends SharedFixtures {
@@ -27,7 +26,7 @@ public class TestAndPatterns extends SharedFixtures {
 		String expected = " " + toPatternString(G) + " " + toPatternString(E);
 		String obtained = toPatternString(A);
 //		System.err.println(">> expected: " + expected);
-//		System.err.println(">> obtained: " + obtained);
+		
 		assertEquals(expected, obtained);
 	}
 }

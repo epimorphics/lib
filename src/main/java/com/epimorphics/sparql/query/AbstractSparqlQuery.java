@@ -24,7 +24,7 @@ import com.epimorphics.util.SparqlUtils;
 	A Query is a representation of a SPARQL query.
 
 */
-public class Query {
+public class AbstractSparqlQuery {
 	
 	static public enum Distinction {NONE, DISTINCT, REDUCED}
 	
@@ -38,6 +38,8 @@ public class Query {
 	final List<Projection> selectedVars = new ArrayList<Projection>();
 	
 	final List<OrderCondition> orderBy = new ArrayList<OrderCondition>();
+	
+	final List<Bind> preBindings = new ArrayList<Bind>();
 	
 	final List<GraphPattern> earlyWhere = new ArrayList<GraphPattern>();
 	
@@ -53,8 +55,8 @@ public class Query {
 		copy() returns a copy of this query. The array-valued instance
 		variables are themselves copied.
 	*/
-	public Query copy() {
-		Query q = new Query();
+	public AbstractSparqlQuery copy() {
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		q.limit = limit;
 		q.offset = offset;
 		q.distinction = distinction;
@@ -62,6 +64,7 @@ public class Query {
 		q.selectedVars.addAll(selectedVars);
 		q.orderBy.addAll(orderBy);
 		q.rawModifiers.addAll(rawModifiers);
+		q.preBindings.addAll(preBindings);
 		q.earlyWhere.addAll(earlyWhere);
 		q.laterWhere.addAll(laterWhere);
 		q.constructions.addAll(constructions);
@@ -172,7 +175,7 @@ public class Query {
 				t.toSparql(s, sb);
 			}
 		}
-		if (earlyWhere.size() > 0 || laterWhere.size() > 0) appendWhere(s, sb);
+		appendWhere(s, sb);
 		appendOrderAndModifiers(s, sb);
 	}
 
@@ -203,35 +206,24 @@ public class Query {
 	}
 	
 	protected void whereToSparql(Settings s, StringBuilder sb) {
-//		List<GraphPattern> all = new ArrayList<GraphPattern>();
-//		all.addAll(earlyWhere);
-//		all.addAll(laterWhere);
-//		whereToSparql(s, sb, all);
-		List<GraphPattern> early = new ArrayList<GraphPattern>();
-		List<GraphPattern> later = new ArrayList<GraphPattern>();
-		split(earlyWhere, early, later);
-		split(laterWhere, early, later);
-		early.addAll(later);
-		whereToSparql(s, sb, early);
-	}
-
-	private void split(List<GraphPattern> from, List<GraphPattern> early, List<GraphPattern> later) {
-		for (GraphPattern f: from) 
-			if (f instanceof Bind) early.add(f); else later.add(f);
+		List<GraphPattern> all = new ArrayList<GraphPattern>();
+		all.addAll(preBindings);
+		all.addAll(earlyWhere);
+		all.addAll(laterWhere);
+		whereToSparql(s, sb, all);
 	}
 
 	protected void whereToSparql(Settings s, StringBuilder sb, List<GraphPattern> patterns) {
 		sb.append("{");
-		// for (GraphPattern element: patterns) element.toSparql(s, sb);
 		And.create(patterns).toSparql(s, sb);
 		sb.append("}");
 	}
 
-	public Query setTemplate(String templateString) {
+	public AbstractSparqlQuery setTemplate(String templateString) {
 		return setTemplate(new Template(templateString));
 	}
 
-	public Query setTemplate(Template t) {
+	public AbstractSparqlQuery setTemplate(Template t) {
 		this.template = t;
 		return this;
 	}
@@ -245,8 +237,13 @@ public class Query {
 		addEarlyPattern(where);
 	}
 	
-	public Query addEarlyPattern(GraphPattern p) {
+	public AbstractSparqlQuery addEarlyPattern(GraphPattern p) {
 		earlyWhere.add(p);
+		return this;
+	}
+
+	public AbstractSparqlQuery addPreBinding(Bind bind) {
+		preBindings.add(bind);
 		return this;
 	}
 	
@@ -255,7 +252,7 @@ public class Query {
 		addLaterPattern(where);
 	}
 	
-	public Query addLaterPattern(GraphPattern p) {
+	public AbstractSparqlQuery addLaterPattern(GraphPattern p) {
 		laterWhere.add(p);
 		return this;
 	}
@@ -272,12 +269,12 @@ public class Query {
 		selectedVars.add(x);
 	}
 
-	public Query addOrder(Order o, IsExpr e) {
+	public AbstractSparqlQuery addOrder(Order o, IsExpr e) {
 		orderBy.add(new OrderCondition(o, e));
 		return this;
 	}
 	
-	public Query addRawModifier(String text) {
+	public AbstractSparqlQuery addRawModifier(String text) {
 		rawModifiers.add(text);
 		return this;
 	}
@@ -292,6 +289,10 @@ public class Query {
 
 	public List<GraphPattern> getEarly() {
 		return earlyWhere;
+	}
+
+	public List<Bind> getBindings() {
+		return preBindings;
 	}
 	
 }

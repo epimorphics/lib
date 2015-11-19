@@ -11,9 +11,9 @@ import com.epimorphics.sparql.terms.IsSparqler;
 
 public class SubstSort implements IsSparqler {
 	
-	final Query q;
+	final AbstractSparqlQuery q;
 	
-	SubstSort(Query q) {
+	SubstSort(AbstractSparqlQuery q) {
 		this.q = q;
 	}
 

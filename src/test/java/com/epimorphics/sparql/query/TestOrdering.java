@@ -16,7 +16,7 @@ import com.epimorphics.sparql.terms.Var;
 public class TestOrdering extends SharedFixtures {
 	
 	@Test public void testOrderByClause() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		q.addOrder(Order.ASC, new Var("it"));
 		String result = q.toSparqlSelect(new Settings());
 		String expected = "SELECT * WHERE {} ORDER BY ASC(?it)";
@@ -24,7 +24,7 @@ public class TestOrdering extends SharedFixtures {
 	}
 	
 	@Test public void testOrderByDESCClause() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		q.addOrder(Order.DESC, new Var("it"));
 		String result = q.toSparqlSelect(new Settings());
 		String expected = "SELECT * WHERE {} ORDER BY DESC(?it)";
@@ -32,7 +32,7 @@ public class TestOrdering extends SharedFixtures {
 	}
 	
 	@Test public void testMultipleOrderByClauses() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		Var A = new Var("A"), B = new Var("B");
 		IsExpr e = new Infix(A, Op.opEq, B);
 		q.addOrder(Order.DESC, new Var("it"));

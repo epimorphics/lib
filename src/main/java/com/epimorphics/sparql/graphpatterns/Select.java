@@ -5,14 +5,14 @@
 */
 package com.epimorphics.sparql.graphpatterns;
 
-import com.epimorphics.sparql.query.Query;
+import com.epimorphics.sparql.query.AbstractSparqlQuery;
 import com.epimorphics.sparql.templates.Settings;
 
 public class Select extends GraphPattern {
 
-	final Query q;
+	final AbstractSparqlQuery q;
 	
-	public Select(Query q) {
+	public Select(AbstractSparqlQuery q) {
 		this.q = q;
 	}
 

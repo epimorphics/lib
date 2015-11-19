@@ -11,9 +11,9 @@ import com.epimorphics.sparql.terms.IsSparqler;
 
 public class SubstPattern implements IsSparqler {
 	
-	final Query q;
+	final AbstractSparqlQuery q;
 	
-	SubstPattern(Query q) {
+	SubstPattern(AbstractSparqlQuery q) {
 		this.q = q;
 	}
 

@@ -14,7 +14,7 @@ import org.junit.Test;
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Optional;
-import com.epimorphics.sparql.query.Query;
+import com.epimorphics.sparql.query.AbstractSparqlQuery;
 import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.sparql.terms.TripleOrFilter;
 
@@ -39,7 +39,7 @@ public class TestOptionalPatterns extends SharedFixtures {
 	
 	@Test public void testOptionalPatternToFullSparql() {
 		
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		
 		TripleOrFilter x = new Triple(S, P, A);
 		List<TripleOrFilter> elements = list(x);
@@ -61,7 +61,7 @@ public class TestOptionalPatterns extends SharedFixtures {
 
 	@Test public void testNestedOptionalPatternToFullSparql() {
 		
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		
 		TripleOrFilter x = new Triple(S, P, A);
 		List<TripleOrFilter> elements = list(x);

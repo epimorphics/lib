@@ -13,14 +13,14 @@ import com.epimorphics.sparql.terms.Triple;
 public class TestConstructQueries extends SharedFixtures{
 	
 	@Test public void testEmptyConstructQuery() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		String result = q.toSparqlConstruct(new Settings());
 		assertEqualSparql("CONSTRUCT {} WHERE {}", result);
 	}
 
 	
 	@Test public void testNonemptyConstructQuery() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		q.construct(new Triple(S, P, V));
 		String result = q.toSparqlConstruct(new Settings());
 		String expected = 
@@ -32,7 +32,7 @@ public class TestConstructQueries extends SharedFixtures{
 	}
 	
 	@Test public void testMultipleTriplesNonemptyConstructQuery() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		q.construct(new Triple(S, P, V));
 		q.construct(new Triple(S, Q, W));
 		String result = q.toSparqlConstruct(new Settings());

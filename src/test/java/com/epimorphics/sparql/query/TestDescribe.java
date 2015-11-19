@@ -16,12 +16,12 @@ import static com.epimorphics.test.utils.MakeCollection.*;
 public class TestDescribe extends SharedFixtures {
 
 	@Test public void testBuildDescribeNoWhere() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		q.addDescribeElements(list(S, P));
 		q.addDescribeElements(list(Q, V));
 		String obtained = q.toSparqlDescribe(new Settings());
 		String expected = 
-			"DESCRIBE _S _P _Q _V"
+			"DESCRIBE _S _P _Q _V WHERE {}"
 			.replace("_S", S.toString())
 			.replace("_P", P.toString())
 			.replace("_Q", Q.toString())
@@ -31,7 +31,7 @@ public class TestDescribe extends SharedFixtures {
 	}
 	
 	@Test public void testBuildDescribeWithWhere() {
-		Query q = new Query();
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		q.addDescribeElements(list(V));
 		
 		q.addEarlyPattern(new Basic(list(new Triple(S, P, V))));
