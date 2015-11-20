@@ -34,6 +34,14 @@ public class Settings {
 	public void setPrefix(String name, String URI) {
 		pm.setNsPrefix(name, URI);
 	}
+
+    public void setPrefixMapping(PrefixMapping prefixes) {
+        pm.setNsPrefixes(prefixes);
+    }
+
+    public PrefixMapping getPrefixMapping() {
+        return pm;
+    }
 	
 	public  Map<String, String> getPrefixes() {
 		return pm.getNsPrefixMap();
@@ -47,7 +55,7 @@ public class Settings {
 		}
 		return shortened;
 	}
-
+	
 	public Set<String> getUsedPrefixes() {
 		return usedPrefixes;
 	}
