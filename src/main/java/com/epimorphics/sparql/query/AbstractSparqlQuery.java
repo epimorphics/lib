@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.epimorphics.sparql.geo.GeoQuery;
 import com.epimorphics.sparql.graphpatterns.And;
 import com.epimorphics.sparql.graphpatterns.Bind;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
@@ -18,6 +19,7 @@ import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
+import com.epimorphics.sparql.terms.Var;
 import com.epimorphics.util.SparqlUtils;
 
 /**
@@ -50,6 +52,8 @@ public class AbstractSparqlQuery {
 	final List<TermAtomic> describeElements = new ArrayList<TermAtomic>();
 	
 	final List<String> rawModifiers = new ArrayList<String>();
+	
+	protected GeoQuery geoQuery = null; 
 
 	/**
 		copy() returns a copy of this query. The array-valued instance
@@ -67,6 +71,7 @@ public class AbstractSparqlQuery {
 		q.preBindings.addAll(preBindings);
 		q.earlyWhere.addAll(earlyWhere);
 		q.laterWhere.addAll(laterWhere);
+		q.geoQuery = geoQuery;
 		q.constructions.addAll(constructions);
 		q.describeElements.addAll(describeElements);
 		return q;
@@ -235,6 +240,10 @@ public class AbstractSparqlQuery {
 	public void setDistinction(Distinction d) {
 		this.distinction = d;
 	}
+
+	public void setGeoQuery(Var var, GeoQuery geoQuery) {
+		this.geoQuery = geoQuery;
+	}
 	
 	public void setEarlyPattern(GraphPattern where) {
 		this.earlyWhere.clear();
@@ -297,6 +306,10 @@ public class AbstractSparqlQuery {
 
 	public List<Bind> getBindings() {
 		return preBindings;
+	}
+
+	public Object getGeoQuery() {
+		return geoQuery;
 	}
 	
 }
