@@ -7,11 +7,17 @@ package com.epimorphics.sparql.patterns;
 
 import static org.junit.Assert.*;
 
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Test;
 
 import com.epimorphics.sparql.geo.GeoQuery;
 import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Var;
+import com.epimorphics.util.Asserts;
+import com.epimorphics.util.SparqlUtils;
+
 import static com.epimorphics.util.Asserts.*;
 
 public class TestGeoPatterns extends SharedFixtures {
@@ -33,5 +39,25 @@ public class TestGeoPatterns extends SharedFixtures {
 		GeoQuery gq = new GeoQuery(GeoQuery.withinBox, r, x, y);
 		q.setGeoQuery(new Var("it"), gq);
 		assertEquals(gq, q.getGeoQuery());
+	}
+	
+	@Test public void testGeoRendering() {
+		
+		Property spatial_withinBox = ResourceFactory.createProperty("eh:/P");
+		GeoQuery.register(GeoQuery.withinBox, spatial_withinBox);
+		
+		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		double r = 10.0, x = 1.2, y = 2.1;
+		GeoQuery gq = new GeoQuery(GeoQuery.withinBox, r, x, y);
+		q.setGeoQuery(new Var("it"), gq);
+		
+		StringBuilder sb = new StringBuilder();
+		Settings s = new Settings();
+		String obtained = q.toSparqlSelect(s);
+		
+//		Asserts.assertContains(obtained, "?it spatial:withinBox (10, 1.2, 2.1)");
+//		
+//		System.err.println(">>\n" + obtained);
+		
 	}
 }
