@@ -6,11 +6,17 @@
 package com.epimorphics.sparql.geo;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.jena.rdf.model.Property;
 
 public class GeoQuery {
 
 	public static final String withinBox = "withinBox";
+	
+	public static final Map<String, Property> registry = new HashMap<String, Property>();
 
 	final String name;
 	final List<Number> args;
@@ -40,6 +46,14 @@ public class GeoQuery {
 		for (int i = 0; i < args.size(); i += 1) 
 			if (!args.get(i).equals(other.args.get(i))) return false;
 		return true;
+	}
+
+	public static void register(String name, Property p) {
+		registry.put(name, p);
+	}
+	
+	public static Property getRegisteredProperty(String name) {
+		return registry.get(name);
 	}
 
 }
