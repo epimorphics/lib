@@ -14,12 +14,20 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
 	final String spelling;
 	final String lang;
 	final URI type;
-	
-	public Literal(String spelling, URI type, String lang) {
-		this.type = type;
-		this.lang = lang;
-		this.spelling = spelling;
-	}
+    
+    public Literal(String spelling, URI type) {
+        this(spelling, type, "");
+    }
+    
+    public Literal(String spelling, String lang) {
+        this(spelling, null, lang);
+    }
+    
+    public Literal(String spelling, URI type, String lang) {
+        this.type = type;
+        this.lang = lang;
+        this.spelling = spelling;
+    }
 
 	public String getLexicalForm() {
 		return spelling;
