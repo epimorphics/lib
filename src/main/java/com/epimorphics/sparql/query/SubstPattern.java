@@ -18,6 +18,6 @@ public class SubstPattern implements IsSparqler {
 	}
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		q.whereToSparql(s, sb);
+		q.NowhereToSparql(s, sb);
 	}
 }

@@ -32,7 +32,7 @@ public abstract class GraphPattern implements IsSparqler {
 		toPatternString(Rank.Zero, s, sb);
 	}
 
-	protected void toPatternString(Rank r, Settings s, StringBuilder sb) {
+	public void toPatternString(Rank r, Settings s, StringBuilder sb) {
 		if (needsBraces(r)) sb.append("{");
 		toPatternString(s, sb);
 		if (needsBraces(r)) sb.append("}");

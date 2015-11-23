@@ -210,6 +210,21 @@ public class AbstractSparqlQuery {
 		if (offset > -1) sb.append(" OFFSET ").append(offset);
 	}
 	
+	// Unify these next two clearly
+	
+	protected void NowhereToSparql(Settings s, StringBuilder sb) {
+		List<GraphPattern> all = new ArrayList<GraphPattern>();
+		all.addAll(preBindings);
+		all.addAll(earlyWhere);
+		all.addAll(laterWhere);
+		
+//		System.err.println(">> NowhereToSparql");
+//		System.err.println(">> ALL: " + all);
+		
+		GraphPattern a = And.create(all);
+		a.toPatternString(GraphPattern.Rank.NoBraces, s, sb);
+	}	
+	
 	protected void whereToSparql(Settings s, StringBuilder sb) {
 		List<GraphPattern> all = new ArrayList<GraphPattern>();
 		all.addAll(preBindings);
