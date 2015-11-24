@@ -6,6 +6,8 @@
 package com.epimorphics.sparql.terms;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 
 import com.epimorphics.sparql.templates.Settings;
 
@@ -14,6 +16,15 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
 	final String spelling;
 	final String lang;
 	final URI type;
+	
+	// for use by createTypedLiteral in fromNumber.
+	private static final Model m = ModelFactory.createDefaultModel();
+	
+	public Literal(String spelling, URI type, String lang) {
+		this.type = type;
+		this.lang = lang;
+		this.spelling = spelling;
+	}
     
     public Literal(String spelling, URI type) {
         this(spelling, type, "");
@@ -22,12 +33,12 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
     public Literal(String spelling, String lang) {
         this(spelling, null, lang);
     }
-    
-    public Literal(String spelling, URI type, String lang) {
-        this.type = type;
-        this.lang = lang;
-        this.spelling = spelling;
-    }
+	
+	public static Literal fromNumber(Number n) {
+		org.apache.jena.rdf.model.Literal l = m.createTypedLiteral(n);
+		URI type = new URI(l.getDatatypeURI());
+		return new Literal(n.toString(), type, "");
+	}
 
 	public String getLexicalForm() {
 		return spelling;

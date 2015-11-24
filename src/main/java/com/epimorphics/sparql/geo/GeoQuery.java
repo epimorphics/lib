@@ -10,18 +10,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.jena.rdf.model.Property;
+import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.terms.Var;
 
 public class GeoQuery {
 
+	public interface Build {
+		void SpatialApply(GeoQuery gq, AbstractSparqlQuery asq);
+	}
+	
 	public static final String withinBox = "withinBox";
 	
-	public static final Map<String, Property> registry = new HashMap<String, Property>();
+	public static final Map<String, Build> registry = new HashMap<String, Build>();
 
+	final Var toBind;
 	final String name;
 	final List<Number> args;
 	
-	public GeoQuery(String name, Number ... args) {
+	public GeoQuery(Var toBind, String name, Number ... args) {
+		this.toBind = toBind;
 		this.name = name;
 		this.args = Arrays.asList(args);
 	}
@@ -36,11 +43,20 @@ public class GeoQuery {
 		
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public Var getVar() {
+		return toBind;
+	}
+	
 	@Override public boolean equals(Object other) {
 		return other instanceof GeoQuery && same((GeoQuery) other);
 	}
 
 	private boolean same(GeoQuery other) {
+		if (!toBind.equals(other.toBind)) return false;
 		if (!name.equals(other.name)) return false;
 		if (args.size() != other.args.size()) return false;
 		for (int i = 0; i < args.size(); i += 1) 
@@ -48,12 +64,16 @@ public class GeoQuery {
 		return true;
 	}
 
-	public static void register(String name, Property p) {
-		registry.put(name, p);
+	public static void register(String name, Build b) {
+		registry.put(name, b);
 	}
 	
-	public static Property getRegisteredProperty(String name) {
+	public static Build lookupBuild(String name) {
 		return registry.get(name);
+	}
+
+	public List<Number> getArgs() {
+		return args;
 	}
 
 }

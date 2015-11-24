@@ -31,12 +31,14 @@ public class Settings {
 		return params.get(name);
 	}
 
-	public void setPrefix(String name, String URI) {
+	public Settings setPrefix(String name, String URI) {
 		pm.setNsPrefix(name, URI);
+		return this;
 	}
 
-    public void setPrefixMapping(PrefixMapping prefixes) {
+    public Settings setPrefixMapping(PrefixMapping prefixes) {
         pm.setNsPrefixes(prefixes);
+		return this;
     }
 
     public PrefixMapping getPrefixMapping() {
