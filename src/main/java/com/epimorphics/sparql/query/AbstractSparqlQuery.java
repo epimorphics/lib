@@ -19,7 +19,6 @@ import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
-import com.epimorphics.sparql.terms.Var;
 import com.epimorphics.util.SparqlUtils;
 
 /**
@@ -77,10 +76,20 @@ public class AbstractSparqlQuery {
 		return q;
 	}
 	
+	public AbstractSparqlQuery prepare(Settings s) {
+		AbstractSparqlQuery c = copy();
+		if (geoQuery != null) {
+			GeoQuery.Build spatial = GeoQuery.lookupBuild(geoQuery.getName());
+			spatial.SpatialApply(geoQuery, c);
+		}
+		return c;
+	}
+
+
 	public String toSparqlSelect(Settings s) {
 		if (template != null) return templateToSparql("SELECT ", s);
 		StringBuilder sb = new StringBuilder();
-		toSparqlSelect(s, sb);
+		prepare(s).toSparqlSelect(s, sb);
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
@@ -90,7 +99,7 @@ public class AbstractSparqlQuery {
 	public String toSparqlDescribe(Settings s) {
 		if (template != null) return templateToSparql("DESCRIBE ", s);
 		StringBuilder sb = new StringBuilder();
-		toSparqlDescribe(s, sb);
+		prepare(s).toSparqlDescribe(s, sb);
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
@@ -100,7 +109,7 @@ public class AbstractSparqlQuery {
 	public String toSparqlConstruct(Settings s) {
 		if (template != null) return templateToSparql("CONSTRUCT ", s);
 		StringBuilder sb = new StringBuilder();
-		toSparqlConstruct(s, sb);
+		prepare(s).toSparqlConstruct(s, sb);
 		StringBuilder other = new StringBuilder();
 		assemblePrefixes(s, other);
 		other.append(sb);
@@ -256,7 +265,7 @@ public class AbstractSparqlQuery {
 		this.distinction = d;
 	}
 
-	public void setGeoQuery(Var var, GeoQuery geoQuery) {
+	public void setGeoQuery(GeoQuery geoQuery) {
 		this.geoQuery = geoQuery;
 	}
 	

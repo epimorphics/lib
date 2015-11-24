@@ -6,17 +6,28 @@
 
 package com.epimorphics.sparql.terms;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class TermList implements IsSparqler {
+public class TermList implements IsSparqler, TermAtomic {
 
 	final List<TermAtomic> terms;
+
+	public TermList(List<TermAtomic> terms) {
+		this.terms = terms;
+	}
 	
 	public TermList(TermAtomic ... terms) {
-		this.terms = Arrays.asList(terms);
+		this(Arrays.asList(terms));
+	}
+	
+	public static TermList fromNumbers(List<Number> values) {
+		List<TermAtomic> result = new ArrayList<TermAtomic>();
+		for (Number v: values) result.add(Literal.fromNumber(v));
+		return new TermList(result);
 	}
 	
 	@Override public void toSparql(Settings s, StringBuilder sb) {
