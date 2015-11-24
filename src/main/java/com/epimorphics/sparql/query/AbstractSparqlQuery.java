@@ -53,7 +53,7 @@ public class AbstractSparqlQuery {
 	final List<String> rawModifiers = new ArrayList<String>();
 	
 	protected GeoQuery geoQuery = null; 
-
+	
 	/**
 		copy() returns a copy of this query. The array-valued instance
 		variables are themselves copied.
@@ -79,7 +79,8 @@ public class AbstractSparqlQuery {
 	public AbstractSparqlQuery prepare(Settings s) {
 		AbstractSparqlQuery c = copy();
 		if (geoQuery != null) {
-			GeoQuery.Build spatial = GeoQuery.lookupBuild(geoQuery.getName());
+			GeoQuery.Build spatial = s.lookup(geoQuery.getName());
+			if (spatial == null) spatial = GeoQuery.lookupBuild(geoQuery.getName());
 			spatial.SpatialApply(geoQuery, c);
 		}
 		return c;

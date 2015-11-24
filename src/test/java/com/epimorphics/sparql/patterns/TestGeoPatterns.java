@@ -51,9 +51,13 @@ public class TestGeoPatterns extends SharedFixtures {
 	}
 	
 	@Test public void testGeoRendering() {
-		
+
 		Property spatial_withinBox = ResourceFactory.createProperty("http://fake.spatial.com/spatial#withinBox");
-		GeoQuery.register(GeoQuery.withinBox, new BuildTest(spatial_withinBox));
+		
+		Settings s = new Settings()
+			.setPrefix("spatial", "http://fake.spatial.com/spatial#")
+			.register(GeoQuery.withinBox, new BuildTest(spatial_withinBox))
+			;
 		
 		AbstractSparqlQuery q = new AbstractSparqlQuery();
 		double r = 10.0, x = 1.2, y = 2.1;
@@ -61,7 +65,6 @@ public class TestGeoPatterns extends SharedFixtures {
 		q.setGeoQuery(gq);
 		
 		StringBuilder sb = new StringBuilder();
-		Settings s = new Settings().setPrefix("spatial", "http://fake.spatial.com/spatial#");
 		String obtained = q.toSparqlSelect(s);
 		
 		Asserts.assertContains(obtained, "?alpha spatial:withinBox (10.0 1.2 2.1)");

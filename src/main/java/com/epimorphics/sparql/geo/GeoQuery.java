@@ -19,9 +19,22 @@ public class GeoQuery {
 		void SpatialApply(GeoQuery gq, AbstractSparqlQuery asq);
 	}
 	
+	public static class Registry {
+		
+		final Map<String, Build> registry = new HashMap<String, Build>();
+		
+		public void register(String name, Build build) {
+			registry.put(name,  build);
+		}
+		
+		public Build lookup(String name) {
+			return registry.get(name);
+		}
+	}
+	
 	public static final String withinBox = "withinBox";
 	
-	public static final Map<String, Build> registry = new HashMap<String, Build>();
+	public static final Registry registry = new Registry();
 
 	final Var toBind;
 	final String name;
@@ -65,11 +78,11 @@ public class GeoQuery {
 	}
 
 	public static void register(String name, Build b) {
-		registry.put(name, b);
+		registry.register(name, b);
 	}
 	
 	public static Build lookupBuild(String name) {
-		return registry.get(name);
+		return registry.lookup(name);
 	}
 
 	public List<Number> getArgs() {

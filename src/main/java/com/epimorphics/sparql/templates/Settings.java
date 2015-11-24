@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.jena.shared.PrefixMapping;
 
+import com.epimorphics.sparql.geo.GeoQuery;
 import com.epimorphics.sparql.terms.IsSparqler;
 
 public class Settings {
@@ -19,6 +20,7 @@ public class Settings {
 	final Map<String, IsSparqler> params = new HashMap<String, IsSparqler>();
 	final PrefixMapping pm = PrefixMapping.Factory.create();
 	final Set<String> usedPrefixes = new HashSet<String>();
+	final GeoQuery.Registry registry = new GeoQuery.Registry();
 	
 	public Settings() {
 	}
@@ -29,6 +31,15 @@ public class Settings {
 
 	public IsSparqler getParam(String name) {
 		return params.get(name);
+	}
+	
+	public Settings register(String name, GeoQuery.Build build) {
+		registry.register(name, build);
+		return this;
+	}
+	
+	public GeoQuery.Build lookup(String name) {
+		return registry.lookup(name);
 	}
 
 	public Settings setPrefix(String name, String URI) {
