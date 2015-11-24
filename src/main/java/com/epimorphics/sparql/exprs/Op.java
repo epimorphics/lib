@@ -53,6 +53,9 @@ public class Op {
 	public static final Op fnIsLITERAL = new Op(OpType.FUNC, "isLITERAL");
 	public static final Op fnIsNUMERIC = new Op(OpType.FUNC, "isNUMERIC");
 
+    public static final Op fnREPLACE = new Op(OpType.FUNC, "REPLACE");
+    public static final Op fnREGEX = new Op(OpType.FUNC, "REGEX");
+	
 	public static final Op fnSTR = new Op(OpType.FUNC, "STR");
 	public static final Op fnLANG = new Op(OpType.FUNC, "LANG");
 	public static final Op fnLANGMATCHES = new Op(OpType.FUNC, "LANGMATCHES");
