@@ -17,6 +17,7 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
 	final String lang;
 	final URI type;
 	
+	// for use by createTypedLiteral in fromNumber.
 	private static final Model m = ModelFactory.createDefaultModel();
 	
 	public Literal(String spelling, URI type, String lang) {
@@ -24,6 +25,14 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
 		this.lang = lang;
 		this.spelling = spelling;
 	}
+    
+    public Literal(String spelling, URI type) {
+        this(spelling, type, "");
+    }
+    
+    public Literal(String spelling, String lang) {
+        this(spelling, null, lang);
+    }
 	
 	public static Literal fromNumber(Number n) {
 		org.apache.jena.rdf.model.Literal l = m.createTypedLiteral(n);
