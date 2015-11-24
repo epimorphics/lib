@@ -1,0 +1,74 @@
+Geo Queries (draft)
+
+The AbstractSparqlQuery API allows an abstract description of simple
+geospatial queries which can then be rendered by different back
+ends for the query rendering.
+
+A GeoQuery object has three components:
+
+    A Variable to which items satisfying the query will be bound
+    A (string) name identifying which query operation is requested
+    A sequence of numbers which are parameters to the query
+
+eg
+    GeoQuery q = new GeoQuery(new Var("it"), "withinBox", 10.1, 11.2, 12.3 )
+
+is a query that will bind to ?it, doing a withinBox query, with arguments
+(as expected by withinBox) 10.1, 11.2 the x,y coordinates of the point at 
+the centre of the box and of "radius" 12.3.
+
+If SQ is an abstract sparql query then
+
+    SQ.setGeoQuery(q)
+
+records the (single) geospatial query q.
+
+When the query SQ is rendered, there must be a translation from
+the GeoQuery to some SPARQL text that will implement it. This
+translation is provided by a GeoQuery.Registry which maps names
+to GeoQuery.Build objects
+
+    public interface Build {
+		void SpatialApply(GeoQuery gq, AbstractSparqlQuery asq);
+	}
+
+The Build object will be applied to the specific GeoQuery gq
+and a copy of the AbstractSparqlObject which the GeoQuery came
+from and translates the query to whatever filters or property 
+functions are required. For example
+
+	static final class BuildTest implements GeoQuery.Build {
+
+		final Property spatial;
+
+		public BuildTest(Property spatial) {
+			this.spatial = spatial;
+		}
+
+		@Override public void SpatialApply(GeoQuery gq,	AbstractSparqlQuery asq) {
+			Var S = gq.getVar();
+			URI P = new URI(spatial.getURI());
+			TermAtomic O = TermList.fromNumbers(gq.getArgs());
+			GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
+			asq.addEarlyPattern(spatialPattern);
+		}
+
+	}
+
+is a Build that will use a Property passed to it on creation to
+build something suitable for a Jena Spatial query.
+
+The AbstractSparqlQuery is a copy of the original so that updates
+to it (eg the addEarlyPattern in the example) are not persistent
+(otherwise we might end up with multiple equal SPARQL patterns).
+
+When the AbstractSparqlQuery is rendered to SPARQL, the GeoQuery
+(if present) is looked up in the Settings passed to the query
+
+    Settings.lookup(name_of_GeoQuery) : Build
+
+If the Build is null, then a static global registry in GeoQuery
+is consulted. This allows an application to set up a default set
+of GeoQuery handlers and to override them in Settings, or to
+leave all the registration to Settings.
+
