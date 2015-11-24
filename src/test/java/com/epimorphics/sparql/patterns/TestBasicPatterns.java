@@ -7,9 +7,6 @@ package com.epimorphics.sparql.patterns;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
 import com.epimorphics.sparql.graphpatterns.Basic;
@@ -18,7 +15,6 @@ import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Filter;
 import com.epimorphics.sparql.terms.Literal;
 import com.epimorphics.sparql.terms.Triple;
-import com.epimorphics.sparql.terms.TripleOrFilter;
 
 import static com.epimorphics.util.SparqlUtils.*;
 import static com.epimorphics.test.utils.MakeCollection.*;

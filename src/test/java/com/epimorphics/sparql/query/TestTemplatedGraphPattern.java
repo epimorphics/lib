@@ -15,7 +15,7 @@ public class TestTemplatedGraphPattern extends SharedFixtures {
 
 	@Test public void testGraphPatternSubstitution() {
 		AbstractSparqlQuery q = new AbstractSparqlQuery();
-		q.setTemplate("SELECT * WHERE $_graphPattern #END");
+		q.setTemplate("SELECT * WHERE {$_graphPattern} #END");
 		q.addEarlyPattern(new Basic(new Triple(S, P, V)));
 		String expected = 
 			"SELECT * WHERE {_S _P _V .} #END"
@@ -24,6 +24,10 @@ public class TestTemplatedGraphPattern extends SharedFixtures {
 			.replace("_V", "?V")	
 			;
 		String obtained = q.toSparqlSelect(new Settings());
+		
+//		System.err.println(">> obtained:\n" + obtained);
+//		System.err.println(">> expected:\n" + expected);
+		
 		assertEqualSparql(expected, obtained);
 	}
 	
