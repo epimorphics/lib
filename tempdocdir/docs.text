@@ -182,17 +182,53 @@ new Union(GraphPattern ... patterns)
 
 new Minus(GraphPattern A, B)
 
+    A Minus graph pattern renders as {_A} MINUS {_B}
+
 new GraphPatternText(String text)
+
+    A Text graph pattern renders as the text. No checks
+    are attempted; the developer is assumed to know that
+    the text is legal at this point.
 
 new Named(URI name, GraphPattern p)
 
+    A Named graph pattern renders as 
+
+        GRAPH _name {_p}
+
 new Select(AbstractSparqlQuery q)
 
-new Values(List<Var>, List<IsExpr>)
+    A Select graph pattern renders as
+
+        {_q}
+
+    where _q is the rendering of q, using the same Settings.
+
+new Values(List<Var> vars, List<IsExpr> data)
+
+    A Values graph pattern renders as
+
+        VALUES (_vars) {_data1 _data2 ...}
+
+    _vars is the renderings of the elements of vars; if
+    there is only one element the round brackets () are
+    omitted. The data elements _datan are the renderings
+    of the expressions in data. When there are multiple
+    variables, and hence any data element represents as
+    many values as there are variables, then the data
+    item must be a bracketed expression, ie of the form
+
+        new Call(Op.Tuple, V1 ... Vn)
 
 new Exists(boolean exists, GraphPattern p)
- 
 
+    An Exists graph pattern renders as
+
+        IF _exists {_p}
+
+    where _exists is empty if exists is true and is NOT
+    if exists is false.
+ 
 Triples
 
 A Triple has three TermAtomic components. A TermAtomic can be
@@ -221,7 +257,7 @@ operations.
 
 An Infix represents a binary operator expression; it has two 
 (sub) expressions (L and R) and an Operator. The operator wraps
-the name of a SPARQL operator.
+the name of a SPARQL operator. 
 
 A Call represents a function call; it has a name (the name of
 a SPARQL function) and a list of (sub)expressions. The special
