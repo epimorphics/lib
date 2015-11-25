@@ -11,7 +11,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Text implements IsSparqler {
+public class Text implements TripleOrFilter {
     protected String text;
     
     public Text(String text) {
