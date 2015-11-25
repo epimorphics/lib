@@ -50,13 +50,13 @@ public class TestGeoPatterns extends SharedFixtures {
 		assertEquals(gq, q.getGeoQuery());
 	}
 	
-	@Test public void testGeoRendering() {
+	@Test public void testGeoRenderingLikeJenaSpatial() {
 
 		Property spatial_withinBox = ResourceFactory.createProperty("http://fake.spatial.com/spatial#withinBox");
 		
 		Settings s = new Settings()
 			.setPrefix("spatial", "http://fake.spatial.com/spatial#")
-			.register(GeoQuery.withinBox, new BuildTest(spatial_withinBox))
+			.register(GeoQuery.withinBox, new LikeSpatialBuild(spatial_withinBox))
 			;
 		
 		AbstractSparqlQuery q = new AbstractSparqlQuery();
@@ -73,11 +73,11 @@ public class TestGeoPatterns extends SharedFixtures {
 		
 	}
 	
-	static final class BuildTest implements GeoQuery.Build {
+	static final class LikeSpatialBuild implements GeoQuery.Build {
 
 		final Property spatial;
 		
-		public BuildTest(Property spatial) {
+		public LikeSpatialBuild(Property spatial) {
 			this.spatial = spatial;
 		}
 		

@@ -146,7 +146,7 @@ new Basic(List<TripleOrFilter>)
 
 	A Basic graph pattern is a sequence of Triple-or-Filter values.
 	(Note that these triples are generalised; they may have variables
-	within them.)
+	within them. See below for more details on these classes.)
 
 new And(List<GraphPattern>)
 new And(GraphPattern ...)
@@ -192,5 +192,42 @@ new Values(List<Var>, List<IsExpr>)
 
 new Exists(boolean exists, GraphPattern p)
  
+
+Triples
+
+A Triple has three TermAtomic components. A TermAtomic can be
+a URI, a Literal, a Blank, or a Var. 
+
+A URI node has a string for the URI it represents. A Blank 
+holds a distinguishing string ID which may be specified
+explicitly or generated (by Jena) as required. A Var has a
+string Name (which does not start with a "?"). A Literal
+has a lexical form, a URI type, and a language code; if
+the type is ommitted use null, if the language is omitted 
+use the empty string "", and it is undefined to give a
+Literal both a type and a language.
+
+Filters
+
+A Filter wraps an expression. When a Filter is rendered it
+wraps FILTER() around the rendering of the expression. An
+expression is something that satisfies the interface IsExpr,
+which requires a rendering method toSparql(int, Settings, StringBuilder).
+The int precedence is used to arrange that sufficiently many brackets
+are inserted into the rendered expression.
+
+Defined IsExprs are all the TermAtomics, function Calls, and Infix
+operations. 
+
+An Infix represents a binary operator expression; it has two 
+(sub) expressions (L and R) and an Operator. The operator wraps
+the name of a SPARQL operator.
+
+A Call represents a function call; it has a name (the name of
+a SPARQL function) and a list of (sub)expressions. The special
+case where the name is the empty string is used to represent
+expression lists in brackets.
+
+
 
 
