@@ -1,0 +1,60 @@
+text search api proposal -- draft
+
+AbstractSparqlQuery Q allows injection of text queries,
+ie searches for text that are based on non-SPARQL indexes.
+
+These operations are supposed to be compatible with the
+text-search options in the DSAPI.
+
+Q.addSearch(Var v, String s)
+
+    Generate SPARQL that binds v to all the items that
+    have a literal value of some property that matches
+    the string s, where "matches" means roughly "appears
+    as a word in". The details of the meaning of matches
+    depend on the choice of implementation of the text
+    search.
+
+    "some property" means "one of a known set of properties",
+    again, chosen by the implementation of the underlying
+    text match.
+
+Q.addSearch(Var v, Property p, String s)
+
+    Generate SPARQL that binds v to all the items with
+    p value some text literal l such that s matches l.
+    (This is the same as search(v, s) restricted to that
+    single named proeprty.)
+
+Q.addSearchThrough(Var v, Property p, String s)
+
+    Generate SPARQL that binds v to all the items
+    with a p-value of some resource R such that
+    s matches some literal value of R.
+
+Q.addSearchThrough(Var v, Property p, Property q, String s)
+
+    As per searchThrough(Var, Property, String) except
+    that only the q-value of R is searched.
+
+RESTRICTIONS (to be considered). 
+
+Only one search query is allowed. (In practice
+doing multiple lucene text searches has lead to poor
+performance in the past, this may no longer be true
+in Jena 3.*.)
+
+ISSUE
+
+Making sure in the implementation that we don't fetch
+the p-value of any resource more than once.
+
+TODO 
+
+How to specify alternative back ends. We should
+have at least a text:query back end available. Is
+it worth having any more eg one that just uses
+regexps to show willing?
+
+
+
