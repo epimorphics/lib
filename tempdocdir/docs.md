@@ -182,91 +182,91 @@ there are several combinators and more complex patterns.
 
 > Creates a graph pattern that renders as
 
-> > {_P1} UNION {_P2} ... {_Pn} 
+> > `{_P1} UNION {_P2} ... {_Pn}` 
 
-> Where _Pn is the rendering of the n'th pattern in
+> Where `_Pn` is the rendering of the `n`'th pattern in
 > the union.
 
 ### `new Minus(GraphPattern A, B)`
 
-    A Minus graph pattern renders as {_A} MINUS {_B}
+> A Minus graph pattern renders as `{_A} MINUS {_B}`
 
 ### `new GraphPatternText(String text)`
 
-    A Text graph pattern renders as the text. No checks
-    are attempted; the developer is assumed to know that
-    the text is legal at this point.
+> A Text graph pattern renders as the text. No checks
+> are attempted; the developer is assumed to know that
+> the text is legal at this point.
 
 ### `new Named(URI name, GraphPattern p)`
 
-    A Named graph pattern renders as 
+> A Named graph pattern renders as 
 
-        GRAPH _name {_p}
+> > `GRAPH _name {_p}`
 
 ### `new Select(ASQ q)`
 
-    A Select graph pattern renders as
+> A Select graph pattern renders as
 
-        {_q}
+> > `{_q}`
 
-    where _q is the rendering of q, using the same Settings.
+> where `_q` is the rendering of `q`, using the same `Settings`.
 
 ### `new Values(List<Var> vars, List<IsExpr> data)`
 
-    A Values graph pattern renders as
+> A Values graph pattern renders as
 
-        VALUES (_vars) {_data1 _data2 ...}
+> > `VALUES (_vars) {_data1 _data2 ...}`
 
-    _vars is the renderings of the elements of vars; if
-    there is only one element the round brackets () are
-    omitted. The data elements _datan are the renderings
-    of the expressions in data. When there are multiple
-    variables, and hence any data element represents as
-    many values as there are variables, then the data
-    item must be a bracketed expression, ie of the form
+> `_vars` is the renderings of the elements of `vars`; if
+> there is only one element the round brackets () are
+> omitted. The data elements `_datan` are the renderings
+> of the expressions in `data`. When there are multiple
+> variables, and hence any data element represents as
+> many values as there are variables, then the data
+> item must be a bracketed expression, ie of the form
 
-        new Call(Op.Tuple, V1 ... Vn)
+> > `new Call(Op.Tuple, V1 ... Vn)`
 
 ### `new Exists(boolean exists, GraphPattern p)`
 
-    An Exists graph pattern renders as
+> An Exists graph pattern renders as
 
-        IF _exists {_p}
+> > `IF _exists {_p}`
 
-    where _exists is empty if exists is true and is NOT
-    if exists is false.
+> where `_exists` is empty if `exists` is `true` and is `NOT`
+> if `exists` is false.
  
 ## Triples
 
-A Triple has three TermAtomic components. A TermAtomic can be
-a URI, a Literal, a Blank, or a Var. 
+A `Triple` has three `TermAtomic` components. A `TermAtomic` can be
+a `URI`, a `Literal`, a `Blank`, or a `Var`. 
 
-A URI node has a string for the URI it represents. A Blank 
+A `URI` node has a string for the URI it represents. A `Blank` 
 holds a distinguishing string ID which may be specified
-explicitly or generated (by Jena) as required. A Var has a
-string Name (which does not start with a "?"). A Literal
+explicitly or generated (by Jena) as required. A `Var` has a
+string Name (which does not start with a "?"). A `Literal`
 has a lexical form, a URI type, and a language code; if
 the type is ommitted use null, if the language is omitted 
 use the empty string "", and it is undefined to give a
-Literal both a type and a language.
+`Literal` both a type and a language.
 
-Filters
+## Filters
 
-A Filter wraps an expression. When a Filter is rendered it
-wraps FILTER() around the rendering of the expression. An
-expression is something that satisfies the interface IsExpr,
-which requires a rendering method toSparql(int, Settings, StringBuilder).
+A `Filter` wraps an expression. When a `Filter` is rendered it
+wraps `FILTER()` around the rendering of the expression. An
+expression is something that satisfies the interface `IsExpr`,
+which requires a rendering method `toSparql(int, Settings, StringBuilder)`.
 The int precedence is used to arrange that sufficiently many brackets
 are inserted into the rendered expression.
 
-Defined IsExprs are all the TermAtomics, function Calls, and Infix
+Defined `IsExprs` are all the `TermAtomic`s, function `Call`s, and `Infix`
 operations. 
 
-An Infix represents a binary operator expression; it has two 
-(sub) expressions (L and R) and an Operator. The operator wraps
+An `Infix` represents a binary operator expression; it has two 
+(sub) expressions (`L` and `R`) and an `Operator`. The operator wraps
 the name of a SPARQL operator. 
 
-A Call represents a function call; it has a name (the name of
+A `Call` represents a function call; it has a name (the name of
 a SPARQL function) and a list of (sub)expressions. The special
 case where the name is the empty string is used to represent
 expression lists in brackets.
