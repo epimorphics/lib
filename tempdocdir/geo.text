@@ -1,43 +1,55 @@
-Geo Queries (draft)
+# Geo-Spatial Queries
 
-The AbstractSparqlQuery API allows an abstract description of simple
-geospatial queries which can then be rendered by different back
-ends for the query rendering.
+# Revised Edition
+
+[This document now describes an unimplemented change to
+the AbstractSparqlQuery(ASQ)  system]
+
+Lib's GeoSpatial queries are handled by translating from an
+abstract geo query ("abstract" in the sense that it is not
+specified how the query is implemented) to graph patterns
+for the ASQ. The implementation may, for example, consist of
+SPARQL filters or use spatial indexes such as Jena Spatial.
 
 A GeoQuery object has three components:
 
-    A Variable to which items satisfying the query will be bound
     A (string) name identifying which query operation is requested
+    A sequence of variables that are used/bound by the generated query
+		(written here as the only element if the sequence is singleton)
     A sequence of numbers which are parameters to the query
 
 eg
-    GeoQuery q = new GeoQuery(new Var("it"), "withinBox", 10.1, 11.2, 12.3 )
 
-is a query that will bind to ?it, doing a withinBox query, with arguments
-(as expected by withinBox) 10.1, 11.2 the x,y coordinates of the point at 
-the centre of the box and of "radius" 12.3.
+    GeoQuery q = new GeoQuery(GeoQuery.withinBox, new Var("it"), 10.1, 11.2, 12.3 )
 
-If SQ is an abstract sparql query then
+GeoQuery defines some known abstract spatial query names
 
-    SQ.setGeoQuery(q)
+	GeoQuery.withinBox
+		A query withinBox(var, x, y, r) binds var to all of the
+		items within Manhatten radius r of the point x, y.
 
-records the (single) geospatial query q.
+	GeoQuery.withinCircle
+		A query withinBox(var, x, y, r) binds var to all of the
+		items within ordinary radius r of the point x, y.
 
-When the query SQ is rendered, there must be a translation from
-the GeoQuery to some SPARQL text that will implement it. This
-translation is provided by a GeoQuery.Registry which maps names
-to GeoQuery.Build objects
+A GeoQuery is translated to appropriate GraphPatterns in
+an ASQ by using a GeoQuery.Build object:
 
     public interface Build {
-		void SpatialApply(GeoQuery gq, AbstractSparqlQuery asq);
+		void spatialApply(GeoQuery gq, AbstractSparqlQuery asq);
 	}
 
-The Build object will be applied to the specific GeoQuery gq
-and a copy of the AbstractSparqlObject which the GeoQuery came
-from and translates the query to whatever filters or property 
-functions are required. For example
+Given a GeoQuery Q, an ASQ A, and a GeoQuery.Build B, then 
 
-	static final class BuildTest implements GeoQuery.Build {
+	Q.translateOn(A, B) : ASQ
+
+will make a copy of A and then add to it graph patterns
+which will implement the effects of Q, returning the
+modified copy as its result. 
+
+As an example:
+
+	static final class ExampleBuild implements GeoQuery.Build {
 
 		final Property spatial;
 
@@ -52,23 +64,20 @@ functions are required. For example
 			GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
 			asq.addEarlyPattern(spatialPattern);
 		}
-
 	}
 
-is a Build that will use a Property passed to it on creation to
-build something suitable for a Jena Spatial query.
+new BuildTest(P) updates the ASQ it is applied to in the style of
+Jena Spatial where the spatial property P used is passed in when
+the BuildTest is constructed.
 
-The AbstractSparqlQuery is a copy of the original so that updates
-to it (eg the addEarlyPattern in the example) are not persistent
-(otherwise we might end up with multiple equal SPARQL patterns).
+GeoQuery defines the built-in Builds
 
-When the AbstractSparqlQuery is rendered to SPARQL, the GeoQuery
-(if present) is looked up in the Settings passed to the query
+	GeoQuery.BuildWithinBoxBySparql
+	GeoQuery.BuildWithinCircleBySparql
 
-    Settings.lookup(name_of_GeoQuery) : Build
+	GeoQuery.BuildWithinBoxByIndex
+	GeoQuery.BuildWithinCircleByIndex
 
-If the Build is null, then a static global registry in GeoQuery
-is consulted. This allows an application to set up a default set
-of GeoQuery handlers and to override them in Settings, or to
-leave all the registration to Settings.
-
+which implement withinBox and withinCircle queres by
+using Jena Spatial ("ByIndex") or by using SPARQL
+filter expressions ("BySparql").
