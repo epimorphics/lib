@@ -16,20 +16,20 @@ can be run against different concrete back ends.
 
 ## ASQ methods
 
-### Q.setTemplate(Template t)
+### `Q.setTemplate(Template t)`
 
 > Set the single template object of `Q` to `t`. A query starts
 > off with its template equal to null. A template consists
 > of a list of Elements which are either fixed text or
 > a named parameter to be substituted later.
 
-### Q.setTemplate(String t)
+### `Q.setTemplate(String t)`
 
 > Translate `t` to a Template and do `setTemplate()` on that.
 > Useful when the template is a string extracted, say, from
 > a JSON value.
 
-### Q.addPreBinding(Bind b) | Q.addEarlyPattern(GraphPattern p) | Q.setLaterPattern(GraphPattern p)
+### `Q.addPreBinding(Bind b)` | `Q.addEarlyPattern(GraphPattern p)` | `Q.setLaterPattern(GraphPattern p)`
 
 > An ASQ holds three collections of graph
 > patterns: an initial set of SPARQL bindings, the early
@@ -41,13 +41,13 @@ can be run against different concrete back ends.
 
 > The allowed GraphPatterns are discussed elsewhere.
 
-### Q.addProjection(Projection x)
+### `Q.addProjection(Projection x)`
 
 > Projections are rendered as the `SELECT` clause of a query.
 > The obvious Projection is a `Var`(iable) but anything that
 > satisfies the rendering interface will do.
 
-### Q.addDescribeElements(List<TermAtomic> elements)
+### `Q.addDescribeElements(List<TermAtomic> elements)`
 
 > Elements are rendered as the `DESCRIBE` clause of a query.
 > (Note that the same query can have  a `SELECT` part and 
@@ -55,25 +55,25 @@ can be run against different concrete back ends.
 > rendering the query.) These elements will be `Var`s
 > or `URI`s.
 
-### Q.construct(Triple t)
+### `Q.construct(Triple t)`
 
 > Supplies a `Triple` which will be part of a `CONSTRUCT`
 > clause.
 
-### Q.addOrder(Order o, IsExpr e)
+### `Q.addOrder(Order o, IsExpr e)`
 
 > An ASQ can hold arbitrarily many orderings
 > which may be upward (`o` = `ASC`) or downward (`o` = `DESC`).
 > Typeically the ordering expression e will be a `Var`(iable)
 > but it can be any expression.
 
-### Q.setLimit(long limit) | Q.setOffset(long offset)
+### `Q.setLimit(long limit)` | `Q.setOffset(long offset)`
 
 > Set the `limit` or `offset` that will be applied to the generated
 > query. If the value is negative (the default is `-1`) then no
 > limit/offset is applied.
 
-### Q.addRawModifier(String text)
+### `Q.addRawModifier(String text)`
 
 > Sometimes the query modifiers are supplied not as 
 > specific Java objects but as a string to be inserted as-is
@@ -84,9 +84,9 @@ can be run against different concrete back ends.
 An ASQ is rendered to a SPARQL text using one
 of the rendering methods:
 
-### Q.toSparqlSELECT(Settings s) : String
-### Q.toSparqlDESCRIBE(Settings s) : String
-### Q.toSparqlCONSTRUCT(Settings s) : String
+### `Q.toSparqlSELECT(Settings s) : String`
+### `Q.toSparqlDESCRIBE(Settings s) : String`
+### `Q.toSparqlCONSTRUCT(Settings s) : String`
 
 > Create a String which is the appropriate kind of SPARQL
 > query using all and only the elements appropriate to
@@ -114,24 +114,24 @@ of the rendering methods:
 An instance S of Settings manages prefixes, parameters,
 and renderers for geo-spatial and text search queries.
 
-### S.putParam(String name, IsSparqler s)
+### `S.putParam(String name, IsSparqler s)`
 
 > Associates the parameter `name` with the value `s`.
 
-### S.setPrefix(String name, String URI)
+### `S.setPrefix(String name, String URI)`
 
 > Set the prefix `name` to abbreviate the string `URI`.
 
-### S.getPrefixes() : Map<String, String>
+### `S.getPrefixes() : Map<String, String>`
 
 > Return a map of all the prefixes known to `S`.
 
-### S.usePrefix(String URI) : String
+### `S.usePrefix(String URI) : String`
 
 > Shorten URI by applying the prefixes declared with setPrefix().
 > Record the prefix that is actually used.
 
-### S.getUsedPrefixes() : Set<String>
+### `S.getUsedPrefixes() : Set<String>`
 
 > Return a set of all the prefix names that have been 
 > used within `S.usePrefix()`.
@@ -148,62 +148,62 @@ GraphPatterns form the major part of the query operations. The
 fundamental pattern is Basic, for triples and filters, and then
 there are several combinators and more complex patterns.
 
-new Basic(TripleOrFilter ...)
-new Basic(List<TripleOrFilter>)
+### `new Basic(TripleOrFilter ...)`
+### `new Basic(List<TripleOrFilter>)`
 
-	A Basic graph pattern is a sequence of Triple-or-Filter values.
-	(Note that these triples are generalised; they may have variables
-	within them. See below for more details on these classes.)
+> A Basic graph pattern is a sequence of Triple-or-Filter values.
+> (Note that these triples are generalised; they may have variables
+> within them. See below for more details on these classes.)
 
-new And(List<GraphPattern>)
-new And(GraphPattern ...)
-	
-	An And graph pattern allows multiple graph patterns in sequence.
+### `new And(List<GraphPattern>)`
+### `new And(GraphPattern ...)`
+> 
+> An And graph pattern allows multiple graph patterns in sequence.
 
-new Bind(IsExpr e, Var v)
+### `new Bind(IsExpr e, Var v)`
 
-	Creates a graph pattern that renders as `BIND(_e AS ?_v)` where
-	_e is the rendering of e and _v is the rendering of v.
+> Creates a graph pattern that renders as `BIND(_e AS ?_v)` where
+> _e is the rendering of e and _v is the rendering of v.
 
-new Empty()
+### `new Empty()`
 
-	Empty is the occasionally-useful empty graph pattern; it renders
-	as the empty string.
+> Empty is the occasionally-useful empty graph pattern; it renders
+> as the empty string.
 
-new Optional(GraphPattern operand)
+### `new Optional(GraphPattern operand)`
 
-	Creates a graph pattern that renders as
+> Creates a graph pattern that renders as
 
-		OPTIONAL {_operand}
+> > `OPTIONAL {_operand}`
 
-	where _operand is the rendering of operand.
+> where `_operand` is the rendering of `operand`.
 
-new Union(GraphPattern ... patterns)
+### `new Union(GraphPattern ... patterns)`
 
-	Creates a graph pattern that renders as
+> Creates a graph pattern that renders as
 
-		{_P1} UNION {_P2} ... {_Pn} 
+> > {_P1} UNION {_P2} ... {_Pn} 
 
-	Where _Pn is the rendering of the n'th pattern in
-	the union.
+> Where _Pn is the rendering of the n'th pattern in
+> the union.
 
-new Minus(GraphPattern A, B)
+### `new Minus(GraphPattern A, B)`
 
     A Minus graph pattern renders as {_A} MINUS {_B}
 
-new GraphPatternText(String text)
+### `new GraphPatternText(String text)`
 
     A Text graph pattern renders as the text. No checks
     are attempted; the developer is assumed to know that
     the text is legal at this point.
 
-new Named(URI name, GraphPattern p)
+### `new Named(URI name, GraphPattern p)`
 
     A Named graph pattern renders as 
 
         GRAPH _name {_p}
 
-new Select(ASQ q)
+### `new Select(ASQ q)`
 
     A Select graph pattern renders as
 
@@ -211,7 +211,7 @@ new Select(ASQ q)
 
     where _q is the rendering of q, using the same Settings.
 
-new Values(List<Var> vars, List<IsExpr> data)
+### `new Values(List<Var> vars, List<IsExpr> data)`
 
     A Values graph pattern renders as
 
@@ -227,7 +227,7 @@ new Values(List<Var> vars, List<IsExpr> data)
 
         new Call(Op.Tuple, V1 ... Vn)
 
-new Exists(boolean exists, GraphPattern p)
+### `new Exists(boolean exists, GraphPattern p)`
 
     An Exists graph pattern renders as
 
@@ -236,7 +236,7 @@ new Exists(boolean exists, GraphPattern p)
     where _exists is empty if exists is true and is NOT
     if exists is false.
  
-Triples
+## Triples
 
 A Triple has three TermAtomic components. A TermAtomic can be
 a URI, a Literal, a Blank, or a Var. 
