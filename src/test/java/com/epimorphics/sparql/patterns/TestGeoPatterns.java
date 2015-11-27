@@ -15,7 +15,8 @@ import com.epimorphics.sparql.geo.GeoQuery;
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.query.AbstractSparqlQuery;
-import com.epimorphics.sparql.query.AbstractSparqlQuery.Transform;
+import com.epimorphics.sparql.query.Transform;
+import com.epimorphics.sparql.query.Transforms;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.TermList;
@@ -51,8 +52,8 @@ public class TestGeoPatterns extends SharedFixtures {
 		assertEquals(gq, q.getGeoQuery());
 	}
 	
-	static AbstractSparqlQuery.Transforms makeTransforms() {
-		AbstractSparqlQuery.Transforms result = new AbstractSparqlQuery.Transforms();
+	static Transforms makeTransforms() {
+		Transforms result = new Transforms();
 		result.add("geo", geoTransform());
 		return result;		
 	}
@@ -73,7 +74,7 @@ public class TestGeoPatterns extends SharedFixtures {
 			}};
 	}
 
-	static final AbstractSparqlQuery.Transforms transforms = makeTransforms(); 
+	static final Transforms transforms = makeTransforms(); 
 	
 	@Test public void testGeoRenderingLikeJenaSpatial() {
 
