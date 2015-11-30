@@ -81,9 +81,7 @@ public class GeoQuery {
 	final List<Number> args;
 	
 	public GeoQuery(Var toBind, String name, Number ... args) {
-		this.toBind = ListUtils.list(toBind);
-		this.name = name;
-		this.args = Arrays.asList(args);
+		this(ListUtils.list(toBind), name, args);
 	}	
 	
 	public GeoQuery(List<Var> toBind, String name, Number ... args) {
