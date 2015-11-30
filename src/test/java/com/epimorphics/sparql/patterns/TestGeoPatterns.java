@@ -7,19 +7,12 @@ package com.epimorphics.sparql.patterns;
 
 import static org.junit.Assert.*;
 
-import org.apache.jena.rdf.model.Property;
 import org.junit.Test;
 
 import com.epimorphics.sparql.geo.GeoQuery;
-import com.epimorphics.sparql.graphpatterns.Basic;
-import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.query.AbstractSparqlQuery;
 import com.epimorphics.sparql.query.Transforms;
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TermAtomic;
-import com.epimorphics.sparql.terms.TermList;
-import com.epimorphics.sparql.terms.Triple;
-import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Var;
 import com.epimorphics.util.Asserts;
 
@@ -66,30 +59,12 @@ public class TestGeoPatterns extends SharedFixtures {
 		GeoQuery gq = new GeoQuery(alpha, GeoQuery.withinBox, r, x, y);
 		q.setGeoQuery(gq);
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
 		String obtained = q.toSparqlSelect(s);
 		
 		Asserts.assertContains(obtained, "?alpha spatial:withinBox (10.0 1.2 2.1)");
 		
 //		System.err.println(">>\n" + obtained);
-		
-	}
-	
-	static final class LikeSpatialBuild implements GeoQuery.Build {
-
-		final Property spatial;
-		
-		public LikeSpatialBuild(Property spatial) {
-			this.spatial = spatial;
-		}
-		
-		@Override public void SpatialApply(GeoQuery gq,	AbstractSparqlQuery asq) {
-			Var S = gq.getVar();
-			URI P = new URI(spatial.getURI());
-			TermAtomic O = TermList.fromNumbers(gq.getArgs());
-			GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
-			asq.addEarlyPattern(spatialPattern);
-		}
 		
 	}
 	
