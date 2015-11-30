@@ -34,6 +34,10 @@ public class AbstractSparqlQuery {
 	
 	protected Template template = null;
 	
+	protected GeoQuery geoQuery = null; 
+	
+	protected Transforms transforms = new Transforms();
+	
 	final List<Projection> selectedVars = new ArrayList<Projection>();
 	
 	final List<OrderCondition> orderBy = new ArrayList<OrderCondition>();
@@ -49,11 +53,6 @@ public class AbstractSparqlQuery {
 	final List<TermAtomic> describeElements = new ArrayList<TermAtomic>();
 	
 	final List<String> rawModifiers = new ArrayList<String>();
-	
-	protected GeoQuery geoQuery = null; 
-	
-	protected Transforms revise = new Transforms();
-	
 	/**
 		copy() returns a copy of this query. The array-valued instance
 		variables are themselves copied.
@@ -73,24 +72,16 @@ public class AbstractSparqlQuery {
 		q.geoQuery = geoQuery;
 		q.constructions.addAll(constructions);
 		q.describeElements.addAll(describeElements);
-		q.revise = revise.copy();
+		q.transforms = transforms;
 		return q;
 	}
 	
 	public AbstractSparqlQuery prepare(Settings s) {
-		return revise.apply(this);
-//		AbstractSparqlQuery c = copy();
-//		if (geoQuery != null) {
-//			GeoQuery.Build spatial = s.lookup(geoQuery.getName());
-//			if (spatial == null) spatial = GeoQuery.lookupBuild(geoQuery.getName());
-//			spatial.SpatialApply(geoQuery, c);
-//		}
-//		return c;
+		return transforms.apply(this);
 	}
 	
 	public AbstractSparqlQuery putTransforms(Transforms t) {
-		revise.names.addAll(t.names);
-		revise.transforms.putAll(t.transforms);
+		transforms = t;
 		return this;
 	}
 

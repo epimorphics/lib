@@ -8,14 +8,12 @@ package com.epimorphics.sparql.patterns;
 import static org.junit.Assert.*;
 
 import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Test;
 
 import com.epimorphics.sparql.geo.GeoQuery;
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.query.AbstractSparqlQuery;
-import com.epimorphics.sparql.query.Transform;
 import com.epimorphics.sparql.query.Transforms;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.TermAtomic;
@@ -52,36 +50,16 @@ public class TestGeoPatterns extends SharedFixtures {
 		assertEquals(gq, q.getGeoQuery());
 	}
 	
-	static Transforms makeTransforms() {
-		Transforms result = new Transforms();
-		result.add("geo", geoTransform());
-		return result;		
-	}
-	
-	static final Property spatial_withinBox = ResourceFactory.createProperty("http://fake.spatial.com/spatial#withinBox");
-	
-	private static Transform geoTransform() {
-		return new Transform() {
-
-			@Override public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
-				GeoQuery gq = q.getGeoQuery();
-				Var S = gq.getVar();
-				URI P = new URI(spatial_withinBox.getURI());
-				TermAtomic O = TermList.fromNumbers(gq.getArgs());
-				GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
-				q.addEarlyPattern(spatialPattern);
-				return q;
-			}};
-	}
-
-	static final Transforms transforms = makeTransforms(); 
+	static final Transforms transforms = new Transforms()
+		.add("geoQuery", GeoQuery.byIndex)
+		; 
 	
 	@Test public void testGeoRenderingLikeJenaSpatial() {
 
 		AbstractSparqlQuery q = new AbstractSparqlQuery().putTransforms(transforms);
 		
 		Settings s = new Settings()
-			.setPrefix("spatial", "http://fake.spatial.com/spatial#")
+			.setPrefix("spatial", GeoQuery.spatial)
 			;
 				
 		double r = 10.0, x = 1.2, y = 2.1;

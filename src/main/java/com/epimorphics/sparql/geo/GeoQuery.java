@@ -6,11 +6,15 @@
 package com.epimorphics.sparql.geo;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import com.epimorphics.sparql.graphpatterns.*;
 import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.query.Transform;
+import com.epimorphics.sparql.terms.TermAtomic;
+import com.epimorphics.sparql.terms.TermList;
+import com.epimorphics.sparql.terms.Triple;
+import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Var;
 
 public class GeoQuery {
@@ -19,22 +23,57 @@ public class GeoQuery {
 		void SpatialApply(GeoQuery gq, AbstractSparqlQuery asq);
 	}
 	
-	public static class Registry {
-		
-		final Map<String, Build> registry = new HashMap<String, Build>();
-		
-		public void register(String name, Build build) {
-			registry.put(name,  build);
+	public static final String spatial = "http://jena.apache.org/spatial#";
+	
+	/**
+		A transform that rewrites geo queries as jena spatial queries.
+		Only does withinBox and withinCircle.
+	*/
+	public static final Transform byIndex = new Transform() {
+
+		@Override public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
+			GeoQuery gq = q.getGeoQuery();
+			if (gq == null) return q;
+			AbstractSparqlQuery c = q.copy();
+			Var S = gq.getVar();
+			URI P = uriForName(gq.getName());
+			TermAtomic O = TermList.fromNumbers(gq.getArgs());
+			GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
+			c.addEarlyPattern(spatialPattern);
+			return c;
 		}
-		
-		public Build lookup(String name) {
-			return registry.get(name);
+
+		private URI uriForName(String name) {
+			if (name.equals("withinBox")) return new URI(spatial + "withinBox");
+			if (name.equals("withinCircle")) return new URI(spatial + "withinCircle");
+			throw new RuntimeException("no URI for geo name " + name);
 		}
+	};
+
+	private static URI uriForName(String name) {
+		if (name.equals("withinBox")) return new URI(spatial + "withinBox");
+		if (name.equals("withinCircle")) return new URI(spatial + "withinCircle");
+		throw new RuntimeException("no URI for geo name " + name);
 	}
 	
-	public static final String withinBox = "withinBox";
+	public static final Transform byFilter = new Transform() {
+
+		@Override public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
+			GeoQuery gq = q.getGeoQuery();
+			if (gq == null) return q;
+			AbstractSparqlQuery c = q.copy();
+			Var S = gq.getVar();
+			URI P = uriForName(gq.getName());
+			// TODO
+			if (true) throw new RuntimeException("TODO: geo by hand filter");
+//			TermAtomic O = TermList.fromNumbers(gq.getArgs());
+//			GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
+//			c.addEarlyPattern(spatialPattern);
+			return c;
+		}}; 
 	
-	public static final Registry registry = new Registry();
+	
+	public static final String withinBox = "withinBox";
 
 	final Var toBind;
 	final String name;
@@ -53,7 +92,6 @@ public class GeoQuery {
 		for (Number n: args) sb.append(" ").append(n);
 		sb.append(" }");
 		return sb.toString();
-		
 	}
 	
 	public String getName() {
@@ -75,14 +113,6 @@ public class GeoQuery {
 		for (int i = 0; i < args.size(); i += 1) 
 			if (!args.get(i).equals(other.args.get(i))) return false;
 		return true;
-	}
-
-	public static void register(String name, Build b) {
-		registry.register(name, b);
-	}
-	
-	public static Build lookupBuild(String name) {
-		return registry.lookup(name);
 	}
 
 	public List<Number> getArgs() {
