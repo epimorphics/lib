@@ -16,6 +16,7 @@ import com.epimorphics.sparql.terms.TermList;
 import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Var;
+import com.epimorphics.util.ListUtils;
 
 public class GeoQuery {
 
@@ -75,11 +76,17 @@ public class GeoQuery {
 	
 	public static final String withinBox = "withinBox";
 
-	final Var toBind;
+	final List<Var> toBind;
 	final String name;
 	final List<Number> args;
 	
 	public GeoQuery(Var toBind, String name, Number ... args) {
+		this.toBind = ListUtils.list(toBind);
+		this.name = name;
+		this.args = Arrays.asList(args);
+	}	
+	
+	public GeoQuery(List<Var> toBind, String name, Number ... args) {
 		this.toBind = toBind;
 		this.name = name;
 		this.args = Arrays.asList(args);
@@ -99,7 +106,7 @@ public class GeoQuery {
 	}
 
 	public Var getVar() {
-		return toBind;
+		return toBind.get(0);
 	}
 	
 	@Override public boolean equals(Object other) {
