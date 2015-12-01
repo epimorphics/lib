@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 import com.epimorphics.sparql.exprs.LeafExprs;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Basic;
-import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
@@ -23,13 +23,13 @@ import static com.epimorphics.test.utils.MakeCollection.*;
 public class TestQuery extends SharedFixtures {
 	
 	@Test public void testEmptySelectQuery() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		String result = q.toSparqlSelect(new Settings());
 		assertEqualSparql("SELECT * WHERE {}", result);
 	}
 
 	@Test public void testRespectsRawModifier() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		String fragment = "ORDER BY ?phone";
 		assertSame(q, q.addRawModifier(fragment));
 		String result = q.toSparqlSelect(new Settings());
@@ -37,21 +37,21 @@ public class TestQuery extends SharedFixtures {
 	}
 	
 	@Test public void testRespectsDistinct() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		q.setDistinction(Distinction.DISTINCT);
 		String result = q.toSparqlSelect(new Settings());
 		assertEqualSparql("SELECT DISTINCT * WHERE {}", result);
 	}
 
 	@Test public void testRespectsReduced() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		q.setDistinction(Distinction.REDUCED);
 		String result = q.toSparqlSelect(new Settings());
 		assertEqualSparql("SELECT REDUCED * WHERE {}", result);
 	}
 	
 	@Test public void testQueryWithTriplePattern() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		
 		Filter filter = new Filter(LeafExprs.bool(true));
 		GraphPattern where = new Basic(list(filter));
@@ -62,7 +62,7 @@ public class TestQuery extends SharedFixtures {
 	}
 	
 	@Test public void testPrefixGeneration() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		Settings s = new Settings();
 		s.setPrefix("ex", "http://localhost/exemplar/");
 		

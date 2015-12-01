@@ -7,7 +7,7 @@ package com.epimorphics.sparql.geo;
 
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
-import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.query.Transform;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.TermList;
@@ -17,17 +17,17 @@ import com.epimorphics.sparql.terms.Var;
 
 public final class TransformByIndex implements Transform {
 	
-	@Override public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
+	@Override public QueryShape apply(QueryShape q) {
 		GeoQuery gq = q.getGeoQuery();
 		if (gq == null) return q;
 		return asJenaSpatial(q, gq);
 	}
 
-	private AbstractSparqlQuery asJenaSpatial(AbstractSparqlQuery q, GeoQuery gq) {
+	private QueryShape asJenaSpatial(QueryShape q, GeoQuery gq) {
 		Var S = gq.getVar();
 		URI P = uriForName(gq.getName());
 		TermAtomic O = TermList.fromNumbers(gq.getArgs());
-		AbstractSparqlQuery c = q.copy();
+		QueryShape c = q.copy();
 		GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
 		c.addEarlyPattern(spatialPattern);
 		return c;

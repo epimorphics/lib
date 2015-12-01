@@ -5,16 +5,16 @@
 */
 package com.epimorphics.sparql.geo;
 
-import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.query.Transform;
 import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Var;
 
 public final class TransformBySparql implements Transform {
-		@Override public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
+		@Override public QueryShape apply(QueryShape q) {
 			GeoQuery gq = q.getGeoQuery();
 			if (gq == null) return q;
-			AbstractSparqlQuery c = q.copy();
+			QueryShape c = q.copy();
 			Var S = gq.getVar();
 			URI P = TransformByIndex.uriForName(gq.getName());
 			// TODO

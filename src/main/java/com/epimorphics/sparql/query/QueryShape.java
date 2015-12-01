@@ -25,7 +25,7 @@ import com.epimorphics.util.SparqlUtils;
 	A Query is a representation of a SPARQL query.
 
 */
-public class AbstractSparqlQuery {
+public class QueryShape {
 	
 	protected long limit = -1;
 	protected long offset = -1;
@@ -57,8 +57,8 @@ public class AbstractSparqlQuery {
 		copy() returns a copy of this query. The array-valued instance
 		variables are themselves copied.
 	*/
-	public AbstractSparqlQuery copy() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+	public QueryShape copy() {
+		QueryShape q = new QueryShape();
 		q.limit = limit;
 		q.offset = offset;
 		q.distinction = distinction;
@@ -76,11 +76,11 @@ public class AbstractSparqlQuery {
 		return q;
 	}
 	
-	public AbstractSparqlQuery prepare(Settings s) {
+	public QueryShape prepare(Settings s) {
 		return transforms.apply(this);
 	}
 	
-	public AbstractSparqlQuery putTransforms(Transforms t) {
+	public QueryShape putTransforms(Transforms t) {
 		transforms = t;
 		return this;
 	}
@@ -251,11 +251,11 @@ public class AbstractSparqlQuery {
 		sb.append("}");
 	}
 
-	public AbstractSparqlQuery setTemplate(String templateString) {
+	public QueryShape setTemplate(String templateString) {
 		return setTemplate(new Template(templateString));
 	}
 
-	public AbstractSparqlQuery setTemplate(Template t) {
+	public QueryShape setTemplate(Template t) {
 		this.template = t;
 		return this;
 	}
@@ -273,12 +273,12 @@ public class AbstractSparqlQuery {
 		addEarlyPattern(where);
 	}
 	
-	public AbstractSparqlQuery addEarlyPattern(GraphPattern p) {
+	public QueryShape addEarlyPattern(GraphPattern p) {
 		earlyWhere.add(p);
 		return this;
 	}
 
-	public AbstractSparqlQuery addPreBinding(Bind bind) {
+	public QueryShape addPreBinding(Bind bind) {
 		preBindings.add(bind);
 		return this;
 	}
@@ -288,7 +288,7 @@ public class AbstractSparqlQuery {
 		addLaterPattern(where);
 	}
 	
-	public AbstractSparqlQuery addLaterPattern(GraphPattern p) {
+	public QueryShape addLaterPattern(GraphPattern p) {
 		laterWhere.add(p);
 		return this;
 	}
@@ -305,12 +305,12 @@ public class AbstractSparqlQuery {
 		selectedVars.add(x);
 	}
 
-	public AbstractSparqlQuery addOrder(Order o, IsExpr e) {
+	public QueryShape addOrder(Order o, IsExpr e) {
 		orderBy.add(new OrderCondition(o, e));
 		return this;
 	}
 	
-	public AbstractSparqlQuery addRawModifier(String text) {
+	public QueryShape addRawModifier(String text) {
 		rawModifiers.add(text);
 		return this;
 	}

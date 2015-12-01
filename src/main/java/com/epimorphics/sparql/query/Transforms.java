@@ -22,8 +22,8 @@ public class Transforms {
 		return this;
 	}
 	
-	public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
-		AbstractSparqlQuery c = q.copy();
+	public QueryShape apply(QueryShape q) {
+		QueryShape c = q.copy();
 		for (String name: names) c = transforms.get(name).apply(c);
 		return c;
 	}

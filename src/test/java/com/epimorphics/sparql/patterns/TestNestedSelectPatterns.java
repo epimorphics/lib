@@ -12,7 +12,7 @@ import org.junit.Test;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Select;
 import com.epimorphics.sparql.query.Order;
-import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.terms.Var;
 
 import static com.epimorphics.util.SparqlUtils.renderToSparql;
@@ -21,7 +21,7 @@ public class TestNestedSelectPatterns extends SharedFixtures {
 	
 	@Test public void testNestedSelect() {
 		
-		AbstractSparqlQuery subQ = new AbstractSparqlQuery();
+		QueryShape subQ = new QueryShape();
 		subQ.addOrder(Order.ASC, new Var("W"));
 		GraphPattern P = new Select(subQ);
 		

@@ -14,7 +14,7 @@ import com.epimorphics.sparql.terms.Triple;
 public class TestTemplatedGraphPattern extends SharedFixtures {
 
 	@Test public void testGraphPatternSubstitution() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		q.setTemplate("SELECT * WHERE {$_graphPattern} #END");
 		q.addEarlyPattern(new Basic(new Triple(S, P, V)));
 		String expected = 
@@ -32,7 +32,7 @@ public class TestTemplatedGraphPattern extends SharedFixtures {
 	}
 	
 	@Test public void testSortSubstitution() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		q.setTemplate("SELECT * WHERE {} ORDER BY$_sort #END");
 		q.addOrder(Order.ASC, P);
 		String expected = 
@@ -44,7 +44,7 @@ public class TestTemplatedGraphPattern extends SharedFixtures {
 	}
 	
 	@Test public void testModifierSubstitution() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		q.setTemplate("SELECT * WHERE {} $_modifiers #END");
 		q.setLimit(10);
 		q.setOffset(20);

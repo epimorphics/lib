@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.sparql.geo.GeoQuery;
-import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.query.Transforms;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Var;
@@ -34,7 +34,7 @@ public class TestGeoPatterns extends SharedFixtures {
 	}
 	
 	@Test public void testAddGeoQuery() {
-		AbstractSparqlQuery q = new AbstractSparqlQuery();
+		QueryShape q = new QueryShape();
 		assertNull(q.getGeoQuery());
 	//
 		double r = 10.0, x = 1.2, y = 2.1;
@@ -49,7 +49,7 @@ public class TestGeoPatterns extends SharedFixtures {
 	
 	@Test public void testGeoRenderingLikeJenaSpatial() {
 
-		AbstractSparqlQuery q = new AbstractSparqlQuery().putTransforms(transforms);
+		QueryShape q = new QueryShape().putTransforms(transforms);
 		
 		Settings s = new Settings()
 			.setPrefix("spatial", GeoQuery.spatial)

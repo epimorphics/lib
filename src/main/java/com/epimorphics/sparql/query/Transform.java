@@ -6,5 +6,5 @@
 package com.epimorphics.sparql.query;
 
 public interface Transform {
-	public AbstractSparqlQuery apply(AbstractSparqlQuery q);
+	public QueryShape apply(QueryShape q);
 }

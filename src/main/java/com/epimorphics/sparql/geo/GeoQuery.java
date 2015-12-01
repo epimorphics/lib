@@ -8,7 +8,7 @@ package com.epimorphics.sparql.geo;
 import java.util.Arrays;
 import java.util.List;
 
-import com.epimorphics.sparql.query.AbstractSparqlQuery;
+import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.query.Transform;
 import com.epimorphics.sparql.terms.Var;
 import com.epimorphics.util.ListUtils;
@@ -48,7 +48,7 @@ public class GeoQuery {
 	    AbstractSparqlQuery.
 	*/
 	public interface Build {
-		void spatialApply(GeoQuery gq, AbstractSparqlQuery aq);
+		void spatialApply(GeoQuery gq, QueryShape aq);
 	}
 
 	/**
@@ -121,8 +121,8 @@ public class GeoQuery {
 	public Transform asTransform(final Build b) {
 		return new Transform() {
 
-			@Override public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
-				AbstractSparqlQuery c = q.copy();
+			@Override public QueryShape apply(QueryShape q) {
+				QueryShape c = q.copy();
 				b.spatialApply(GeoQuery.this, c);
 				return c;
 			}
