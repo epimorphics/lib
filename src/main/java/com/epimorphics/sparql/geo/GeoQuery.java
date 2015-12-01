@@ -14,23 +14,61 @@ import com.epimorphics.sparql.terms.Var;
 import com.epimorphics.util.ListUtils;
 
 public class GeoQuery {
-
-	public interface Build {
-		void SpatialApply(GeoQuery gq, AbstractSparqlQuery asq);
-	}
 	
+	/**
+	   'spatial' is the namespace of Jena Spatial properties. It is
+	   copied here (rather than imported) to reduce dependencies. 
+	*/
 	public static final String spatial = "http://jena.apache.org/spatial#";
 
+	/**
+	    `withinBox ?id x y r` geo-query name
+	*/
 	public static final String withinBox = "withinBox";
 	
+	/**
+		`withinCircle ?id x y r`
+	*/
 	public static final String withinCircle = "withinCircle";
 
+	/**
+	    An AbstractSParqlQuery transform that translates geo-queries
+	    using Jena Spatial indexes.
+	*/
 	public static final Transform byIndex = new TransformByIndex();
 	
+	/**
+	    An AbstractSparqlQuery transform that translates geo-queries
+	    into SPARQL filters.
+	*/
 	public static final Transform byFilter = new TransformBySparql(); 
+	
+	/**
+	    A Build object knows how to apply a geo-query to an
+	    AbstractSparqlQuery.
+	*/
+	public interface Build {
+		void spatialApply(GeoQuery gq, AbstractSparqlQuery aq);
+	}
 
+	/**
+		The list of variables bound (or checked) by this GeoQuery.
+		Typically this is one element, the selected item, but it
+		may be addition result properties.
+	*/
 	final List<Var> toBind;
+	
+	/**
+	    The name of this GeoQuery, currently one of the `within`
+	    queries.
+	*/
 	final String name;
+	
+	/**
+		The numeric arguments for this GeoQuery, currently for the
+		`within` queries x, y (co-ordinates of centre point) and
+		r (ordinary radius or manhatten radius). 
+	*/
 	final List<Number> args;
 	
 	public GeoQuery(Var toBind, String name, Number ... args) {
@@ -75,6 +113,21 @@ public class GeoQuery {
 
 	public List<Number> getArgs() {
 		return args;
+	}
+	
+	/**
+		Given a Build produce a Transform that applies that build.
+	*/
+	public Transform asTransform(final Build b) {
+		return new Transform() {
+
+			@Override public AbstractSparqlQuery apply(AbstractSparqlQuery q) {
+				AbstractSparqlQuery c = q.copy();
+				b.spatialApply(GeoQuery.this, c);
+				return c;
+			}
+			
+		};
 	}
 
 }
