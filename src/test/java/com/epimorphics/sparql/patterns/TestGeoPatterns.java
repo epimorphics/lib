@@ -43,13 +43,10 @@ public class TestGeoPatterns extends SharedFixtures {
 		assertEquals(gq, q.getGeoQuery());
 	}
 	
-	static final Transforms transforms = new Transforms()
-		.add("geoQuery", GeoQuery.byIndex)
-		; 
-	
 	@Test public void testGeoRenderingLikeJenaSpatial() {
 
-		QueryShape q = new QueryShape().putTransforms(transforms);
+		QueryShape q = new QueryShape(); 
+		q.getTransforms().add("geoQuery", GeoQuery.byIndex);
 		
 		Settings s = new Settings()
 			.setPrefix("spatial", GeoQuery.spatial)

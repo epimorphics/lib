@@ -22,8 +22,7 @@ import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.util.SparqlUtils;
 
 /**
-	A Query is a representation of a SPARQL query.
-
+	A QueryShape is a representation of a SPARQL query.
 */
 public class QueryShape {
 	
@@ -78,11 +77,6 @@ public class QueryShape {
 	
 	public QueryShape prepare(Settings s) {
 		return transforms.apply(this);
-	}
-	
-	public QueryShape putTransforms(Transforms t) {
-		transforms = t;
-		return this;
 	}
 
 	public String toSparqlSelect(Settings s) {
@@ -333,6 +327,10 @@ public class QueryShape {
 
 	public GeoQuery getGeoQuery() {
 		return geoQuery;
+	}
+	
+	public Transforms getTransforms() {
+		return transforms;
 	}
 	
 }

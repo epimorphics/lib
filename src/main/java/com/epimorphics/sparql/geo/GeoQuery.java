@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.query.Transform;
+import com.epimorphics.sparql.query.Transforms;
 import com.epimorphics.sparql.terms.Var;
 import com.epimorphics.util.ListUtils;
 
@@ -42,6 +43,11 @@ public class GeoQuery {
 	    into SPARQL filters.
 	*/
 	public static final Transform byFilter = new TransformBySparql(); 
+	
+	static {
+		Transforms.put("geoByIndex", byIndex);
+		Transforms.put("geoByIndex", byFilter);
+	}
 	
 	/**
 	    A Build object knows how to apply a geo-query to an
