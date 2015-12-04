@@ -38,4 +38,12 @@ public final class TransformByIndex implements Transform {
 		if (name.equals("withinCircle")) return new URI(GeoQuery.spatial + "withinCircle");
 		throw new RuntimeException("no URI for geo name " + name);
 	}
+
+	@Override public String getTypeName() {
+		return "GeoQuery";
+	}
+
+	@Override public String getInstanceName() {
+		return "byLuceneIndex";
+	}
 }

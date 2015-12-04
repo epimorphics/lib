@@ -16,7 +16,8 @@ public class Transforms {
 	
 	final Map<String, Transform> transforms = new HashMap<String, Transform>();
 
-	public Transforms add(String name, Transform t) {
+	public Transforms add(Transform t) {
+		String name = t.getTypeName();
 		names.add(name);
 		transforms.put(name, t);
 		return this;
@@ -38,7 +39,7 @@ public class Transforms {
 		return transforms.get(name);
 	}
 
-	public static void put(String name, Transform t) {
-		instance.add(name, t);
+	public static void put(Transform t) {
+		instance.add(t);
 	}
 }

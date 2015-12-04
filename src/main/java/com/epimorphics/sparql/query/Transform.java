@@ -7,4 +7,8 @@ package com.epimorphics.sparql.query;
 
 public interface Transform {
 	public QueryShape apply(QueryShape q);
+	
+	public String getTypeName();
+	
+	public String getInstanceName();
 }

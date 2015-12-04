@@ -11,6 +11,7 @@ import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Var;
 
 public final class TransformBySparql implements Transform {
+	
 		@Override public QueryShape apply(QueryShape q) {
 			GeoQuery gq = q.getGeoQuery();
 			if (gq == null) return q;
@@ -23,5 +24,13 @@ public final class TransformBySparql implements Transform {
 //			GraphPattern spatialPattern = new Basic(new Triple(S, P, O));
 //			c.addEarlyPattern(spatialPattern);
 			return c;
+		}
+
+		@Override public String getTypeName() {
+			return "GeoQuery";
+		}
+
+		@Override public String getInstanceName() {
+			return "bySparqlFilter";
 		}
 	}

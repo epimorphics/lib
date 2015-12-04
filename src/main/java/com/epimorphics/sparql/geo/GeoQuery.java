@@ -45,8 +45,8 @@ public class GeoQuery {
 	public static final Transform byFilter = new TransformBySparql(); 
 	
 	static {
-		Transforms.put("geoByIndex", byIndex);
-		Transforms.put("geoByIndex", byFilter);
+		Transforms.put(byIndex);
+		Transforms.put(byFilter);
 	}
 	
 	/**
@@ -121,19 +121,31 @@ public class GeoQuery {
 		return args;
 	}
 	
-	/**
-		Given a Build produce a Transform that applies that build.
-	*/
-	public Transform asTransform(final Build b) {
-		return new Transform() {
-
-			@Override public QueryShape apply(QueryShape q) {
-				QueryShape c = q.copy();
-				b.spatialApply(GeoQuery.this, c);
-				return c;
-			}
-			
-		};
-	}
+//	/**
+//		Given a Build produce a Transform that applies that build.
+//	*/
+//	public Transform asTransform(final Build b) {
+//		return new Transform() {
+//
+//			@Override public QueryShape apply(QueryShape q) {
+//				QueryShape c = q.copy();
+//				b.spatialApply(GeoQuery.this, c);
+//				return c;
+//			}
+//
+//			@Override
+//			public String getTypeName() {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			@Override
+//			public String getInstanceName() {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//			
+//		};
+//	}
 
 }
