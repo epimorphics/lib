@@ -18,7 +18,7 @@ public class Transforms {
 
 	public Transforms add(Transform t) {
 		String name = t.getTypeName();
-		names.add(name);
+		if (transforms.get(name) == null) names.add(name);
 		transforms.put(name, t);
 		return this;
 	}
