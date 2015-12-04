@@ -31,9 +31,13 @@ public class Transforms {
 	public static Transforms instance = new Transforms();
 	
 	public static Transform get(String name) {
-		return instance.get(name);
+		return instance.getTransform(name);
 	}
 	
+	public Transform getTransform(String name) {
+		return transforms.get(name);
+	}
+
 	public static void put(String name, Transform t) {
 		instance.add(name, t);
 	}
