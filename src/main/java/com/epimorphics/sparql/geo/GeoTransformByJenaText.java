@@ -15,7 +15,7 @@ import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Var;
 
-public final class TransformByIndex implements Transform {
+public final class GeoTransformByJenaText implements Transform {
 	
 	@Override public QueryShape apply(QueryShape q) {
 		GeoQuery gq = q.getGeoQuery();
@@ -39,11 +39,7 @@ public final class TransformByIndex implements Transform {
 		throw new RuntimeException("no URI for geo name " + name);
 	}
 
-	@Override public String getTypeName() {
-		return "GeoQuery";
-	}
-
-	@Override public String getInstanceName() {
-		return "byLuceneIndex";
+	@Override public String getFullName() {
+		return "GeoQuery:ByJenaText";
 	}
 }

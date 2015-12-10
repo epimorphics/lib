@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import com.epimorphics.sparql.geo.GeoQuery;
 import com.epimorphics.sparql.query.QueryShape;
-import com.epimorphics.sparql.query.Transforms;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.Var;
 import com.epimorphics.util.Asserts;

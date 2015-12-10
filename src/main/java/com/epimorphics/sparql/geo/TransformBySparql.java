@@ -17,7 +17,7 @@ public final class TransformBySparql implements Transform {
 			if (gq == null) return q;
 			QueryShape c = q.copy();
 			Var S = gq.getVar();
-			URI P = TransformByIndex.uriForName(gq.getName());
+			URI P = GeoTransformByJenaText.uriForName(gq.getName());
 			// TODO
 			if (true) throw new RuntimeException("TODO: geo by hand filter");
 //			TermAtomic O = TermList.fromNumbers(gq.getArgs());
@@ -26,11 +26,7 @@ public final class TransformBySparql implements Transform {
 			return c;
 		}
 
-		@Override public String getTypeName() {
-			return "GeoQuery";
-		}
-
-		@Override public String getInstanceName() {
-			return "bySparqlFilter";
+		@Override public String getFullName() {
+			return "GeoQuery:BySparqlFilter";
 		}
 	}

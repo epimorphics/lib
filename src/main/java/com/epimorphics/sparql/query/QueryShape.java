@@ -16,6 +16,7 @@ import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.templates.Template;
 import com.epimorphics.sparql.terms.IsExpr;
+import com.epimorphics.sparql.terms.IsSparqler;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
@@ -52,6 +53,7 @@ public class QueryShape {
 	final List<TermAtomic> describeElements = new ArrayList<TermAtomic>();
 	
 	final List<String> rawModifiers = new ArrayList<String>();
+	
 	/**
 		copy() returns a copy of this query. The array-valued instance
 		variables are themselves copied.
@@ -132,8 +134,40 @@ public class QueryShape {
     
 	private void fillParams(Settings s) {
 		s.putParam("_graphPattern", new SubstPattern(this));
+		s.putParam("_graphPatternEarly", new SubstEarly(this));
+		s.putParam("_graphPatternLater", new SubstLater(this));
 		s.putParam("_sort", new SubstSort(this));
 		s.putParam("_modifiers", new SubstMod(this));
+	}
+	
+	static class SubstP {
+		final QueryShape qs;
+		
+		SubstP(QueryShape qs) {
+			this.qs = qs;
+		}
+	}
+	
+	static class SubstEarly extends SubstP implements IsSparqler {
+		
+		public SubstEarly(QueryShape qs) {
+			super(qs);
+		}
+
+		@Override public void toSparql(Settings s, StringBuilder sb) {
+			new And(qs.earlyWhere).toPatternString(GraphPattern.Rank.NoBraces, s, sb);
+		}
+	}	
+	
+	static class SubstLater extends SubstP implements IsSparqler {
+				
+		public SubstLater(QueryShape qs) {
+			super(qs); 
+		}
+
+		@Override public void toSparql(Settings s, StringBuilder sb) {
+			new And(qs.laterWhere).toPatternString(GraphPattern.Rank.NoBraces, s, sb);
+		}
 	}
 
 	private void assemblePrefixes(Settings s, StringBuilder sb) {

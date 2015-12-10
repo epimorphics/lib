@@ -36,7 +36,7 @@ public class GeoQuery {
 	    An AbstractSParqlQuery transform that translates geo-queries
 	    using Jena Spatial indexes.
 	*/
-	public static final Transform byIndex = new TransformByIndex();
+	public static final Transform byIndex = new GeoTransformByJenaText();
 	
 	/**
 	    An AbstractSparqlQuery transform that translates geo-queries
@@ -120,32 +120,5 @@ public class GeoQuery {
 	public List<Number> getArgs() {
 		return args;
 	}
-	
-//	/**
-//		Given a Build produce a Transform that applies that build.
-//	*/
-//	public Transform asTransform(final Build b) {
-//		return new Transform() {
-//
-//			@Override public QueryShape apply(QueryShape q) {
-//				QueryShape c = q.copy();
-//				b.spatialApply(GeoQuery.this, c);
-//				return c;
-//			}
-//
-//			@Override
-//			public String getTypeName() {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			@Override
-//			public String getInstanceName() {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//			
-//		};
-//	}
 
 }

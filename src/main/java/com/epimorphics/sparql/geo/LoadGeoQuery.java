@@ -3,10 +3,12 @@
     
     (c) Copyright 2014 Epimorphics Limited
 */
-package com.epimorphics.sparql.query;
+package com.epimorphics.sparql.geo;
 
-public interface Transform {
-	public QueryShape apply(QueryShape q);
-	
-	public String getFullName();
+import com.epimorphics.sparql.terms.Var;
+
+public class LoadGeoQuery {
+	public LoadGeoQuery() {
+		new GeoQuery(new Var("anon"), "anon");
+	}
 }
