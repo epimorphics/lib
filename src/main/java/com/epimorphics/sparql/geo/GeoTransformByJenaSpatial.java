@@ -15,7 +15,7 @@ import com.epimorphics.sparql.terms.Triple;
 import com.epimorphics.sparql.terms.URI;
 import com.epimorphics.sparql.terms.Var;
 
-public final class GeoTransformByJenaText implements Transform {
+public final class GeoTransformByJenaSpatial implements Transform {
 	
 	@Override public QueryShape apply(QueryShape q) {
 		GeoQuery gq = q.getGeoQuery();
@@ -40,6 +40,6 @@ public final class GeoTransformByJenaText implements Transform {
 	}
 
 	@Override public String getFullName() {
-		return "GeoQuery:ByJenaText";
+		return "GeoQuery:ByJenaSpatial";
 	}
 }

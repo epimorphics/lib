@@ -36,13 +36,13 @@ public class GeoQuery {
 	    An AbstractSParqlQuery transform that translates geo-queries
 	    using Jena Spatial indexes.
 	*/
-	public static final Transform byIndex = new GeoTransformByJenaText();
+	public static final Transform byIndex = new GeoTransformByJenaSpatial();
 	
 	/**
 	    An AbstractSparqlQuery transform that translates geo-queries
 	    into SPARQL filters.
 	*/
-	public static final Transform byFilter = new TransformBySparql(); 
+	public static final Transform byFilter = new GeoTransformBySparqlFilter(); 
 	
 	static {
 		Transforms.put(byIndex);
@@ -81,6 +81,12 @@ public class GeoQuery {
 		this(ListUtils.list(toBind), name, args);
 	}	
 	
+	public GeoQuery(Var toBind, String name, List<Number> args) {
+		this.toBind = ListUtils.list(toBind);
+		this.name = name;
+		this.args = args;
+	}	
+	
 	public GeoQuery(List<Var> toBind, String name, Number ... args) {
 		this.toBind = toBind;
 		this.name = name;
@@ -90,6 +96,8 @@ public class GeoQuery {
 	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Geo{");
+		sb.append(toBind);
+		sb.append(" ");
 		sb.append(name);
 		for (Number n: args) sb.append(" ").append(n);
 		sb.append(" }");

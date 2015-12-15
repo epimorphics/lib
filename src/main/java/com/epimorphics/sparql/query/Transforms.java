@@ -76,4 +76,9 @@ public class Transforms {
 		log.debug("putting transform " + t.getFullName());
 		instance.add(t);
 	}
+
+	public void addAll(Transforms others) {
+		for (Transform t: others.transforms.values())
+			add(t);
+	}
 }
