@@ -26,29 +26,53 @@ public final class GeoTransformBySparqlFilter implements Transform {
 		
 		static final Op sqrt = new Op(OpType.FUNC, AFN + "sqrt");
 
+		protected URI eastingProp = new URI("http://data.ordnancesurvey.co.uk/ontology/spatialrelations/easting");
+		
+		protected URI northingProp = new URI("http://data.ordnancesurvey.co.uk/ontology/spatialrelations/northing");
+
+		protected Var eastingVar = new Var("easting");
+		
+		protected Var northingVar = new Var("northing");
+		
+		protected Var distanceVar = new Var("distance");
+
+		public void setDistanceVar(String name) {
+			distanceVar = new Var(name);
+		}
+		
+		public void setEastingVar(String name) {
+			eastingVar = new Var(name);
+		}
+		
+		public void setNorthingVar(String name) {
+			northingVar = new Var(name);
+		}
+		
+		public void setEastingProp(String uri) {
+			eastingProp = new URI(uri);
+		}
+		
+		public void setNorthingProp(String uri) {
+			northingProp = new URI(uri);
+		}
+		
 		@Override public QueryShape apply(QueryShape q) {
 			
 			GeoQuery gq = q.getGeoQuery();
 			if (gq == null) return q;
 			QueryShape c = q.copy();
-			Var S = gq.getVar();
-			URI P = GeoTransformByJenaSpatial.uriForName(gq.getName());
+			
+			Var id = gq.getVar();
 			Number x = gq.args.get(0), y = gq.args.get(1), r = gq.args.get(2);
 			
-			Var easting = new Var("easting");
-			Var northing = new Var("northing");
-			URI eastingProp = new URI("http://data.ordnancesurvey.co.uk/ontology/spatialrelations/easting");
-			URI northingProp = new URI("http://data.ordnancesurvey.co.uk/ontology/spatialrelations/northing");
+			c.addEarlyPattern(new Basic(new Triple(id, eastingProp, eastingVar)));
+			c.addEarlyPattern(new Basic(new Triple(id, northingProp, northingVar)));
 			
-			Var id = new Var("id");
-			
-			c.addEarlyPattern(new Basic(new Triple(id, eastingProp, easting)));
-			c.addEarlyPattern(new Basic(new Triple(id, northingProp, northing)));
 			Literal xl = Literal.fromNumber(x);
 			Literal yl = Literal.fromNumber(y);
 			
-			IsExpr xdiff = new Infix(xl, Op.opMinus, easting);
-			IsExpr ydiff = new Infix(yl, Op.opMinus, northing);
+			IsExpr xdiff = new Infix(eastingVar, Op.opMinus, xl);
+			IsExpr ydiff = new Infix(northingVar, Op.opMinus, yl);
 			
 			IsExpr xl2 = new Infix(xdiff, Op.opMul, xdiff);
 			IsExpr yl2 = new Infix(ydiff, Op.opMul, ydiff);
@@ -56,12 +80,11 @@ public final class GeoTransformBySparqlFilter implements Transform {
 			IsExpr sum = new Infix(xl2, Op.opPlus, yl2);
 			IsExpr root = new Call(sqrt, sum);
 			
-			Var distance = new Var("distance");
-			Bind b = new Bind(root, distance);
-			c.addPreBinding(b);
+			Bind b = new Bind(root, distanceVar);
+			c.addEarlyPattern(b);
 			
 			Literal radius = Literal.fromNumber(r);
-			c.addEarlyPattern(new Basic(new Filter(new Infix(distance, Op.opLessEq, radius))));
+			c.addEarlyPattern(new Basic(new Filter(new Infix(distanceVar, Op.opLessEq, radius))));
 			
 			return c;
 		}
