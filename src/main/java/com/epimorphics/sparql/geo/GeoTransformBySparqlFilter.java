@@ -76,7 +76,8 @@ public final class GeoTransformBySparqlFilter implements Transform {
 	}
 
 	private QueryShape withinBox(QueryShape q, GeoQuery gq) {
-		// TO BE DONE -- code for box
+		// x - r <= easting <= x + r && y - r <= northing <= y + r
+		
 		QueryShape c = q.copy();
 		
 		Var id = gq.getVar();
@@ -87,21 +88,21 @@ public final class GeoTransformBySparqlFilter implements Transform {
 		
 		Literal xl = Literal.fromNumber(x);
 		Literal yl = Literal.fromNumber(y);
+		Literal radius = Literal.fromNumber(r);		
 		
-		IsExpr xdiff = new Infix(eastingVar, Op.opMinus, xl);
-		IsExpr ydiff = new Infix(northingVar, Op.opMinus, yl);
+		IsExpr xMinusR = new Infix(xl, Op.opMinus, radius);
+		IsExpr xPlusR = new Infix(xl, Op.opPlus, radius);
+		IsExpr yMinusR = new Infix(yl, Op.opMinus, radius);
+		IsExpr yPlusR = new Infix(yl, Op.opPlus, radius);
 		
-		IsExpr xl2 = new Infix(xdiff, Op.opMul, xdiff);
-		IsExpr yl2 = new Infix(ydiff, Op.opMul, ydiff);
+		IsExpr el = new Infix(xMinusR, Op.opLessEq, eastingVar);
+		IsExpr er = new Infix(eastingVar, Op.opLessEq, xPlusR);
+
+		IsExpr nl = new Infix(yMinusR, Op.opLessEq, northingVar);
+		IsExpr nr = new Infix(northingVar, Op.opLessEq, yPlusR);
 		
-		IsExpr sum = new Infix(xl2, Op.opPlus, yl2);
-		IsExpr root = new Call(sqrt, sum);
-		
-		Bind b = new Bind(root, distanceVar);
-		c.addEarlyPattern(b);
-		
-		Literal radius = Literal.fromNumber(r);
-		c.addEarlyPattern(new Basic(new Filter(new Infix(distanceVar, Op.opLessEq, radius))));
+		c.addEarlyPattern(new Basic(new Filter(new Infix(el, Op.opAnd, er))));
+		c.addEarlyPattern(new Basic(new Filter(new Infix(nl, Op.opAnd, nr))));
 		
 		return c;
 	}
