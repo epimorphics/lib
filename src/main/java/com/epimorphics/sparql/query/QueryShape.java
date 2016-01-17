@@ -300,11 +300,16 @@ public class QueryShape {
 		this.earlyWhere.clear();
 		addEarlyPattern(where);
 	}
-	
-	public QueryShape addEarlyPattern(GraphPattern p) {
-		earlyWhere.add(p);
-		return this;
-	}
+    
+    public QueryShape addEarlyPattern(GraphPattern p) {
+        earlyWhere.add(p);
+        return this;
+    }
+    
+    public QueryShape injectEarlyPattern(GraphPattern p) {
+        earlyWhere.add(0, p);
+        return this;
+    }
 
 	public QueryShape addPreBinding(Bind bind) {
 		preBindings.add(bind);

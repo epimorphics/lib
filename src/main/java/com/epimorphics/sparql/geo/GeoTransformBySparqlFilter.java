@@ -83,8 +83,8 @@ public final class GeoTransformBySparqlFilter implements Transform {
 		Var id = gq.getVar();
 		Number x = gq.args.get(0), y = gq.args.get(1), r = gq.args.get(2);
 		
-		c.addEarlyPattern(new Basic(new Triple(id, eastingProp, eastingVar)));
-		c.addEarlyPattern(new Basic(new Triple(id, northingProp, northingVar)));
+		c.addLaterPattern(new Basic(new Triple(id, eastingProp, eastingVar)));
+		c.addLaterPattern(new Basic(new Triple(id, northingProp, northingVar)));
 		
 		Literal xl = Literal.fromNumber(x);
 		Literal yl = Literal.fromNumber(y);
@@ -101,8 +101,8 @@ public final class GeoTransformBySparqlFilter implements Transform {
 		IsExpr nl = new Infix(yMinusR, Op.opLessEq, northingVar);
 		IsExpr nr = new Infix(northingVar, Op.opLessEq, yPlusR);
 		
-		c.addEarlyPattern(new Basic(new Filter(new Infix(el, Op.opAnd, er))));
-		c.addEarlyPattern(new Basic(new Filter(new Infix(nl, Op.opAnd, nr))));
+		c.addLaterPattern(new Basic(new Filter(new Infix(el, Op.opAnd, er))));
+		c.addLaterPattern(new Basic(new Filter(new Infix(nl, Op.opAnd, nr))));
 		
 		return c;
 	}
@@ -113,8 +113,8 @@ public final class GeoTransformBySparqlFilter implements Transform {
 		Var id = gq.getVar();
 		Number x = gq.args.get(0), y = gq.args.get(1), r = gq.args.get(2);
 		
-		c.addEarlyPattern(new Basic(new Triple(id, eastingProp, eastingVar)));
-		c.addEarlyPattern(new Basic(new Triple(id, northingProp, northingVar)));
+		c.addLaterPattern(new Basic(new Triple(id, eastingProp, eastingVar)));
+		c.addLaterPattern(new Basic(new Triple(id, northingProp, northingVar)));
 		
 		Literal xl = Literal.fromNumber(x);
 		Literal yl = Literal.fromNumber(y);
@@ -129,10 +129,10 @@ public final class GeoTransformBySparqlFilter implements Transform {
 		IsExpr root = new Call(sqrt, sum);
 		
 		Bind b = new Bind(root, distanceVar);
-		c.addEarlyPattern(b);
+		c.addLaterPattern(b);
 		
 		Literal radius = Literal.fromNumber(r);
-		c.addEarlyPattern(new Basic(new Filter(new Infix(distanceVar, Op.opLessEq, radius))));
+		c.addLaterPattern(new Basic(new Filter(new Infix(distanceVar, Op.opLessEq, radius))));
 		
 		return c;
 	}
