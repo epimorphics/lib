@@ -20,6 +20,7 @@ import com.epimorphics.sparql.terms.IsSparqler;
 import com.epimorphics.sparql.terms.Projection;
 import com.epimorphics.sparql.terms.TermAtomic;
 import com.epimorphics.sparql.terms.Triple;
+import com.epimorphics.sparql.text.TextQuery;
 import com.epimorphics.util.SparqlUtils;
 
 /**
@@ -35,6 +36,8 @@ public class QueryShape {
 	protected Template template = null;
 	
 	protected GeoQuery geoQuery = null; 
+	
+	protected TextQuery textQuery = null;
 	
 	protected Transforms transforms = new Transforms();
 	
@@ -294,6 +297,14 @@ public class QueryShape {
 
 	public void setGeoQuery(GeoQuery geoQuery) {
 		this.geoQuery = geoQuery;
+	}
+
+	public void setTextQuery(TextQuery textQuery) {
+		this.textQuery = textQuery;
+	}
+
+	public TextQuery getTextQuery() {
+		return textQuery;
 	}
 	
 	public void setEarlyPattern(GraphPattern where) {
