@@ -8,8 +8,10 @@ package com.epimorphics.sparql.terms;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
 
 import com.epimorphics.sparql.templates.Settings;
+import com.epimorphics.util.EpiException;
 
 public class Literal implements TermAtomic, IsSparqler, IsExpr {
 
@@ -32,6 +34,17 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
     
     public Literal(String spelling, String lang) {
         this(spelling, null, lang);
+    }
+    
+    public static Literal fromRDFNode(RDFNode node) {
+        if (node.isLiteral()) {
+            org.apache.jena.rdf.model.Literal l = node.asLiteral();
+            String uriStr = l.getDatatypeURI();
+            URI uri = uriStr != null ? new URI(uriStr) : null;
+            return new Literal( l.getLexicalForm(), uri, l.getLanguage() );
+        } else {
+            throw new EpiException("Node is not a literal: " + node);
+        }
     }
 	
 	public static Literal fromNumber(Number n) {
