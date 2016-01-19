@@ -165,7 +165,7 @@ public class CompiledTemplate<T> {
 		return true;
 	}
 
-	private static final Pattern varPattern = Pattern.compile( "\\{([a-zA-Z][a-zA-Z0-9_]*)\\}" );
+	private static final Pattern varPattern = Pattern.compile( "\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}" );
 
 	private static String extractParams(String template, Map<String, String> uriParamBindings) {
 		int q = template.indexOf( '?' );
