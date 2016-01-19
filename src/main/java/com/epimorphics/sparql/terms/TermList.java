@@ -24,10 +24,24 @@ public class TermList implements IsSparqler, TermAtomic {
 		this(Arrays.asList(terms));
 	}
 	
+	@Override public int hashCode() {
+		return terms.hashCode();
+	}
+	
+	@Override public boolean equals(Object other) {
+		return other instanceof TermList && terms.equals(((TermList)other).terms);
+	}
+	
 	public static TermList fromNumbers(List<Number> values) {
 		List<TermAtomic> result = new ArrayList<TermAtomic>();
 		for (Number v: values) result.add(Literal.fromNumber(v));
 		return new TermList(result);
+	}
+	
+	@Override public String toString() {
+		StringBuilder sb = new StringBuilder();
+		toSparql(new Settings(), sb);
+		return sb.toString();
 	}
 	
 	@Override public void toSparql(Settings s, StringBuilder sb) {

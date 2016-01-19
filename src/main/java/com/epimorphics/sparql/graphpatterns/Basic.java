@@ -31,6 +31,14 @@ public class Basic extends GraphPattern {
 		return "Basic{" + elements + "}";
 	}
 	
+	@Override public int hashCode() {
+		return elements.hashCode();
+	}
+	
+	@Override public boolean equals(Object other) {
+		return other instanceof Basic && elements.equals(((Basic) other).elements);
+	}
+	
 	@Override public void toPatternString(Settings s, StringBuilder sb) {
 		String gap = "";
 		for (TripleOrFilter p: elements) {

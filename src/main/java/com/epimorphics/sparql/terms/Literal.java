@@ -16,13 +16,13 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
 	final String spelling;
 	final String lang;
 	final URI type;
-	
+			
 	// for use by createTypedLiteral in fromNumber.
 	private static final Model m = ModelFactory.createDefaultModel();
 	
 	public Literal(String spelling, URI type, String lang) {
-		this.type = type;
-		this.lang = lang;
+		this.type = type == null ? xsdString : type;
+		this.lang = lang == null ? "" : lang;
 		this.spelling = spelling;
 	}
     
