@@ -5,9 +5,12 @@
 */
 package com.epimorphics.sparql.terms;
 
-import static com.epimorphics.util.Asserts.*;
-import static org.junit.Assert.*;
+import static com.epimorphics.util.Asserts.assertDiffer;
+import static org.junit.Assert.assertEquals;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.XSD;
 import org.junit.Test;
 
 public class TestTermLiteral {
@@ -30,6 +33,11 @@ public class TestTermLiteral {
 		assertDiffer(given, new Literal(lexical, type2, "fr"));
 		assertDiffer(given, new Literal(lexical, type, "en"));
 		
+		
 		assertEquals(given.hashCode(), given.spelling.hashCode() + given.getLanguage().hashCode() + given.getLiteralType().hashCode());
+		
+        Literal fn = Literal.fromRDFNode( ResourceFactory.createTypedLiteral(lexical, XSDDatatype.XSDstring) );
+        assertEquals(lexical, fn.getLexicalForm());
+        assertEquals(XSD.xstring.getURI(), fn.getLiteralType().getURI());
 	}
 }

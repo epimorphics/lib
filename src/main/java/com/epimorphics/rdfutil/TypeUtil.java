@@ -24,21 +24,21 @@ import org.apache.jena.vocabulary.RDFS;
  * depending on either an explicit type URI or a guess from the syntax.
  */
 public class TypeUtil {
-    protected static final Pattern INTEGER_PATTERN = Pattern.compile("(-\\s*)?[0-9]+");
-    protected static final Pattern DECIMAL_PATTERN = Pattern.compile("(-\\s*)?[0-9]+\\.[0-9]+");
-    protected static final Pattern FLOAT_PATTERN = Pattern.compile("(-\\s*)?[0-9]+(\\.[0-9]+)?[eE][-+]?[0-9]+(\\.[0-9]+)?");
+    public static final Pattern INTEGER_PATTERN = Pattern.compile("(-\\s*)?[0-9]+");
+    public static final Pattern DECIMAL_PATTERN = Pattern.compile("(-\\s*)?[0-9]+\\.[0-9]+");
+    public static final Pattern FLOAT_PATTERN = Pattern.compile("(-\\s*)?[0-9]+(\\.[0-9]+)?[eE][-+]?[0-9]+(\\.[0-9]+)?");
 
-    protected static final String DATE_BLOCK = "[0-9]{4}-[01][0-9]-[0-3][0-9]";
-    protected static final String TIME_BLOCK = "[0-6][0-9]:[0-6][0-9]:[0-6][0-9](\\.[0-9]+)?";
-    protected static final String TZONE_BLOCK = "([+-][0-6][0-9]:[0-6][0-9])|Z";
-    protected static final String GYM_BLOCK = "[0-9]{4}-[01][0-9]";
-    protected static final Pattern DATETIME_PATTERN = Pattern.compile( String.format("-?%sT%s(%s)?", DATE_BLOCK, TIME_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern DATE_PATTERN = Pattern.compile( String.format("-?%s(%s)?", DATE_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern TIME_PATTERN = Pattern.compile( String.format("%s(%s)?", TIME_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern GYEARMONTH_PATTERN = Pattern.compile( String.format("%s(%s)?", GYM_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern ANYDATE_PATTERN = Pattern.compile( String.format("-?(%sT%s|%s|%s|%s)(%s)?", DATE_BLOCK, TIME_BLOCK, DATE_BLOCK, TIME_BLOCK, GYM_BLOCK, TZONE_BLOCK) );
+    public static final String DATE_BLOCK = "[0-9]{4}-[01][0-9]-[0-3][0-9]";
+    public static final String TIME_BLOCK = "[0-6][0-9]:[0-6][0-9]:[0-6][0-9](\\.[0-9]+)?";
+    public static final String TZONE_BLOCK = "([+-][0-6][0-9]:[0-6][0-9])|Z";
+    public static final String GYM_BLOCK = "[0-9]{4}-[01][0-9]";
+    public static final Pattern DATETIME_PATTERN = Pattern.compile( String.format("-?%sT%s(%s)?", DATE_BLOCK, TIME_BLOCK, TZONE_BLOCK) );
+    public static final Pattern DATE_PATTERN = Pattern.compile( String.format("-?%s(%s)?", DATE_BLOCK, TZONE_BLOCK) );
+    public static final Pattern TIME_PATTERN = Pattern.compile( String.format("%s(%s)?", TIME_BLOCK, TZONE_BLOCK) );
+    public static final Pattern GYEARMONTH_PATTERN = Pattern.compile( String.format("%s(%s)?", GYM_BLOCK, TZONE_BLOCK) );
+    public static final Pattern ANYDATE_PATTERN = Pattern.compile( String.format("-?(%sT%s|%s|%s|%s)(%s)?", DATE_BLOCK, TIME_BLOCK, DATE_BLOCK, TIME_BLOCK, GYM_BLOCK, TZONE_BLOCK) );
 
-    protected static final Pattern URL_PATTERN = Pattern.compile("(http://|https://|ftp:|file:|mailto:).*");
+    public static final Pattern URL_PATTERN = Pattern.compile("(http://|https://|ftp:|file:|mailto:).*");
     
     public static final String PLAIN_LITERAL_URI = RDF.getURI() + "PlainLiteral";    
     

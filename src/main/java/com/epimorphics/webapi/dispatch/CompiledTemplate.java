@@ -45,6 +45,11 @@ import javax.ws.rs.core.MultivaluedMap;
     	and that's not dealing with any other -- unclaimed -- query
     	parameters.
     </p>
+    
+    <p>
+    	An ill-formed variable binding, ie an { or } not part of {NAME},
+    	is reported by prepare as a SyntaxError exception.
+    </p>
 */
 public class CompiledTemplate<T> {
 	
@@ -72,6 +77,18 @@ public class CompiledTemplate<T> {
 		this.compiled = compiled;
 		this.template = template;
 		this.uriParamBindings = uriParamBindings;
+	}
+	
+	public static class SyntaxError extends RuntimeException {
+		
+		private static final long serialVersionUID = 1L;
+
+		public final String fragment;
+		
+		public SyntaxError(String fragment) {
+			super("Bad template, contains { or } not matching {NAME}: '" + fragment + "'");
+			this.fragment = fragment;
+		}
 	}
 	
 	@Override public String toString() {
@@ -189,6 +206,7 @@ public class CompiledTemplate<T> {
 			String name = m.group(1);
 			where.add( new VarGroupIndex( name, index ) );
 			String literal = template.substring( start, m.start() );
+			checkLiteralIsBraceless(literal);
 			literals += literal.length();
 			patterns += 1;
 			sb.append( literal );
@@ -196,10 +214,16 @@ public class CompiledTemplate<T> {
 			start = m.end();
 		}
 		String literal = template.substring( start );
+		checkLiteralIsBraceless(literal);
 		sb.append( literal );
 		literals += literal.length();
 		Pattern compiled = Pattern.compile( sb.toString() );
 		return new CompiledTemplate<T>( literals, patterns, template, compiled, uriParamBindings, where, value );
+	}
+
+	private static void checkLiteralIsBraceless(String literal) {
+		if (literal.contains("{") || literal.contains("}"))
+			throw new SyntaxError(literal);
 	}
 
 	private static void fillParams( Map<String, String> uriParamBindings, String template ) {
