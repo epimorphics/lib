@@ -45,6 +45,8 @@ import com.epimorphics.sparql.terms.Var;
 public class TestTextIndex {
 
 	static final Node G = NodeFactory.createURI("eh:/G");
+
+	static final String root = "./DATASET", tdb_dir = root + "/TDB";
 	
 	static final String [] triples = new String[] {
 			"A :: leaf branch",
@@ -54,10 +56,14 @@ public class TestTextIndex {
 	
 	@Test public void testTextIndex() throws IOException {
 		Dataset ds = prepareForTest();		
-		testIndexSelectsSubjects(ds, set("eh:/subjectA", "eh:/subjectC"), "branch");
-		testIndexSelectsSubjects(ds, set("eh:/subjectA", "eh:/subjectB"), "leaf");
-		testIndexSelectsSubjects(ds, set("eh:/subjectB"), "paint");
-		testIndexSelectsSubjects(ds, set("eh:/subjectC"), "line");
+		try {
+			testIndexSelectsSubjects(ds, set("eh:/subjectA", "eh:/subjectC"), "branch");
+			testIndexSelectsSubjects(ds, set("eh:/subjectA", "eh:/subjectB"), "leaf");
+			testIndexSelectsSubjects(ds, set("eh:/subjectB"), "paint");
+			testIndexSelectsSubjects(ds, set("eh:/subjectC"), "line");
+		} finally {
+			FileUtils.deleteDirectory(new File(root));
+		}
 	}
 
 	private void testIndexSelectsSubjects(Dataset ds, Set<String> expected, String target) throws IOException {
@@ -91,7 +97,6 @@ public class TestTextIndex {
 	}
 
 	private Dataset prepareForTest() throws IOException {
-		String root = "./DATASET", tdb_dir = root + "/TDB";
 				
 		FileUtils.deleteDirectory(new File(root));
 				
