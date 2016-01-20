@@ -74,6 +74,7 @@ public class QueryShape {
 		q.earlyWhere.addAll(earlyWhere);
 		q.laterWhere.addAll(laterWhere);
 		q.geoQuery = geoQuery;
+		q.textQuery = textQuery;
 		q.constructions.addAll(constructions);
 		q.describeElements.addAll(describeElements);
 		q.transforms = transforms;

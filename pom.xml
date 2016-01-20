@@ -77,7 +77,14 @@
         <artifactId>apache-jena-libs</artifactId>
         <type>pom</type>
         <version>3.0.0</version>
-      </dependency>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-text</artifactId>
+      <version>3.0.0</version>
+  </dependency>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

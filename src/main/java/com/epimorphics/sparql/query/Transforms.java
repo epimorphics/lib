@@ -58,7 +58,8 @@ public class Transforms {
 
 	public QueryShape apply(QueryShape q) {
 		QueryShape c = q.copy();
-		for (String name: names) c = transforms.get(name).apply(c);
+		for (String name: names) 
+			c = transforms.get(name).apply(c);
 		return c;
 	}
 	
