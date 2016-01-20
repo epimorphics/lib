@@ -14,21 +14,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
-import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ReadWrite;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.text.EntityDefinition;
 import org.apache.jena.query.text.TextDatasetFactory;
 import org.apache.jena.query.text.TextIndexConfig;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.sparql.core.DatasetGraph;
 import org.apache.jena.tdb.TDBFactory;
@@ -48,6 +47,7 @@ public class TestTextIndex {
 
 	static final String root = "./DATASET", tdb_dir = root + "/TDB";
 	
+	// subjectLetter :: string for object 
 	static final String [] triples = new String[] {
 			"A :: leaf branch",
 			"B :: leaf paint",
@@ -64,6 +64,37 @@ public class TestTextIndex {
 		} finally {
 			FileUtils.deleteDirectory(new File(root));
 		}
+	}
+	
+	@Test public void testBySparql() {
+		
+		testBySparql(set("eh:/subjectA", "eh:/subjectC"), "branch");
+		testBySparql(set("eh:/subjectA", "eh:/subjectB"), "leaf");
+		testBySparql(set("eh:/subjectB"), "paint");
+		testBySparql(set("eh:/subjectC"), "line");
+	}
+
+	private void testBySparql(Set<String> expected, String target) {
+		Model m = ModelFactory.createDefaultModel();
+		Dataset ds = DatasetFactory.create(m);
+		ds.addNamedModel(G.getURI(), m);
+		loadTestData(ds);
+		
+		QueryShape qs = new QueryShape();
+		qs.getTransforms().add(new TextTransformerBySparql());
+		qs.setTextQuery(new TextQuery(new Var("S"), new URI(RDFS.label.getURI()), target));
+
+		QueryExecution qx = createQuery(ds, qs);
+
+		Set<String> results = new HashSet<String>();
+		
+		try {
+			ResultSet rs = qx.execSelect();
+			while (rs.hasNext()) results.add(rs.next().get("S").asNode().getURI());
+		} finally {
+		}
+		
+		assertEquals(expected, results);
 	}
 
 	private void testIndexSelectsSubjects(Dataset ds, Set<String> expected, String target) throws IOException {
@@ -91,7 +122,7 @@ public class TestTextIndex {
 	private QueryExecution createQuery(Dataset ds, QueryShape qs) {
 		String queryString = qs.toSparqlSelect(new Settings());
 		Query q = QueryFactory.create(queryString);		
-		
+//		System.err.println(">> queryString:\n" + queryString);
 		QueryExecution qx = QueryExecutionFactory.create(q, ds);
 		return qx;
 	}
@@ -119,7 +150,7 @@ public class TestTextIndex {
 	}
 
 	private void loadTestData(Dataset ds) {
-		ds.begin(ReadWrite.WRITE);
+		if (ds.supportsTransactions()) ds.begin(ReadWrite.WRITE);
 		DatasetGraph g = ds.asDatasetGraph();
 		for (String t: triples) {
 			String [] nameAndText = t.split(" *:: *");
@@ -128,8 +159,10 @@ public class TestTextIndex {
 			Node O = NodeFactory.createLiteral(nameAndText[1]);
 			g.add(G, S, P, O);
 		}
-		ds.commit();
-		ds.end();
+		if (ds.supportsTransactions()) {
+			ds.commit();
+			ds.end();
+		}
 	}
 
 		
