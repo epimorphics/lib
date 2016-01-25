@@ -47,7 +47,10 @@ public class TextTransformerByJenaText implements Transform {
 		Var v = (var == null ? gq.var : var);
 		Literal target = new Literal(gq.target, "");
 		URI search = (searchProperty == null ? gq.property : searchProperty);
-		TermList args = new TermList(search, target, BIG);
+		TermList args = search == null
+			? new TermList(target, BIG)
+			: new TermList(search, target, BIG)
+			;
 		Triple t = new Triple(v, queryProperty, args );
 		newq.addEarlyPattern(new Basic(t));
 		return newq;
