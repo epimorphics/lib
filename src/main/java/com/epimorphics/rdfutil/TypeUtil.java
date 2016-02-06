@@ -19,6 +19,8 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 
+import com.epimorphics.util.NameUtils;
+
 /**
  * Utilities for converting strings to typed RDF nodes
  * depending on either an explicit type URI or a guess from the syntax.
@@ -71,11 +73,17 @@ public class TypeUtil {
      * If the type URI is null then the typed is guessed, if it is empty string then
      * a plain literal is used, if it is rdfs:Resource then a returns a resource.
      */
-    public static RDFNode asTypedValue(String value, String typeURI) {
+    public static RDFNode asTypedValue(String value, String typeURI, String lang) {
         if (typeURI == null) {
             return asTypedValue(value);
         } else if (typeURI.isEmpty() || PLAIN_LITERAL_URI.equals(typeURI)) {
             return ResourceFactory.createPlainLiteral(value);
+        } else if (RDF.langString.getURI().equals(typeURI)) {
+            if (value.contains("@")) {
+                value = NameUtils.splitBeforeLast(value, "@");
+                lang  = NameUtils.splitAfterLast(value, "@");
+            }
+            return ResourceFactory.createLangLiteral(value, lang);
         } else if (typeURI.equals(RDFS.Resource.getURI())) {
             return ResourceFactory.createResource(value);
         } else {
@@ -86,6 +94,15 @@ public class TypeUtil {
                 throw new IllegalFormatException(value + " is not a legal syntax for type " + typeURI);
             }
         }
+    }
+    
+    /**
+     * Return a typed RDFNode using the given type URI.
+     * If the type URI is null then the typed is guessed, if it is empty string then
+     * a plain literal is used, if it is rdfs:Resource then a returns a resource.
+     */
+    public static RDFNode asTypedValue(String value, String typeURI) {
+        return asTypedValue(value, typeURI, "en");
     }
     
     public static class IllegalFormatException extends RuntimeException {

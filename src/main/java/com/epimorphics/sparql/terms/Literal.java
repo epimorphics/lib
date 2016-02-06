@@ -9,6 +9,7 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.vocabulary.RDF;
 
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.util.EpiException;
@@ -95,11 +96,12 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
 	public static final URI xsdInteger = new URI(XSDDatatype.XSDinteger.getURI());
 	public static final URI xsdDecimal = new URI(XSDDatatype.XSDdecimal.getURI());
 	public static final URI xsdFloat = new URI(XSDDatatype.XSDfloat.getURI());
-	public static final URI xsdDouble = new URI(XSDDatatype.XSDdouble.getURI());
+    public static final URI xsdDouble = new URI(XSDDatatype.XSDdouble.getURI());
+    public static final URI rdfLangString = new URI(RDF.langString.getURI());
 	
 	@Override public void toSparql(Settings s, StringBuilder sb) {
 		
-		if (type == null) {
+		if (type == null || type.equals(rdfLangString)) {
 			sb.append("'").append(spelling).append("'");
 			if (lang.length()> 0) sb.append("@").append(lang);
 		} else if (type.equals(xsdBoolean)) {
