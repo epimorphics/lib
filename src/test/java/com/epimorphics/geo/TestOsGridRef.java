@@ -17,6 +17,8 @@ public class TestOsGridRef {
     @Test
     public void testParseFormat() {
         OsGridRef ref = OsGridRef.parse("TL 85090 84360");
+        OsGridRef ref2 = new OsGridRef(12,24);
+        
         assertEquals(585090, ref.getEasting());
         assertEquals(284360, ref.getNorthing());
         assertEquals("TL 85090 84360", ref.format(10));
@@ -24,6 +26,9 @@ public class TestOsGridRef {
         assertEquals("TL 85 84", ref.format(4));
         
         assertEquals("TL 85090 84360", new OsGridRef(585090, 284360).format(10));
+        
+        // Round trip testing of grid ref parser and formatter
+        assertEquals(ref2.format(10), OsGridRef.parse(ref2.format(10)).format(10));
 
         ref = OsGridRef.parse("TA0539739744");
         assertEquals(505397, ref.getEasting());
