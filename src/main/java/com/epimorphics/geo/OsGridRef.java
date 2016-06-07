@@ -108,7 +108,7 @@ public class OsGridRef {
         e = (long) Math.floor((e%100000)/Math.pow(10,5-digits/2));
         n = (long) Math.floor((n%100000)/Math.pow(10,5-digits/2));
 
-        String formatString = "%" + (int)(digits/2) + "d";
+        String formatString = "%0" + (int)(digits/2) + "d";
         formatString = "%c%c " + formatString + " " + formatString;
         String gridRef = String.format(formatString, char1, char2, e, n);
 
