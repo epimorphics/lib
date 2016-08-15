@@ -39,10 +39,12 @@ import org.apache.jena.atlas.json.JsonObject;
 
 import com.epimorphics.webapi.PageInfo;
 import com.epimorphics.webapi.ResultPage;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileUtils;
+import com.epimorphics.webapi.test.MockUriInfo;
+
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.FileUtils;
 
 public class TestJsonResultPageMarshall {
 

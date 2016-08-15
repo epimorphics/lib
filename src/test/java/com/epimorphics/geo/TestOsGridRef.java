@@ -30,6 +30,9 @@ public class TestOsGridRef {
         // Round trip testing of grid ref parser and formatter
         assertEquals(ref2.format(10), OsGridRef.parse(ref2.format(10)).format(10));
 
+        // Round trip testing of grid ref parser and formatter
+        assertEquals(ref2.format(10), OsGridRef.parse(ref2.format(10)).format(10));
+
         ref = OsGridRef.parse("TA0539739744");
         assertEquals(505397, ref.getEasting());
         assertEquals(439744, ref.getNorthing());

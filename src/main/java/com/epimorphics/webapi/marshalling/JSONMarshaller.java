@@ -33,7 +33,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import com.epimorphics.json.RDFJSONModWriter;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 @Provider
 @Produces("application/json")

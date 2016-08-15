@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 /**
  * <p>A rich resource is an RDF resource with an attached model. A {@link RichResourcesList}

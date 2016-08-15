@@ -31,15 +31,16 @@ import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 import org.apache.jena.riot.RiotException;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.TypeMapper;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.TypeMapper;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * <p>Read a graph serialized using the modified JSON format. This implementation
@@ -109,11 +110,11 @@ public class RDFJSONModReader {
      */
     public void parseJson( JsonObject json, Graph graph) {
         for (String uri : json.keys()) {
-            Node resource = uri.startsWith("_:") ? bNodeFor(uri) : Node.createURI(uri);
+            Node resource = uri.startsWith("_:") ? bNodeFor(uri) : NodeFactory.createURI(uri);
             JsonObject entity = json.get(uri).getAsObject();
 
             for (String prop : entity.keys()) {
-                Node propNode = Node.createURI(prop);
+                Node propNode = NodeFactory.createURI(prop);
                 JsonArray values = entity.get(prop).getAsArray();
                 for (Iterator<JsonValue> it = values.iterator(); it.hasNext();) {
                     Node valueNode = parseValue( it.next(), graph );
@@ -125,17 +126,17 @@ public class RDFJSONModReader {
 
     protected Node parseValue(JsonValue value, Graph graph) {
         if (value.isNumber()) {
-            return Node.createLiteral(value.toString(), XSDDatatype.XSDinteger);
+            return NodeFactory.createLiteral(value.toString(), XSDDatatype.XSDinteger);
 
         } else if (value.isString()) {
-            return Node.createLiteral(value.getAsString().value());
+            return NodeFactory.createLiteral(value.getAsString().value());
 
         } else if (value.isObject()) {
 
             JsonObject valueDef = value.getAsObject();
             String type = getRequiredKey(valueDef, TYPE_KEY).getAsString().value();
             if (type.equals(URI_TYPE)) {
-                return Node.createURI( getValueAsString(valueDef) );
+                return NodeFactory.createURI( getValueAsString(valueDef) );
 
             } else if (type.equals(BNODE_TYPE)) {
                 return bNodeFor( getValueAsString(valueDef) );
@@ -146,7 +147,7 @@ public class RDFJSONModReader {
                 Node prev = null;
                 for (Iterator<JsonValue> i = listValues.iterator(); i.hasNext();) {
                     Node v = parseValue( i.next(), graph );
-                    Node cell = Node.createAnon();
+                    Node cell = NodeFactory.createBlankNode();
                     graph.add( new Triple(cell, RDF.first.asNode(), v) );
                     if (prev != null) {
                         graph.add( new Triple(prev, RDF.rest.asNode(), cell) );
@@ -165,13 +166,13 @@ public class RDFJSONModReader {
                 String lex = getValueAsString(valueDef);
 
                 if (lang != null) {
-                    return Node.createLiteral(lex, lang, false);
+                    return NodeFactory.createLiteral(lex, lang, false);
                 }
                 if (dturi != null) {
                     RDFDatatype dt = TypeMapper.getInstance().getSafeTypeByName(dturi);
-                    return Node.createLiteral(lex, dt);
+                    return NodeFactory.createLiteral(lex, dt);
                 }
-                return Node.createLiteral(lex);
+                return NodeFactory.createLiteral(lex);
 
             } else {
                 throw new RiotException("Property value type must be one of uri, bnode, literal or array. Found " + type);
@@ -211,7 +212,7 @@ public class RDFJSONModReader {
     protected Node bNodeFor(String id) {
         Node valueNode = bNodeTable.get(id);
         if (valueNode == null) {
-            valueNode = Node.createAnon();
+            valueNode = NodeFactory.createBlankNode();
             bNodeTable.put(id, valueNode);
         }
         return valueNode;

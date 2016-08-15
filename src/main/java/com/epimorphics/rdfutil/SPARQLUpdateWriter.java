@@ -29,11 +29,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.hp.hpl.jena.n3.N3IndentedWriter;
-import com.hp.hpl.jena.n3.N3JenaWriterCommon;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.n3.N3IndentedWriter;
+import org.apache.jena.n3.N3JenaWriterCommon;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
  * Support for writing out a model in SPARQL UPDATE syntax.

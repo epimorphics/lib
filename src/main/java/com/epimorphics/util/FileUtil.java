@@ -39,7 +39,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.CRC32;
 
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.util.FileUtils;
 
 public class FileUtil {
 

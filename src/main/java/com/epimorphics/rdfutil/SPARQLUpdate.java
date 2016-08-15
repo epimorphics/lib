@@ -39,9 +39,9 @@ import java.util.Date;
 
 import com.epimorphics.util.EpiException;
 import com.epimorphics.util.FileUtil;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.util.FileUtils;
 
 /**
  * Low level support for POSTing SPARQL update requests to a server.

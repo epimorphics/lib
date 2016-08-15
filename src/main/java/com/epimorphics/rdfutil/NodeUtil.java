@@ -24,8 +24,8 @@ package com.epimorphics.rdfutil;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hp.hpl.jena.graph.*;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.graph.*;
+import org.apache.jena.util.iterator.ExtendedIterator;
 
 /**
  * Collection of utilities to help working with RDF at Node/Graph level.

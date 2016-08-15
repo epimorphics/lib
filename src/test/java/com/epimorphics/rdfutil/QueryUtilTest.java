@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.util.PrefixUtils;
 import com.epimorphics.util.TestUtil;
-import com.hp.hpl.jena.query.QuerySolutionMap;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.*;
 
 /**
  * <p>Unit tests for {@link QueryUtil}</p>

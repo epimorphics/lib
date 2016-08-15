@@ -19,7 +19,7 @@
  *
  *****************************************************************/
 
-package com.epimorphics.webapi.marshalling;
+package com.epimorphics.webapi.test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,7 +30,9 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.core.header.InBoundHeaders;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
+
+import com.epimorphics.util.EpiException;
 
 /**
  * Partial mock up of UriInfo, just sufficient to create PageInfo instances
@@ -42,13 +44,25 @@ public class MockUriInfo implements UriInfo {
 
     protected String path;
     protected String absolutePath;
-    protected MultivaluedMap<String, String> queryParameters = new InBoundHeaders();
+    protected URI requestUri;
+    protected MultivaluedMap<String, String> queryParameters = new MultivaluedStringMap();
+    protected MultivaluedMap<String, String> pathParameters = new MultivaluedStringMap();
 
     public MockUriInfo(String path) {
+        this("http://localhost/", path);
+    }
+    
+    public MockUriInfo(String base, String path) {
         this.path = path;
+        try {
+            requestUri = new URI(base + path);
+        } catch (URISyntaxException e) {
+            throw new EpiException(e);
+        }
         if (path.contains("?")) {
             String[] parts = path.split("\\?");
-            absolutePath = parts[0];
+            absolutePath = base + parts[0];
+            this.path = parts[0];
             String[] queries = parts[1].split("&");
             for (String query : queries) {
                 String[] comps = query.split("=");
@@ -81,8 +95,7 @@ public class MockUriInfo implements UriInfo {
 
     @Override
     public URI getRequestUri() {
-        // TODO Auto-generated method stub
-        return null;
+        return requestUri;
     }
 
     @Override
@@ -118,14 +131,12 @@ public class MockUriInfo implements UriInfo {
 
     @Override
     public MultivaluedMap<String, String> getPathParameters() {
-        // TODO Auto-generated method stub
-        return null;
+        return pathParameters;
     }
 
     @Override
     public MultivaluedMap<String, String> getPathParameters(boolean decode) {
-        // TODO Auto-generated method stub
-        return null;
+        return pathParameters;
     }
 
     @Override
@@ -152,6 +163,18 @@ public class MockUriInfo implements UriInfo {
 
     @Override
     public List<Object> getMatchedResources() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public URI resolve(URI uri) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public URI relativize(URI uri) {
         // TODO Auto-generated method stub
         return null;
     }

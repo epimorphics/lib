@@ -1,7 +1,7 @@
 package com.epimorphics.vocabs;
 /* CVS $UkId: $ */
  
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
  
 /**
  * Vocabulary definitions from ../../../../../resources/ontology/reference.n3 

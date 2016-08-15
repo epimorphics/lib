@@ -1,7 +1,7 @@
 package com.epimorphics.vocabs;
 /* CVS $Id: $ */
  
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
  
 /**
  * Vocabulary definitions from src/main/webapp/vocabs/internal.ttl 

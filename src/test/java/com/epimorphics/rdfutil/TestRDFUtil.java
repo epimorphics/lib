@@ -26,9 +26,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.util.TestUtil;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileManager;
 
 public class TestRDFUtil {
 

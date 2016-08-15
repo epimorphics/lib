@@ -21,6 +21,7 @@ import com.epimorphics.util.EpiException;
  *  
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
+// Based on: https://github.com/chrisveness/geodesy/blob/master/osgridref.js
 public class OsGridRef {
     long easting;
     long northing;

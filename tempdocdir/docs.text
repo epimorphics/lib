@@ -1,0 +1,269 @@
+WIP, headed for Wiki.
+AbstractSparqlQuery useage
+
+Instances of AbstractSparqlQuery are abstractions of SPARQL
+queries. They can be renderered into SPARQL texts according
+to Settings values. The rendering can be specified by a
+template with parameters or according to the items in
+the AbstractSparqlQuery.
+
+Given an AbstractSparqlQuery object Q, Q may be updated
+with additional graph patterns, orderings, a template,
+and modifiers.
+
+Q.setTemplate(Template t)
+
+	Set the single template object of Q to t. A query starts
+	off with its template equal to null. A template consists
+	of a list of Elemenets which are either fixed text or
+	a named parameter to be substituted later.
+
+Q.setTemplate(String t)
+
+	Translate t to a Template and do setTemplate() on that.
+	Useful when the template is a string extracted, say, from
+	a JSON value.
+
+Q.addPreBinding(Bind b)
+Q.addEarlyPattern(GraphPattern p)
+Q.setLaterPattern(GraphPattern p)
+
+	An AbstractSparqlQuery holds three collections of graph
+	patterns: an initial set of SPARQL bindings, the early
+	graph patterns, and the later graph patterns. When rendering
+	these are translated into SPARQL text in that order.
+	Typically the "early" patterns will be those that extract
+	properties from resources and "later" ones will filter
+	those properties.
+
+	The allowed GraphPatterns are discussed elsewhere.
+
+Q.addProjection(Projection x)
+
+	Projections are rendered as the SELECT clause of a query.
+	The obvious Projection is a Var(iable) but anything that
+	satisfies the rendering interface will do.
+
+Q.addDescribeElements(List<TermAtomic> elements)
+
+	Elements are rendered as the DESCRIBE clause of a query.
+	(Note that the same query can have  a SELECT part and 
+	a DESCRIBE part; which one applies is chosen when
+	rendering the query.) These elements will be Vars
+	or URIs.
+
+Q.construct(Triple t)
+
+	Supplies a Triple which will be part of a CONSTRUCT
+	clause.
+
+Q.addOrder(Order o, IsExpr e)
+
+	An AbstractSparqlQuery can hold arbitrarily many orderings
+	which may be upward (o = ASC) or downward (o = DESC).
+	Typeically the ordering expression e will be a Var(iable)
+	but it can be any expression.
+
+Q.setLimit(long limit)
+Q.setOffset(long offset)
+
+	Set the limit or offset that will be applied to the generated
+	query. If the value is negative (the default is -1) then no
+	limit/offset is applied.
+
+Q.addRawModifier(String text)
+
+	Sometimes the query modifiers are supplied not as 
+	specific Java objects but as a string to be inserted as-is
+	in the modifier position of a query.
+
+An AsbtractSparqlQuery is rendered to a SPARQL text using one
+of the rendering methods:
+
+Q.toSparqlSELECT(Settings s) : String
+Q.toSparqlDESCRIBE(Settings s) : String
+Q.toSparqlCONSTRUCT(Settings s) : String
+
+	Create a String which is the appropriate kind of SPARQL
+	query using all and only the elements appropriate to
+	this query type.
+
+	If the query has a template then the result is the
+	template text with its parameters filled in by rendering
+	their values as found in the Settings(). There are
+	three reserved parameters that are added to the Settings:
+
+		_graphPattern
+		_sort
+		_modifiers
+
+	The _graphPattern is filled in with the rendering of all
+	of the graph patterns from the query, the _sort from the
+	orderings of the query, and the _modifiers from the
+	offset and limit.
+
+	The rendered text starts with PREFIX declarations, using
+	only the ones that were usePrefix'd in the Settings.
+
+An instance S of Settings manages prefixes and parameters.
+
+S.putParam(String name, IsSparqler s)
+
+	Associated the parameter `name` with the value `s`.
+
+S.setPrefix(String name, String URI)
+
+	Set the prefix `name` to abbreviate the string `URI`.
+
+S.getPrefixes() : Map<String, String>
+
+	Return a map of all the prefixes known to S.
+
+S.usePrefix(String URI) : String
+
+	Shorten URI by applying the prefixes declared with setPrefix().
+	Record the prefix that is actually used.
+
+S.getUsedPrefixes() : Set<String>
+
+	Return a set of all the prefix names that have been 
+	used within S.usePrefix().
+
+Rendering a parameter value into a string is done by the
+IsSparqler method `toSparql(Settings s, StringBuffer sb)`,
+where the settings `s` has been passed in by the top-level
+call and `sb` is the string builder in which the complete
+query is being assembled.
+
+GraphPatterns
+
+GraphPatterns form the major part of the query operations. The
+fundamental pattern is Basic, for triples and filters, and then
+there are several combinators and more complex patterns.
+
+new Basic(TripleOrFilter ...)
+new Basic(List<TripleOrFilter>)
+
+	A Basic graph pattern is a sequence of Triple-or-Filter values.
+	(Note that these triples are generalised; they may have variables
+	within them. See below for more details on these classes.)
+
+new And(List<GraphPattern>)
+new And(GraphPattern ...)
+	
+	An And graph pattern allows multiple graph patterns in sequence.
+
+new Bind(IsExpr e, Var v)
+
+	Creates a graph pattern that renders as `BIND(_e AS ?_v)` where
+	_e is the rendering of e and _v is the rendering of v.
+
+new Empty()
+
+	Empty is the occasionally-useful empty graph pattern; it renders
+	as the empty string.
+
+new Optional(GraphPattern operand)
+
+	Creates a graph pattern that renders as
+
+		OPTIONAL {_operand}
+
+	where _operand is the rendering of operand.
+
+new Union(GraphPattern ... patterns)
+
+	Creates a graph pattern that renders as
+
+		{_P1} UNION {_P2} ... {_Pn} 
+
+	Where _Pn is the rendering of the n'th pattern in
+	the union.
+
+new Minus(GraphPattern A, B)
+
+    A Minus graph pattern renders as {_A} MINUS {_B}
+
+new GraphPatternText(String text)
+
+    A Text graph pattern renders as the text. No checks
+    are attempted; the developer is assumed to know that
+    the text is legal at this point.
+
+new Named(URI name, GraphPattern p)
+
+    A Named graph pattern renders as 
+
+        GRAPH _name {_p}
+
+new Select(AbstractSparqlQuery q)
+
+    A Select graph pattern renders as
+
+        {_q}
+
+    where _q is the rendering of q, using the same Settings.
+
+new Values(List<Var> vars, List<IsExpr> data)
+
+    A Values graph pattern renders as
+
+        VALUES (_vars) {_data1 _data2 ...}
+
+    _vars is the renderings of the elements of vars; if
+    there is only one element the round brackets () are
+    omitted. The data elements _datan are the renderings
+    of the expressions in data. When there are multiple
+    variables, and hence any data element represents as
+    many values as there are variables, then the data
+    item must be a bracketed expression, ie of the form
+
+        new Call(Op.Tuple, V1 ... Vn)
+
+new Exists(boolean exists, GraphPattern p)
+
+    An Exists graph pattern renders as
+
+        IF _exists {_p}
+
+    where _exists is empty if exists is true and is NOT
+    if exists is false.
+ 
+Triples
+
+A Triple has three TermAtomic components. A TermAtomic can be
+a URI, a Literal, a Blank, or a Var. 
+
+A URI node has a string for the URI it represents. A Blank 
+holds a distinguishing string ID which may be specified
+explicitly or generated (by Jena) as required. A Var has a
+string Name (which does not start with a "?"). A Literal
+has a lexical form, a URI type, and a language code; if
+the type is ommitted use null, if the language is omitted 
+use the empty string "", and it is undefined to give a
+Literal both a type and a language.
+
+Filters
+
+A Filter wraps an expression. When a Filter is rendered it
+wraps FILTER() around the rendering of the expression. An
+expression is something that satisfies the interface IsExpr,
+which requires a rendering method toSparql(int, Settings, StringBuilder).
+The int precedence is used to arrange that sufficiently many brackets
+are inserted into the rendered expression.
+
+Defined IsExprs are all the TermAtomics, function Calls, and Infix
+operations. 
+
+An Infix represents a binary operator expression; it has two 
+(sub) expressions (L and R) and an Operator. The operator wraps
+the name of a SPARQL operator. 
+
+A Call represents a function call; it has a name (the name of
+a SPARQL function) and a list of (sub)expressions. The special
+case where the name is the empty string is used to represent
+expression lists in brackets.
+
+
+
+

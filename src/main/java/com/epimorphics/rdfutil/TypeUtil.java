@@ -11,34 +11,36 @@ package com.epimorphics.rdfutil;
 
 import java.util.regex.Pattern;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.TypeMapper;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.TypeMapper;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
+
+import com.epimorphics.util.NameUtils;
 
 /**
  * Utilities for converting strings to typed RDF nodes
  * depending on either an explicit type URI or a guess from the syntax.
  */
 public class TypeUtil {
-    protected static final Pattern INTEGER_PATTERN = Pattern.compile("(-\\s*)?[0-9]+");
-    protected static final Pattern DECIMAL_PATTERN = Pattern.compile("(-\\s*)?[0-9]+\\.[0-9]+");
-    protected static final Pattern FLOAT_PATTERN = Pattern.compile("(-\\s*)?[0-9]+(\\.[0-9]+)?[eE][-+]?[0-9]+(\\.[0-9]+)?");
+    public static final Pattern INTEGER_PATTERN = Pattern.compile("(-\\s*)?[0-9]+");
+    public static final Pattern DECIMAL_PATTERN = Pattern.compile("(-\\s*)?[0-9]+\\.[0-9]+");
+    public static final Pattern FLOAT_PATTERN = Pattern.compile("(-\\s*)?[0-9]+(\\.[0-9]+)?[eE][-+]?[0-9]+(\\.[0-9]+)?");
 
-    protected static final String DATE_BLOCK = "[0-9]{4}-[01][0-9]-[0-3][0-9]";
-    protected static final String TIME_BLOCK = "[0-6][0-9]:[0-6][0-9]:[0-6][0-9](\\.[0-9]+)?";
-    protected static final String TZONE_BLOCK = "([+-][0-6][0-9]:[0-6][0-9])|Z";
-    protected static final String GYM_BLOCK = "[0-9]{4}-[01][0-9]";
-    protected static final Pattern DATETIME_PATTERN = Pattern.compile( String.format("-?%sT%s(%s)?", DATE_BLOCK, TIME_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern DATE_PATTERN = Pattern.compile( String.format("-?%s(%s)?", DATE_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern TIME_PATTERN = Pattern.compile( String.format("%s(%s)?", TIME_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern GYEARMONTH_PATTERN = Pattern.compile( String.format("%s(%s)?", GYM_BLOCK, TZONE_BLOCK) );
-    protected static final Pattern ANYDATE_PATTERN = Pattern.compile( String.format("-?(%sT%s|%s|%s|%s)(%s)?", DATE_BLOCK, TIME_BLOCK, DATE_BLOCK, TIME_BLOCK, GYM_BLOCK, TZONE_BLOCK) );
+    public static final String DATE_BLOCK = "[0-9]{4}-[01][0-9]-[0-3][0-9]";
+    public static final String TIME_BLOCK = "[0-6][0-9]:[0-6][0-9]:[0-6][0-9](\\.[0-9]+)?";
+    public static final String TZONE_BLOCK = "([+-][0-6][0-9]:[0-6][0-9])|Z";
+    public static final String GYM_BLOCK = "[0-9]{4}-[01][0-9]";
+    public static final Pattern DATETIME_PATTERN = Pattern.compile( String.format("-?%sT%s(%s)?", DATE_BLOCK, TIME_BLOCK, TZONE_BLOCK) );
+    public static final Pattern DATE_PATTERN = Pattern.compile( String.format("-?%s(%s)?", DATE_BLOCK, TZONE_BLOCK) );
+    public static final Pattern TIME_PATTERN = Pattern.compile( String.format("%s(%s)?", TIME_BLOCK, TZONE_BLOCK) );
+    public static final Pattern GYEARMONTH_PATTERN = Pattern.compile( String.format("%s(%s)?", GYM_BLOCK, TZONE_BLOCK) );
+    public static final Pattern ANYDATE_PATTERN = Pattern.compile( String.format("-?(%sT%s|%s|%s|%s)(%s)?", DATE_BLOCK, TIME_BLOCK, DATE_BLOCK, TIME_BLOCK, GYM_BLOCK, TZONE_BLOCK) );
 
-    protected static final Pattern URL_PATTERN = Pattern.compile("(http://|https://|ftp:|file:|mailto:).*");
+    public static final Pattern URL_PATTERN = Pattern.compile("(http://|https://|ftp:|file:|mailto:).*");
     
     public static final String PLAIN_LITERAL_URI = RDF.getURI() + "PlainLiteral";    
     
@@ -71,11 +73,17 @@ public class TypeUtil {
      * If the type URI is null then the typed is guessed, if it is empty string then
      * a plain literal is used, if it is rdfs:Resource then a returns a resource.
      */
-    public static RDFNode asTypedValue(String value, String typeURI) {
+    public static RDFNode asTypedValue(String value, String typeURI, String lang) {
         if (typeURI == null) {
             return asTypedValue(value);
         } else if (typeURI.isEmpty() || PLAIN_LITERAL_URI.equals(typeURI)) {
             return ResourceFactory.createPlainLiteral(value);
+        } else if (RDF.langString.getURI().equals(typeURI)) {
+            if (value.contains("@")) {
+                value = NameUtils.splitBeforeLast(value, "@");
+                lang  = NameUtils.splitAfterLast(value, "@");
+            }
+            return ResourceFactory.createLangLiteral(value, lang);
         } else if (typeURI.equals(RDFS.Resource.getURI())) {
             return ResourceFactory.createResource(value);
         } else {
@@ -86,6 +94,15 @@ public class TypeUtil {
                 throw new IllegalFormatException(value + " is not a legal syntax for type " + typeURI);
             }
         }
+    }
+    
+    /**
+     * Return a typed RDFNode using the given type URI.
+     * If the type URI is null then the typed is guessed, if it is empty string then
+     * a plain literal is used, if it is rdfs:Resource then a returns a resource.
+     */
+    public static RDFNode asTypedValue(String value, String typeURI) {
+        return asTypedValue(value, typeURI, "en");
     }
     
     public static class IllegalFormatException extends RuntimeException {
