@@ -33,10 +33,10 @@ public class TestTemplatedGraphPattern extends SharedFixtures {
 	
 	@Test public void testSortSubstitution() {
 		QueryShape q = new QueryShape();
-		q.setTemplate("SELECT * WHERE {} ORDER BY$_sort #END");
+		q.setTemplate("SELECT * WHERE {} $_sort #END");
 		q.addOrder(Order.ASC, P);
 		String expected = 
-			"SELECT * WHERE {} ORDER BY ASC(_P) #END"
+			"SELECT * WHERE {} ORDER BY  ASC(_P) #END"
 			.replace("_P", P.toString())	
 			;
 		String obtained = q.toSparqlSelect(new Settings());
