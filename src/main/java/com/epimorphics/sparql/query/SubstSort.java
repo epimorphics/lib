@@ -18,7 +18,9 @@ public class SubstSort implements IsSparqler {
 	}
 
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-	    sb.append("ORDER BY ");
-		for (OrderCondition oc: q.orderBy) oc.toSparql(s, sb);
+	    if ( ! q.orderBy.isEmpty() ) {
+	        sb.append("ORDER BY ");
+	        for (OrderCondition oc: q.orderBy) oc.toSparql(s, sb);
+	    }
 	}
 }
