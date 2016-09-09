@@ -40,6 +40,9 @@ public class TestOsGridRef {
         ref = OsGridRef.parse("TA 05 39");
         assertEquals(505500, ref.getEasting());
         assertEquals(439500, ref.getNorthing());
+        
+        // Problmatic bad grid reference
+        assertNull( GeoPoint.fromGridRef("TE57") );
     }
     
     @Test

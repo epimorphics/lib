@@ -62,7 +62,12 @@ public class GeoPoint {
      * Construct point from OS grid reference
      */
     public static GeoPoint fromGridRef(String gridref) {
-        return new GeoPoint( OsGridRef.parse(gridref) );
+        OsGridRef ref = OsGridRef.parse(gridref);
+        if (ref == null) {
+            return null;
+        } else {
+            return new GeoPoint( ref );
+        }
     }
     
     /**
