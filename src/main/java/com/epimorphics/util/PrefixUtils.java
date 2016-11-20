@@ -113,6 +113,18 @@ public class PrefixUtils {
         public boolean samePrefixMappingAs(PrefixMapping other) {
             return false;
         }
+
+        @Override
+        public PrefixMapping clearNsPrefixMap() {
+            pm1.clearNsPrefixMap();
+            pm2.clearNsPrefixMap();
+            return this;
+        }
+
+        @Override
+        public int numPrefixes() {
+            return pm1.numPrefixes() + pm2.numPrefixes();
+        }
     }
 
     /**

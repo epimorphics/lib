@@ -450,7 +450,12 @@ public class RDFNodeWrapper {
             for (String propname : props.split(",")) {
                 Property p = ResourceFactory.createProperty( modelw.expandPrefix(propname) );
                 if (r.hasProperty(p)) {
-                    return getPropertyValue(p);
+                    Statement s =node.asResource().getProperty( toProperty(p) );
+                    if (s != null) {
+                        return new RDFNodeWrapper(modelw, s.getObject() );
+                    } else {
+                        return null;
+                    }
                 }
             }
             return null;

@@ -82,7 +82,7 @@ public class NameUtils {
      * Test if the given name is a legal URI.
      */
     public static boolean isURI(String name) {
-        IRI testing = IRIFactory.jenaImplementation().create(name);
+        IRI testing = IRIFactory.iriImplementation().create(name);
         return ! testing.hasViolation(false);
     }
 
