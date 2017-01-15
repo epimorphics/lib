@@ -79,11 +79,11 @@ public class NameUtils {
     }
 
     /**
-     * Test if the given name is a legal URI.
+     * Test if the given name is a legal absolute URI.
      */
     public static boolean isURI(String name) {
         IRI testing = IRIFactory.iriImplementation().create(name);
-        return ! testing.hasViolation(false);
+        return ! testing.hasViolation(false) && testing.isAbsolute();
     }
 
 
