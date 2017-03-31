@@ -75,4 +75,18 @@ public class TestOsGridRef {
         assertTrue( point.getLatLiteral().asLiteral().getLexicalForm().startsWith("55.682") );
         assertTrue( point.getLonLiteral().asLiteral().getLexicalForm().startsWith("-1.805") );
     }
+    
+    @Test
+    public void testGeoPointRoundTripleLatLong() {
+        doRoundTripTest(55.74981, -4.90633);
+        doRoundTripTest(55.20678, -6.65683);
+    }
+    
+    private void doRoundTripTest(double lat, double lon) {
+        GeoPoint point = GeoPoint.fromLatLon(lat, lon);
+        GeoPoint point2 = GeoPoint.fromGridRef( point.getGridRefString() );
+//        System.out.println( String.format("point2 [%s] = %7.5f, %7.5f", point2.getGridRefString(), point2.getLat(), point2.getLon()) );
+        assertEquals(lat, point2.getLat(), 0.0001);
+        assertEquals(lon, point2.getLon(), 0.0001);
+    }
 }
