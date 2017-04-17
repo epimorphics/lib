@@ -41,6 +41,21 @@ import com.epimorphics.util.EpiException;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
 public class JsonUtil {
+    
+    public static JsonValue loadFromFile(String filename) {
+        try (InputStream is = new FileInputStream(filename)) {
+            if (filename.endsWith(".yaml")) {
+                return JsonUtil.asJson( new Yaml().load(is) ) ;
+            } else if (filename.endsWith(".json")) {
+                return JSON.parseAny(is);
+            } else {
+                // Ignore other files, useful for hiding old endpoints
+                return null;
+            }
+        } catch (IOException e) {
+            throw new EpiException(e);
+        }
+    }
 
     public static String getStringValue(JsonObject jo, String field) {
         return getStringValue(jo, field, null);
