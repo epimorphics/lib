@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.jena.shared.PrefixMapping;
 import com.epimorphics.sparql.terms.IsSparqler;
@@ -48,10 +49,25 @@ public class Settings {
 		return pm.getNsPrefixMap();
 	}
 
+	/**
+		Conservative pattern to check the local name part of a URI.
+		Letters, digits, and underbars generally accepted. Dot(.),
+		colon(:), and hyphen(-) only permitted infixed.
+	*/
+	static final Pattern suffixPattern = Pattern.compile("^[_A-Za-z0-9]+([-.:][_A-Za-z0-9]+)*[_A-Za-z0-9]$");
+		
 	public String usePrefix(String URI) {
 		String shortened = pm.shortForm(URI);
+				
+		int colonPos = shortened.indexOf(':');
+		String prefix = shortened.substring(0, colonPos);
+		String suffix = shortened.substring(colonPos + 1);
+		
+		if (!suffixPattern.matcher(suffix).find()) {
+			return URI;			
+		}
+		
 		if (!shortened.equals(URI)) {
-			String prefix = shortened.substring(0, shortened.indexOf(':'));
 			usedPrefixes.add(prefix);
 		}
 		return shortened;
