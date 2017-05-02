@@ -7,6 +7,8 @@ package com.epimorphics.sparql.templates;
 
 import static org.junit.Assert.*;
 
+import java.util.regex.Pattern;
+
 import org.junit.Test;
 
 public class TestSettingsPrefixes {
@@ -35,7 +37,6 @@ public class TestSettingsPrefixes {
 		
 		assertShortens(s, "pre:alpha.zog", "http://example.com/pre/alpha.zog");
 
-		
 		assertShortens(s, "pre:alpha", "http://example.com/pre/alpha");
 		assertShortens(s, "pre:1066", "http://example.com/pre/1066");
 		assertShortens(s, "pre:alphaBet", "http://example.com/pre/alphaBet");
@@ -51,5 +52,7 @@ public class TestSettingsPrefixes {
 
 	void assertUnchanged(Settings s, String URI) {
 		assertEquals(URI, s.usePrefix(URI));
-	}
+	}	
+
+
 }

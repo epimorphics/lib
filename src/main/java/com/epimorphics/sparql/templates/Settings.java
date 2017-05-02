@@ -54,9 +54,10 @@ public class Settings {
 		Letters, digits, and underbars generally accepted. Dot(.),
 		colon(:), and hyphen(-) only permitted infixed.
 	*/
-	static final Pattern suffixPattern = Pattern.compile("^[_A-Za-z0-9]+([-.:][_A-Za-z0-9]+)*[_A-Za-z0-9]$");
+	static final Pattern suffixPattern = Pattern.compile("^[_A-Za-z0-9]+([-.:][_A-Za-z0-9]+)*[_A-Za-z0-9]*$");
 		
 	public String usePrefix(String URI) {
+		
 		String shortened = pm.shortForm(URI);
 				
 		int colonPos = shortened.indexOf(':');
