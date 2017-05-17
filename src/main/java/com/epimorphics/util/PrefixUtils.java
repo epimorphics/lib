@@ -143,8 +143,28 @@ public class PrefixUtils {
         result.append(query);
         return result.toString();
     }
-
-    private final static Pattern prefixPatt = Pattern.compile("([a-zA-Z0-9-_][a-zA-Z0-9-_\\.]*):");
+    
+    /**
+		<pre>
+		https://www.w3.org/TR/sparql11-query/#rPNAME_NS
+		</pre>
+		
+		<p>
+			Taken from SPARQL 1.1 grammar and cut back --
+			we only deal with the ASCII subset. A Prefix
+			matches the pattern (LETTER (CHARSORDOT* CHARS)?):
+			where LETTER is A-Za-z (not _), CHARS is a
+			letter, underbar, hyphen, or digit, and
+			CHARSORDOT is CHARS or a dot. Hence a prefix
+			cannot end with a dot.
+		</p>
+		
+    */
+    private final static Pattern prefixPatt = Pattern.compile
+    		(
+    		// "(LETTER (CHARSORDOT* CHARS)?):"
+    		"([A-Za-z]([A-Za-z0-9-_.]*[A-Za-z0-9-_])?):"
+    		);
 
     private static Set<String> findPrefixes(String source) {
         Set<String> prefixes = new HashSet<String>();

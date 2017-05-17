@@ -23,11 +23,16 @@ package com.epimorphics.util;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import com.epimorphics.util.PrefixUtils.MergePrefixMapping;
 import com.epimorphics.vocabs.Cube;
 import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.impl.PrefixMappingImpl;
 
 public class TestPrefixUtils {
 
@@ -68,6 +73,59 @@ public class TestPrefixUtils {
         assertTrue( result.contains("PREFIX pc: <http://prefix/c#>") );
         assertTrue( result.endsWith(query) );
     }
+
+    protected static class LoggingMergeMapping extends MergePrefixMapping {
+    	
+    	protected final Set<String> allowed = new HashSet<String>();
+    	protected final Set<String> seen = new HashSet<String>();
+    	
+    	protected LoggingMergeMapping(PrefixMapping pm1, PrefixMapping pm2, String... ok) {
+    		super(pm1, pm2);
+    		for (String o: ok) allowed.add(o);
+    	}
+    	
+    	@Override public String getNsPrefixURI(String prefix) {
+    		assertTrue("incorrect prefix '" + prefix + "' supplied", allowed.contains(prefix));
+    		seen.add(prefix);
+    		return super.getNsPrefixURI(prefix);
+    	}
+    	
+    	protected void check() {
+    		assertEquals("", allowed, seen);
+    	}
+    }
+    
+    @Test 
+    public void testingLegalPrefixes() {
+    	testLegalPrefixes("Select p_a:x", "p_a");
+    	testLegalPrefixes("Select -p_a:x", "p_a");
+    	testLegalPrefixes("Select !p_a:x", "p_a");
+    	testLegalPrefixes("Select _p_a:x", "p_a");
+    	testLegalPrefixes("Select .p_a:x", "p_a");
+    	testLegalPrefixes("Select 9p_a:x", "p_a");
+    	testLegalPrefixes("Select 9p_a:x", "p_a");
+
+    	testLegalPrefixes("Select p_a_:x", "p_a_");
+    	testLegalPrefixes("Select p_a-:x", "p_a-");
+    	testLegalPrefixes("Select p_a9:x", "p_a9");
+    	testLegalPrefixes("Select p_a.b:x", "p_a.b");  	
+    	testLegalPrefixes("Select p_a.:x"); 
+    	
+    }
+    
+    /**
+    	Test that when the supplied query (any string) is expanded,
+    	all and only the expected prefixes are encountered to be
+    	prefixed.
+    */
+    private void testLegalPrefixes(String query, String ...expecting) {
+    	LoggingMergeMapping pm = new LoggingMergeMapping
+            (pm1, pm2, expecting);
+
+		String result = PrefixUtils.expandQuery(query, pm);
+		assertTrue(result.endsWith(query));
+    	pm.check();
+	}
 
     @Test
     public void testCommonPrefixes() {
