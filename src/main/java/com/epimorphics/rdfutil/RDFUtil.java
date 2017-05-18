@@ -309,7 +309,7 @@ public class RDFUtil {
         if (match.matches()) {
             return match.group(2);
         } else {
-            return "";
+            return uri;
         }
     }
 
