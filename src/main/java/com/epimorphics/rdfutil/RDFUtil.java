@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 
 import com.epimorphics.util.EpiException;
 import com.epimorphics.vocabs.SKOS;
+
+import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.graph.Node;
@@ -428,7 +430,8 @@ public class RDFUtil {
     public static long asTimestamp(RDFNode n) {
         if (n.isLiteral()) {
             Literal l = n.asLiteral();
-            if (l.getDatatype().equals(XSDDatatype.XSDdateTime)) {
+            RDFDatatype ty = l.getDatatype();
+            if (ty.equals(XSDDatatype.XSDdateTime) || ty.equals(XSDDatatype.XSDdate)) {
                 return ((XSDDateTime)l.getValue()).asCalendar().getTimeInMillis();
             }
         }
