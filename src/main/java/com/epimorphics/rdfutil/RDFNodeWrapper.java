@@ -190,7 +190,11 @@ public class RDFNodeWrapper {
             try {
                 String label = RDFUtil.getLabel(r, modelw.getLanguage());
                 if (label != null && !label.isEmpty()) {
-                    return tokeniseWords( label );
+                    if (label.equals( RDFUtil.getLocalname(r) )) {
+                        return tokeniseWords( label );
+                    } else {
+                        return label;
+                    }
                 } else {
                     return r.isAnon() ? "[]" : r.getURI();
                 }
