@@ -188,15 +188,16 @@ public class RDFNodeWrapper {
             Resource r = node.asResource();
             modelw.lock();
             try {
-                String label = RDFUtil.getLabel(r, modelw.getLanguage());
+                String label = RDFUtil.findLangMatchValue(r, modelw.getLanguage(), RDFUtil.labelProps); 
                 if (label != null && !label.isEmpty()) {
-                    if (label.equals( RDFUtil.getLocalname(r) )) {
+                    return label;
+                } else {
+                    label = RDFUtil.getLocalname(r);
+                    if (label != null && !label.isEmpty()) {
                         return tokeniseWords( label );
                     } else {
-                        return label;
+                        return r.isAnon() ? "[]" : r.getURI();
                     }
-                } else {
-                    return r.isAnon() ? "[]" : r.getURI();
                 }
             } finally {
                 modelw.unlock();
