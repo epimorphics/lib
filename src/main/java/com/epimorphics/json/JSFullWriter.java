@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.jena.atlas.io.IndentedLineBuffer;
 import org.apache.jena.atlas.io.IndentedWriter;
@@ -20,11 +21,11 @@ import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 import org.apache.jena.atlas.json.io.JSWriter;
-import org.apache.jena.atlas.lib.Ref;
 
 /**
  * Variant on ARQ streaming JSON writer that supports full JSON numbers.
  * Can't subclass JSWriter it because the underlying writer is private.
+ * Actually that's no longer true and this could now be migrated to a straight subclass.
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
@@ -51,7 +52,7 @@ public class JSFullWriter {
     private static String ObjectPairSep     = " : " ;
     
     // Remember whether we are in the first element of a compound (object or array). 
-    Deque<Ref<Boolean>> stack = new ArrayDeque<Ref<Boolean>>() ;
+    Deque<AtomicBoolean> stack = new ArrayDeque<>() ;
     
     public void startObject()
     {
@@ -222,10 +223,23 @@ public class JSFullWriter {
         out.print(x);
     }
     
-    private void startCompound()    { stack.push(new Ref<Boolean>(true)) ; }
-    private void finishCompound()   { stack.pop(); }
-    private boolean isFirst()       { return stack.peek().getValue() ; }
-    private void setNotFirst()      { stack.peek().setValue(false) ; }
+
+    private void startCompound() {
+        stack.push(new AtomicBoolean(true)) ;
+    }
+
+    private void finishCompound() {
+        stack.pop() ;
+    }
+
+    private boolean isFirst() {
+        return stack.peek().get() ;
+    }
+
+    private void setNotFirst() {
+        stack.peek().set(false) ;
+    }
+
     
     // Can only write a value in some context.
     private void value(String x) { out.print(outputQuotedString(x)); }
