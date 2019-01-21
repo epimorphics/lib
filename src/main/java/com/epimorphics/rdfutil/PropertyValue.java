@@ -56,6 +56,12 @@ public class PropertyValue implements Comparable<PropertyValue> {
         return values;
     }
 
+    public Boolean isMultilingual() {
+        return values.size() > 1 && values.stream().anyMatch( node ->
+            node.getLanguage() != null && !node.getLanguage().isEmpty()
+        );
+    }
+
     public void addValue(RDFNodeWrapper value) {
         this.values.add( value );
     }

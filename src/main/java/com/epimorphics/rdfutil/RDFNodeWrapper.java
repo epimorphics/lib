@@ -394,7 +394,7 @@ public class RDFNodeWrapper {
     /**
      * Return the set of property values of this node as a ordered list of value bindings
      */
-    public  List<PropertyValue> listProperties() {
+    public List<PropertyValue> listProperties() {
         PropertyValueSet pvalues = new PropertyValueSet(modelw);
         if (node.isResource()) {
             modelw.lock();
