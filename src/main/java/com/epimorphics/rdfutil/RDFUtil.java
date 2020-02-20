@@ -81,6 +81,11 @@ public class RDFUtil {
     public static String findLangMatchValue(Resource root, String language, Property...props) {
         String label = null;
         for (Property p : props) {
+            Statement stmt = root.getProperty(p, language);
+            if (stmt != null && stmt.getObject().isLiteral()) {
+                return stmt.getLiteral().getLexicalForm();
+            }
+
             for (StmtIterator si = root.listProperties(p); si.hasNext(); ) {
                 RDFNode val = si.next().getObject();
                 if (val.isLiteral()) {
