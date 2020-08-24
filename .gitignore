@@ -7,3 +7,9 @@ generated
 /runtime
 /modal.log
 *.iml
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
