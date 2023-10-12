@@ -33,6 +33,8 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdfxml.xmloutput.RDFXMLWriterI;
+import org.apache.jena.rdfxml.xmloutput.impl.Basic;
 import org.apache.jena.util.FileUtils;
 
 @Provider
@@ -42,6 +44,15 @@ public class RDFXMLMarshaller implements MessageBodyWriter<Model>{
     public static final String MIME_RDFXML = "application/rdf+xml";
     public static final String FULL_MIME_RDFXML = "application/rdf+xml; charset=UTF-8";
 
+    private static boolean useAbbreviatedWriter = true;
+
+    public static boolean isUseAbbreviatedWriter() {
+        return useAbbreviatedWriter;
+    }
+
+    public static void setUseAbbreviatedWriter(boolean useAbbreviatedWriter) {
+        RDFXMLMarshaller.useAbbreviatedWriter = useAbbreviatedWriter;
+    }
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType,
@@ -67,8 +78,12 @@ public class RDFXMLMarshaller implements MessageBodyWriter<Model>{
             MultivaluedMap<String, Object> httpHeaders,
             OutputStream entityStream) throws IOException,
             WebApplicationException {
-        t.write(entityStream, FileUtils.langXMLAbbrev);
-
+        if (useAbbreviatedWriter) {
+            t.write(entityStream, FileUtils.langXMLAbbrev);
+        } else {
+            RDFXMLWriterI writer = new Basic();
+            writer.write(t, entityStream, null);
+        }
     }
 
 }
