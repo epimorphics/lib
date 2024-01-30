@@ -5,6 +5,8 @@
 */
 package com.epimorphics.sparql.query;
 
+import com.epimorphics.sparql.terms.*;
+import org.apache.jena.vocabulary.XSD;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -13,10 +15,6 @@ import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.templates.Settings;
-import com.epimorphics.sparql.terms.TermAtomic;
-import com.epimorphics.sparql.terms.Triple;
-import com.epimorphics.sparql.terms.URI;
-import com.epimorphics.sparql.terms.Filter;
 
 import static com.epimorphics.test.utils.MakeCollection.*;
 
@@ -59,6 +57,19 @@ public class TestQuery extends SharedFixtures {
 		q.setEarlyPattern(where);
 		String result = q.toSparqlSelect(new Settings());
 		assertEqualSparql("SELECT * WHERE {FILTER(true)}", result);
+	}
+
+	@Test public void testQueryTriplePatterns() {
+		QueryShape q = new QueryShape();
+		Var v = new Var("s");
+		URI p = new URI("http://example.com/p");
+		Triple t1 = new Triple(v, p, new Literal("foo", null, ""));
+		Triple t2 = new Triple(v, p, new Literal("42", new URI(XSD.integer.getURI()), ""));
+		Triple t3 = new Triple(v, p, new Literal("foo'bar", null, ""));
+		GraphPattern where = new Basic(list(t1, t2, t3));
+		q.setEarlyPattern(where);
+		String result = q.toSparqlSelect(new Settings());
+		assertEqualSparql("SELECT * WHERE {?s <http://example.com/p> 'foo' . ?s <http://example.com/p> 42 . ?s <http://example.com/p> 'foo\\'bar' .}", result);
 	}
 	
 	@Test public void testPrefixGeneration() {

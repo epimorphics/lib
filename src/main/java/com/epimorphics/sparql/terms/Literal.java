@@ -100,24 +100,24 @@ public class Literal implements TermAtomic, IsSparqler, IsExpr {
     public static final URI rdfLangString = new URI(RDF.langString.getURI());
 	
 	@Override public void toSparql(Settings s, StringBuilder sb) {
-		
+		String lex = spelling.replaceAll("'", "\\\\'");
 		if (type == null || type.equals(rdfLangString)) {
-			sb.append("'").append(spelling).append("'");
+			sb.append("'").append(lex).append("'");
 			if (lang.length()> 0) sb.append("@").append(lang);
 		} else if (type.equals(xsdBoolean)) {
-			sb.append(spelling.equals("true") || spelling.equals("1") ? "true" : "false");
+			sb.append(lex.equals("true") || lex.equals("1") ? "true" : "false");
 		} else if (type.equals(xsdInteger)) {
-			sb.append(spelling);
+			sb.append(lex);
 		} else if (type.equals(xsdString)) {
-			sb.append("'").append(spelling).append("'");
+			sb.append("'").append(lex).append("'");
 		} else if (type.equals(xsdDecimal)) {
-			sb.append(spelling);
+			sb.append(lex);
 		} else if (type.equals(xsdFloat)) {
-			sb.append(spelling);
+			sb.append(lex);
 		} else if (type.equals(xsdDouble)) {
-			sb.append(spelling);
+			sb.append(lex);
 		} else {
-			sb.append("'").append(spelling).append("'");
+			sb.append("'").append(lex).append("'");
 			sb.append("^^");
 			type.toSparql(s, sb);
 		}	
