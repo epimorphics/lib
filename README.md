@@ -6,8 +6,6 @@ Includes a *lot* of historical cruft which has been obsoleted by evolution of Je
 
 Only documentation is the code and javadoc.
 
-## Main starting points
-
    * [RDFUtil](https://github.com/epimorphics/lib/tree/master/src/main/java/com/epimorphics/rdfutil/RDFUtil.java)
 Collection of utilities for common trivial RDF tasks, a couple of other utils in that directory might be handy but most are obsoleted
 
@@ -38,3 +36,7 @@ Set of JAX-RS bindings for read/write of RDF when using Jersey.  This does mean 
 
    * [geo](https://github.com/epimorphics/lib/tree/master/src/main/java/com/epimorphics/geo)
 Support for geolocations including parsing/formating OS Grid References and converting to from lat/log (in WGS84 as well as OSGB36) 
+
+## Change log
+
+**2025-07-22** Replaced Apache `commons-lang` by `commons-text` to avoid CVE-2025-48924 (though that wouldn't afffect our usage). Preferable over upgrading `commons-lang3` because the relevant module in `commons-lang3` is deprecated in favour of `commons-text`.

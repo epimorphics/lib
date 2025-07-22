@@ -15,7 +15,7 @@ import static com.epimorphics.json.JsonUtil.getStringValue;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.jena.atlas.json.JsonObject;
 
 import com.epimorphics.json.JSFullWriter;
@@ -104,7 +104,7 @@ public class ProgressMessage implements JSONWritable {
     }
     
     protected String cleanMessage() {
-        String clean = StringEscapeUtils.escapeHtml(message);
+        String clean = StringEscapeUtils.escapeHtml4(message);
         clean = CHEF_JUNK.matcher(clean).replaceAll("");
         clean = clean.replaceAll("\n", "<br>\n");
         return clean;
