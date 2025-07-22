@@ -242,7 +242,7 @@ public class PrefixUtils {
         pm.setNsPrefix( "dgu", DGU.getURI() );
         pm.setNsPrefix( "internal", Internal.getURI() );
         pm.setNsPrefix( "opensearch", OpenSearch.getURI() );
-        pm.setNsPrefix( "record", Record.getURI() );
+        pm.setNsPrefix( "record", com.epimorphics.vocabs.Record.getURI() );
         pm.setNsPrefix( "skos", SKOS.getURI() );
         pm.setNsPrefix( "time", Time.getURI() );
         pm.setNsPrefix( "void", VOID.getURI() );
