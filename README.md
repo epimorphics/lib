@@ -39,4 +39,6 @@ Support for geolocations including parsing/formating OS Grid References and conv
 
 ## Change log
 
-**3.1.6 2025-07-22** Replaced Apache `commons-lang` by `commons-text` to avoid CVE-2025-48924 (though that wouldn't afffect our usage). Preferable over upgrading `commons-lang3` because the relevant module in `commons-lang3` is deprecated in favour of `commons-text`.
+**3.1.7** Override jackson versions used by jena 3.9.0 dependency to avoid severe CVEs. There are remaining CVEs logged against jena 3.9.0 but they are less severe and exploitable in our usage.
+
+**3.1.6** Replaced Apache `commons-lang` by `commons-text` to avoid CVE-2025-48924 (though that wouldn't afffect our usage). Preferable over upgrading `commons-lang3` because the relevant module in `commons-lang3` is deprecated in favour of `commons-text`.
