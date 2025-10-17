@@ -14,5 +14,5 @@ generated
 *.iml
 *.ipr
 
-# VSCode
+### VSCode ###
 .vscode/
