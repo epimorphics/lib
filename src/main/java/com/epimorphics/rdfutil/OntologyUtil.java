@@ -72,9 +72,6 @@ public class OntologyUtil {
         XSDTree.put( XSDDatatype.XSDshort , XSDDatatype.XSDint  );
         XSDTree.put( XSDDatatype.XSDint, XSDDatatype.XSDlong );
         XSDTree.put( XSDDatatype.XSDlong, XSDDatatype.XSDinteger );
-        XSDTree.put( XSDDatatype.XSDENTITY , XSDDatatype.XSDNCName  );
-        XSDTree.put( XSDDatatype.XSDID, XSDDatatype.XSDNCName );
-        XSDTree.put( XSDDatatype.XSDIDREF, XSDDatatype.XSDNCName );
         XSDTree.put( XSDDatatype.XSDNCName, XSDDatatype.XSDName );
         XSDTree.put( XSDDatatype.XSDName , XSDDatatype.XSDtoken  );
         XSDTree.put( XSDDatatype.XSDlanguage , XSDDatatype.XSDtoken );
