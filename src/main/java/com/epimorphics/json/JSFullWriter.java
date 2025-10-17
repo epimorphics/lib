@@ -15,12 +15,10 @@ import java.util.Deque;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.jena.atlas.io.IndentedLineBuffer;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
-import org.apache.jena.atlas.json.io.JSWriter;
 
 /**
  * Variant on ARQ streaming JSON writer that supports full JSON numbers.
@@ -214,9 +212,12 @@ public class JSFullWriter {
     
     public static String outputQuotedString(String string)
     {
-        IndentedLineBuffer b = new IndentedLineBuffer() ;
-        JSWriter.outputQuotedString(b, string) ;
-        return b.asString() ;
+        // Use simple JSON string escaping since JSWriter method is no longer accessible
+        return "\"" + string.replace("\\", "\\\\")
+                           .replace("\"", "\\\"")
+                           .replace("\n", "\\n")
+                           .replace("\r", "\\r")
+                           .replace("\t", "\\t") + "\"" ;
     }
     
     public void print(String x) {

@@ -223,7 +223,7 @@ public class RDFNodeWrapper {
                 }
             }
 
-            return StrUtils.strjoin( " ", correctlyCased );
+            return StrUtils.strjoin( correctlyCased, " " );
         }
         else {
             return name;

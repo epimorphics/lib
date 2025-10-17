@@ -118,7 +118,7 @@ public class RDFJSONModReader {
                 JsonArray values = entity.get(prop).getAsArray();
                 for (Iterator<JsonValue> it = values.iterator(); it.hasNext();) {
                     Node valueNode = parseValue( it.next(), graph );
-                    graph.add( new Triple(resource, propNode, valueNode) );
+                    graph.add( Triple.create(resource, propNode, valueNode) );
                 }
             }
         }
@@ -148,15 +148,15 @@ public class RDFJSONModReader {
                 for (Iterator<JsonValue> i = listValues.iterator(); i.hasNext();) {
                     Node v = parseValue( i.next(), graph );
                     Node cell = NodeFactory.createBlankNode();
-                    graph.add( new Triple(cell, RDF.first.asNode(), v) );
+                    graph.add( Triple.create(cell, RDF.first.asNode(), v) );
                     if (prev != null) {
-                        graph.add( new Triple(prev, RDF.rest.asNode(), cell) );
+                        graph.add( Triple.create(prev, RDF.rest.asNode(), cell) );
                     }
                     prev = cell;
                     if (head == null) head = cell;
                 }
                 if (prev != null) {
-                    graph.add( new Triple(prev, RDF.rest.asNode(), RDF.nil.asNode()) );
+                    graph.add( Triple.create(prev, RDF.rest.asNode(), RDF.nil.asNode()) );
                 }
                 return head == null ? RDF.nil.asNode() : head;
 
@@ -166,7 +166,7 @@ public class RDFJSONModReader {
                 String lex = getValueAsString(valueDef);
 
                 if (lang != null) {
-                    return NodeFactory.createLiteral(lex, lang, false);
+                    return NodeFactory.createLiteralLang(lex, lang);
                 }
                 if (dturi != null) {
                     RDFDatatype dt = TypeMapper.getInstance().getSafeTypeByName(dturi);

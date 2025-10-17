@@ -13,3 +13,6 @@ generated
 *.iws
 *.iml
 *.ipr
+
+# VSCode
+.vscode/

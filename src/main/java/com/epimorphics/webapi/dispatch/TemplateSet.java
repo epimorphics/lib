@@ -9,7 +9,7 @@ package com.epimorphics.webapi.dispatch;
 
 import java.util.*;
 
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

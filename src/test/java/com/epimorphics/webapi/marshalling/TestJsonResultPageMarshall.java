@@ -28,8 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
 
 import org.junit.Before;
 import org.junit.Test;

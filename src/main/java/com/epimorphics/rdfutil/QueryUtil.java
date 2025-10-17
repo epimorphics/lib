@@ -33,6 +33,8 @@ import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.vocabulary.XSD;
+import org.apache.jena.sparql.exec.QueryExec;
+import org.apache.jena.sparql.exec.QueryExecutionAdapter;
 
 import static com.epimorphics.util.NameUtils.escape;
 
@@ -395,7 +397,10 @@ public class QueryUtil {
     public static ResultSet serviceSelectAll( String serviceURL, String query, PrefixMapping pm, QuerySolutionMap bindings ) {
         String qBody = substituteVars( query, bindings );
         String qHeader = PrefixUtils.asSparqlPrefixes( (pm == null) ? PrefixUtils.commonPrefixes() : pm );
-        return QueryExecutionFactory.sparqlService( serviceURL, qHeader + qBody ).execSelect();
+        Query fullQuery = QueryFactory.create(qHeader + qBody);
+        try (QueryExec qe = QueryExec.service(serviceURL).query(fullQuery).build()) {
+            return QueryExecutionAdapter.adapt(qe).execSelect();
+        }
     }
 
     /**
@@ -435,7 +440,10 @@ public class QueryUtil {
     public static Model serviceDescribe( String serviceURL, String query, PrefixMapping pm, Object... bindings ) {
         String qBody = substituteVars( query, createBindings( bindings ) );
         String qHeader = PrefixUtils.asSparqlPrefixes( (pm == null) ? PrefixUtils.commonPrefixes() : pm );
-        return QueryExecutionFactory.sparqlService( serviceURL, qHeader + qBody ).execDescribe();
+        Query fullQuery = QueryFactory.create(qHeader + qBody);
+        try (QueryExec qe = QueryExec.service(serviceURL).query(fullQuery).build()) {
+            return QueryExecutionAdapter.adapt(qe).execDescribe();
+        }
     }
 
     /**

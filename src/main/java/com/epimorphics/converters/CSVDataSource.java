@@ -33,8 +33,12 @@ import java.util.Map;
 
 import com.epimorphics.util.EpiException;
 
-import au.com.bytecode.opencsv.CSVParser;
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+import com.opencsv.exceptions.CsvException;
 
 /**
  * Reader for CVS files with assumed header row.
@@ -68,9 +72,18 @@ public class CSVDataSource implements RawDataSource {
     
     public CSVDataSource(Reader reader, boolean preload) throws IOException {
         this.preload = preload;
-//        csvIn = new CSVReader(reader);
-        csvIn = new CSVReader(reader, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, '\0');
-        String[] headerRow = csvIn.readNext();
+        CSVParser parser = new CSVParserBuilder()
+            .withSeparator(CSVParser.DEFAULT_SEPARATOR)
+            .withQuoteChar(CSVParser.DEFAULT_QUOTE_CHARACTER)
+            .withEscapeChar('\0')
+            .build();
+        csvIn = new CSVReaderBuilder(reader).withCSVParser(parser).build();
+        String[] headerRow;
+        try {
+            headerRow = csvIn.readNext();
+        } catch (CsvValidationException e) {
+            throw new IOException("Error reading CSV header", e);
+        }
         if (headerRow == null) {
             csvIn = null;
         } else {
@@ -82,7 +95,11 @@ public class CSVDataSource implements RawDataSource {
         }
         
         if (preload) {
-            allrows = csvIn.readAll();
+            try {
+                allrows = csvIn.readAll();
+            } catch (CsvException e) {
+                throw new IOException("Error reading CSV data", e);
+            }
             csvIn.close();
             csvIn = null;
         }
@@ -129,7 +146,7 @@ public class CSVDataSource implements RawDataSource {
                         csvIn.close();
                         csvIn = null;
                     }
-                } catch (IOException e) {
+                } catch (IOException | CsvValidationException e) {
                     throw new EpiException("Problem during CSV parsing", e);
                 }
             }

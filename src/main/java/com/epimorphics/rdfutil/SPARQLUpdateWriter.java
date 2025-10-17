@@ -21,31 +21,26 @@
 
 package com.epimorphics.rdfutil;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.jena.n3.N3IndentedWriter;
-import org.apache.jena.n3.N3JenaWriterCommon;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Support for writing out a model in SPARQL UPDATE syntax.
- * Essentially just the normal N3/Turle writer but with
- * support for separate writing of prefix and body information.
+ * Provides separate writing of prefix and body information.
  *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
-public class SPARQLUpdateWriter extends N3JenaWriterCommon {
+public class SPARQLUpdateWriter {
 
     public SPARQLUpdateWriter() {
-        useWellKnownPropertySymbols = false;
+        // Constructor for compatibility
     }
 
     public static void writeUpdatePrefixes(PrefixMapping prefixes, Writer writer) throws IOException {
@@ -54,39 +49,44 @@ public class SPARQLUpdateWriter extends N3JenaWriterCommon {
         }
     }
 
-    public void writeUpdateBody(Model model, Writer _out) throws IOException {
-        // Set up output
-        if (!(_out instanceof BufferedWriter)) {
-            _out = new BufferedWriter(_out);
-        }
-        out = new N3IndentedWriter(_out);
-
-        bNodesMap = new HashMap<Resource, String>() ;
-
-        // Set up prefix mapping
-        prefixMap = model.getNsPrefixMap() ;
-        for ( Iterator<Entry<String, String>> iter = prefixMap.entrySet().iterator() ; iter.hasNext() ; )
-        {
-            Entry<String, String> e = iter.next() ;
-            String prefix = e.getKey() ;
-            String uri = e.getValue();
-
-            // XML namespaces name can include '.'
-            // Turtle prefixed names can't.
-            if ( ! checkPrefixPart(prefix) )
-                iter.remove() ;
-            else
-            {
-                if ( checkPrefixPart(prefix) )
-                    // Build acceptable reverse mapping
-                    reversePrefixMap.put(uri, prefix) ;
+    public void writeUpdateBody(Model model, Writer writer) throws IOException {
+        // Use modern Jena RIOT writer to write in Turtle format
+        // which is suitable for SPARQL UPDATE body
+        // Convert Writer to OutputStream since RIOT uses OutputStream
+        try (java.io.PipedOutputStream pos = new java.io.PipedOutputStream();
+             java.io.PipedInputStream pis = new java.io.PipedInputStream(pos)) {
+            
+            // Start a separate thread to write to the pipe
+            Thread writerThread = new Thread(() -> {
+                try {
+                    RDFWriter.create()
+                        .format(RDFFormat.TTL)
+                        .source(model)
+                        .output(pos);
+                } finally {
+                    try {
+                        pos.close();
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
+            });
+            writerThread.start();
+            
+            // Read from pipe and write to the output writer
+            try (java.io.InputStreamReader reader = new java.io.InputStreamReader(pis, StandardCharsets.UTF_8)) {
+                char[] buffer = new char[8192];
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
             }
+            
+            writerThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Interrupted while writing model", e);
         }
-
-//        writeModel( ModelFactory.withHiddenStatements(model));
-        writeModel( model );
-        out.flush();
-        bNodesMap = null ;
     }
 
 }
