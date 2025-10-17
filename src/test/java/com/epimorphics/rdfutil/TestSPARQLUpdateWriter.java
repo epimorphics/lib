@@ -59,6 +59,10 @@ public class TestSPARQLUpdateWriter extends TestCase {
         testout = new StringWriter();
         uw.writeUpdateBody(source, testout);
         testout.close();
+        String output = testout.toString();
+        assertFalse(output.contains("PREFIX"));
+        assertFalse(output.contains("@prefix"));
+        assertTrue(output.contains("test:p"));
         String prelude = "@prefix rdfs: <" + RDFS.getURI() +"> .\n@prefix test: <" + NS + "> .\n";
         StringReader in = new StringReader(prelude + testout.toString());
         Model got = ModelFactory.createDefaultModel();

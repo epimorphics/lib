@@ -25,11 +25,17 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.apache.jena.atlas.io.IndentedWriter;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.riot.RDFFormat;
-import org.apache.jena.riot.RDFWriter;
-import java.nio.charset.StandardCharsets;
+
+import org.apache.jena.riot.system.PrefixMap;
+import org.apache.jena.riot.system.PrefixMapAdapter;
+import org.apache.jena.riot.system.RiotLib;
+import org.apache.jena.riot.writer.TurtleShell;
+import org.apache.jena.riot.writer.TurtleWriterBase;
+import org.apache.jena.sparql.util.Context;
 
 /**
  * Support for writing out a model in SPARQL UPDATE syntax.
@@ -49,44 +55,33 @@ public class SPARQLUpdateWriter {
         }
     }
 
-    public void writeUpdateBody(Model model, Writer writer) throws IOException {
-        // Use modern Jena RIOT writer to write in Turtle format
-        // which is suitable for SPARQL UPDATE body
-        // Convert Writer to OutputStream since RIOT uses OutputStream
-        try (java.io.PipedOutputStream pos = new java.io.PipedOutputStream();
-             java.io.PipedInputStream pis = new java.io.PipedInputStream(pos)) {
-            
-            // Start a separate thread to write to the pipe
-            Thread writerThread = new Thread(() -> {
-                try {
-                    RDFWriter.create()
-                        .format(RDFFormat.TTL)
-                        .source(model)
-                        .output(pos);
-                } finally {
-                    try {
-                        pos.close();
-                    } catch (IOException e) {
-                        // Ignore
-                    }
-                }
-            });
-            writerThread.start();
-            
-            // Read from pipe and write to the output writer
-            try (java.io.InputStreamReader reader = new java.io.InputStreamReader(pis, StandardCharsets.UTF_8)) {
-                char[] buffer = new char[8192];
-                int n;
-                while ((n = reader.read(buffer)) != -1) {
-                    writer.write(buffer, 0, n);
-                }
+    private static class TurtleWriterNoPrefix extends TurtleWriterBase {
+
+        @Override
+        protected void output(IndentedWriter iOut, Graph graph, PrefixMap prefixMap, String baseURI, Context context) {
+            TurtleWriter$ w = new TurtleWriter$(iOut, prefixMap, baseURI, context);
+            w.write(graph);
+        }
+
+        private static class TurtleWriter$ extends TurtleShell {
+            public TurtleWriter$(IndentedWriter out, PrefixMap prefixMap, String baseURI, Context context) {
+                super(out, prefixMap, baseURI, context);
             }
-            
-            writerThread.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IOException("Interrupted while writing model", e);
+
+            private void write(Graph graph) {
+                writeGraphTTL(graph);
+            }
         }
     }
 
+    public void writeUpdateBody(Model model, Writer writer) throws IOException {
+        TurtleWriterNoPrefix turtleWriter = new TurtleWriterNoPrefix();
+        turtleWriter.output(
+            RiotLib.create(writer),
+            model.getGraph(),
+            new PrefixMapAdapter(model),
+            null,
+            new Context()
+        );
+    }
 }
