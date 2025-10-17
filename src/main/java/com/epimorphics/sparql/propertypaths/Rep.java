@@ -8,7 +8,7 @@ package com.epimorphics.sparql.propertypaths;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Rep extends PathCommon implements PropertyPath {
+public class Rep extends PathCommon {
 
 	final PropertyPath path;
 	final PropertyPath.Repeat rep;

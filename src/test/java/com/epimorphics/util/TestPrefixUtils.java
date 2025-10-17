@@ -32,7 +32,6 @@ import org.junit.Test;
 import com.epimorphics.util.PrefixUtils.MergePrefixMapping;
 import com.epimorphics.vocabs.Cube;
 import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.shared.impl.PrefixMappingImpl;
 
 public class TestPrefixUtils {
 

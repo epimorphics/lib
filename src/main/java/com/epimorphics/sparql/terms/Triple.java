@@ -7,7 +7,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Triple implements IsSparqler, TripleOrFilter {
+public class Triple implements TripleOrFilter {
 
 	final TermAtomic S, P, O;
 	

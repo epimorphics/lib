@@ -7,7 +7,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Var implements IsExpr, TermAtomic, IsSparqler, Projection {
+public class Var implements IsExpr, Projection {
 	
 	final String name;
 	

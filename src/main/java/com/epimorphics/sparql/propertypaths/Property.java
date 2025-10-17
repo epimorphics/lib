@@ -9,7 +9,7 @@ package com.epimorphics.sparql.propertypaths;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.URI;
 
-public class Property extends PathCommon implements PropertyPath {
+public class Property extends PathCommon {
 
 	final URI property;
 	

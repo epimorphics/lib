@@ -14,7 +14,7 @@ import org.apache.jena.vocabulary.RDF;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.util.EpiException;
 
-public class Literal implements TermAtomic, IsSparqler, IsExpr {
+public class Literal implements IsExpr {
 
 	final String spelling;
 	final String lang;

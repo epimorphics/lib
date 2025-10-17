@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Seq extends PathCommon implements PropertyPath {
+public class Seq extends PathCommon {
 	
 	final List<PropertyPath> paths;
 	

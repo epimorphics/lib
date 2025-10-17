@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class TermList implements IsSparqler, TermAtomic {
+public class TermList implements TermAtomic {
 
 	final List<TermAtomic> terms;
 

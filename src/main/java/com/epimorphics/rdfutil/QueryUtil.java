@@ -167,7 +167,7 @@ public class QueryUtil {
         QueryExecution qe = null;
 
         if (bindings != null) {
-            qe = QueryExecutionFactory.create( q, m, bindings );
+            qe = QueryExecution.model(m).query(q).substitution(bindings).build();
         }
         else {
             qe = QueryExecutionFactory.create( q, m );

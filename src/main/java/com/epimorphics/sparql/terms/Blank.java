@@ -9,7 +9,7 @@ import org.apache.jena.graph.NodeFactory;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Blank implements TermAtomic, IsSparqler, IsExpr {
+public class Blank implements IsExpr {
 
 	final String id;
 	

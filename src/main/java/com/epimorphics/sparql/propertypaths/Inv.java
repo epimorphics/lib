@@ -8,7 +8,7 @@ package com.epimorphics.sparql.propertypaths;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Inv extends PathCommon implements PropertyPath {
+public class Inv extends PathCommon {
 
 	final PropertyPath path;
 	

@@ -11,8 +11,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.sparql.exprs.Infix;
-import com.epimorphics.sparql.exprs.Op;
 import com.epimorphics.sparql.terms.IsExpr;
 import com.epimorphics.util.SparqlUtils;
 
