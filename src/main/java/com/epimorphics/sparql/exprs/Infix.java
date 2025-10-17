@@ -8,7 +8,7 @@ package com.epimorphics.sparql.exprs;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 
-public class Infix extends ExprCommon implements IsExpr {
+public class Infix extends ExprCommon {
 	
 	public Infix(IsExpr L, Op op, IsExpr R) {
 		super(op, L, R);

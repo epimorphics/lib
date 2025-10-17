@@ -10,7 +10,7 @@ import java.util.List;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 
-public class Call extends ExprCommon implements IsExpr {
+public class Call extends ExprCommon {
 	
 	public Call(Op op, IsExpr... args) {
 		super(op, args);

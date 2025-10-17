@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Alt extends PathCommon implements PropertyPath {
+public class Alt extends PathCommon {
 
 	final List<PropertyPath> paths;
 	

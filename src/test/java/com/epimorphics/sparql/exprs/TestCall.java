@@ -7,8 +7,6 @@ package com.epimorphics.sparql.exprs;
 
 import org.junit.Test;
 
-import com.epimorphics.sparql.exprs.Call;
-import com.epimorphics.sparql.exprs.Op;
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.sparql.terms.IsExpr;
 

@@ -7,7 +7,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class Filter implements IsSparqler, TripleOrFilter {
+public class Filter implements TripleOrFilter {
 
 	final IsExpr e;
 	

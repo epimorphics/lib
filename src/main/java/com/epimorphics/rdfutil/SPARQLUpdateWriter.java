@@ -21,31 +21,32 @@
 
 package com.epimorphics.rdfutil;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.jena.n3.N3IndentedWriter;
-import org.apache.jena.n3.N3JenaWriterCommon;
+import org.apache.jena.atlas.io.IndentedWriter;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.PrefixMapping;
+
+import org.apache.jena.riot.system.PrefixMap;
+import org.apache.jena.riot.system.PrefixMapAdapter;
+import org.apache.jena.riot.system.RiotLib;
+import org.apache.jena.riot.writer.TurtleShell;
+import org.apache.jena.riot.writer.TurtleWriterBase;
+import org.apache.jena.sparql.util.Context;
 
 /**
  * Support for writing out a model in SPARQL UPDATE syntax.
- * Essentially just the normal N3/Turle writer but with
- * support for separate writing of prefix and body information.
+ * Provides separate writing of prefix and body information.
  *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
-public class SPARQLUpdateWriter extends N3JenaWriterCommon {
+public class SPARQLUpdateWriter {
 
     public SPARQLUpdateWriter() {
-        useWellKnownPropertySymbols = false;
+        // Constructor for compatibility
     }
 
     public static void writeUpdatePrefixes(PrefixMapping prefixes, Writer writer) throws IOException {
@@ -54,39 +55,33 @@ public class SPARQLUpdateWriter extends N3JenaWriterCommon {
         }
     }
 
-    public void writeUpdateBody(Model model, Writer _out) throws IOException {
-        // Set up output
-        if (!(_out instanceof BufferedWriter)) {
-            _out = new BufferedWriter(_out);
+    private static class TurtleWriterNoPrefix extends TurtleWriterBase {
+
+        @Override
+        protected void output(IndentedWriter iOut, Graph graph, PrefixMap prefixMap, String baseURI, Context context) {
+            TurtleWriter$ w = new TurtleWriter$(iOut, prefixMap, baseURI, context);
+            w.write(graph);
         }
-        out = new N3IndentedWriter(_out);
 
-        bNodesMap = new HashMap<Resource, String>() ;
+        private static class TurtleWriter$ extends TurtleShell {
+            public TurtleWriter$(IndentedWriter out, PrefixMap prefixMap, String baseURI, Context context) {
+                super(out, prefixMap, baseURI, context);
+            }
 
-        // Set up prefix mapping
-        prefixMap = model.getNsPrefixMap() ;
-        for ( Iterator<Entry<String, String>> iter = prefixMap.entrySet().iterator() ; iter.hasNext() ; )
-        {
-            Entry<String, String> e = iter.next() ;
-            String prefix = e.getKey() ;
-            String uri = e.getValue();
-
-            // XML namespaces name can include '.'
-            // Turtle prefixed names can't.
-            if ( ! checkPrefixPart(prefix) )
-                iter.remove() ;
-            else
-            {
-                if ( checkPrefixPart(prefix) )
-                    // Build acceptable reverse mapping
-                    reversePrefixMap.put(uri, prefix) ;
+            private void write(Graph graph) {
+                writeGraphTTL(graph);
             }
         }
-
-//        writeModel( ModelFactory.withHiddenStatements(model));
-        writeModel( model );
-        out.flush();
-        bNodesMap = null ;
     }
 
+    public void writeUpdateBody(Model model, Writer writer) throws IOException {
+        TurtleWriterNoPrefix turtleWriter = new TurtleWriterNoPrefix();
+        turtleWriter.output(
+            RiotLib.create(writer),
+            model.getGraph(),
+            new PrefixMapAdapter(model),
+            null,
+            new Context()
+        );
+    }
 }

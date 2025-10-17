@@ -7,7 +7,7 @@ package com.epimorphics.sparql.terms;
 
 import com.epimorphics.sparql.templates.Settings;
 
-public class URI implements TermAtomic, IsExpr, IsSparqler {
+public class URI implements IsExpr {
 	
 	final String URI;
 	

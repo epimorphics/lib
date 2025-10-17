@@ -25,17 +25,16 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.Provider;
 
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdfxml.xmloutput.RDFXMLWriterI;
-import org.apache.jena.rdfxml.xmloutput.impl.Basic;
-import org.apache.jena.util.FileUtils;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFWriter;
 
 @Provider
 @Produces("application/rdf+xml")
@@ -78,12 +77,11 @@ public class RDFXMLMarshaller implements MessageBodyWriter<Model>{
             MultivaluedMap<String, Object> httpHeaders,
             OutputStream entityStream) throws IOException,
             WebApplicationException {
-        if (useAbbreviatedWriter) {
-            t.write(entityStream, FileUtils.langXMLAbbrev);
-        } else {
-            RDFXMLWriterI writer = new Basic();
-            writer.write(t, entityStream, null);
-        }
+        RDFFormat format = useAbbreviatedWriter ? RDFFormat.RDFXML_ABBREV : RDFFormat.RDFXML_PLAIN;
+        RDFWriter.create()
+            .format(format)
+            .source(t)
+            .output(entityStream);
     }
 
 }

@@ -28,7 +28,7 @@ import org.junit.Test;
 import com.epimorphics.util.TestUtil;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.util.FileManager;
+import org.apache.jena.riot.RDFDataMgr;
 
 public class TestRDFUtil {
 
@@ -105,8 +105,9 @@ public class TestRDFUtil {
     
     @Test
     public void testNSMapping() {
-        Model original = FileManager.get().loadModel("src/test/data/testModel.ttl");
-        Model expected = FileManager.get().loadModel("src/test/data/mappedTestModel.ttl");
+        RDFDataMgr.loadModel("src/test/data/testModel.ttl");
+        Model original = RDFDataMgr.loadModel("src/test/data/testModel.ttl");
+        Model expected = RDFDataMgr.loadModel("src/test/data/mappedTestModel.ttl");
         Model mapped = RDFUtil.mapNamespace(original, "http://www.epimporphics.com/examples#", "http://example.com/test#");
         assertTrue( mapped.isIsomorphicWith(expected) );
     }

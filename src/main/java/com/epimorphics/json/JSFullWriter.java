@@ -15,12 +15,10 @@ import java.util.Deque;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.jena.atlas.io.IndentedLineBuffer;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
-import org.apache.jena.atlas.json.io.JSWriter;
 
 /**
  * Variant on ARQ streaming JSON writer that supports full JSON numbers.
@@ -214,9 +212,29 @@ public class JSFullWriter {
     
     public static String outputQuotedString(String string)
     {
-        IndentedLineBuffer b = new IndentedLineBuffer() ;
-        JSWriter.outputQuotedString(b, string) ;
-        return b.asString() ;
+        StringBuilder sb = new StringBuilder();
+        sb.append('"');
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            switch (c) {
+                case '\\': sb.append("\\\\"); break;
+                case '"': sb.append("\\\""); break;
+                case '\b': sb.append("\\b"); break;
+                case '\f': sb.append("\\f"); break;
+                case '\n': sb.append("\\n"); break;
+                case '\r': sb.append("\\r"); break;
+                case '\t': sb.append("\\t"); break;
+                default:
+                    if (c < 0x20) {
+                        sb.append(String.format("\\u%04x", (int)c));
+                    } else {
+                        sb.append(c);
+                    }
+                    break;
+            }
+        }
+        sb.append('"');
+        return sb.toString();
     }
     
     public void print(String x) {

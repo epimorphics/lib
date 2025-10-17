@@ -13,7 +13,6 @@ import static org.junit.Assert.*;
 import com.epimorphics.sparql.exprs.LeafExprs;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;
 import com.epimorphics.sparql.graphpatterns.Basic;
-import com.epimorphics.sparql.query.QueryShape;
 import com.epimorphics.sparql.templates.Settings;
 
 import static com.epimorphics.test.utils.MakeCollection.*;
