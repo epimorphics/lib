@@ -39,7 +39,7 @@ import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.shared.Lock;
 import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.tdb.TDB;
+import org.apache.jena.tdb2.TDB2;
 
 /**
  * Wrap up a dataset to support script-friendly access. See ModelWrapper and
@@ -173,7 +173,7 @@ public class DatasetWrapper {
     public ResultSetRewindable querySelect(String query) {
         String expandedQuery = expandQuery(query);
         QueryExecution qexec = QueryExecutionFactory.create(expandedQuery);
-        if (unionDefault) qexec.getContext().set(TDB.symUnionDefaultGraph, true) ;
+        if (unionDefault) qexec.getContext().set(TDB2.symUnionDefaultGraph, true) ;
         lock();
         try {
             return ResultSetFactory.copyResults( qexec.execSelect() );
@@ -191,7 +191,7 @@ public class DatasetWrapper {
     public boolean queryAsk(String query) {
         String expandedQuery = expandQuery(query);
         QueryExecution qexec = QueryExecutionFactory.create(expandedQuery);
-        if (unionDefault) qexec.getContext().set(TDB.symUnionDefaultGraph, true) ;
+        if (unionDefault) qexec.getContext().set(TDB2.symUnionDefaultGraph, true) ;
         lock();
         try {
             return ( qexec.execAsk() );
@@ -210,7 +210,7 @@ public class DatasetWrapper {
     public ModelWrapper queryConstruct(String query) {
         String expandedQuery = expandQuery(query);
         QueryExecution qexec = QueryExecutionFactory.create(expandedQuery);
-        if (unionDefault) qexec.getContext().set(TDB.symUnionDefaultGraph, true) ;
+        if (unionDefault) qexec.getContext().set(TDB2.symUnionDefaultGraph, true) ;
         lock();
         try {
             return new ModelWrapper( this, qexec.execConstruct() );
