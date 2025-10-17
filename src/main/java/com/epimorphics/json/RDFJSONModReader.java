@@ -126,10 +126,10 @@ public class RDFJSONModReader {
 
     protected Node parseValue(JsonValue value, Graph graph) {
         if (value.isNumber()) {
-            return NodeFactory.createLiteral(value.toString(), XSDDatatype.XSDinteger);
+            return NodeFactory.createLiteralDT(value.toString(), XSDDatatype.XSDinteger);
 
         } else if (value.isString()) {
-            return NodeFactory.createLiteral(value.getAsString().value());
+            return NodeFactory.createLiteralString(value.getAsString().value());
 
         } else if (value.isObject()) {
 
@@ -170,9 +170,9 @@ public class RDFJSONModReader {
                 }
                 if (dturi != null) {
                     RDFDatatype dt = TypeMapper.getInstance().getSafeTypeByName(dturi);
-                    return NodeFactory.createLiteral(lex, dt);
+                    return NodeFactory.createLiteralDT(lex, dt);
                 }
-                return NodeFactory.createLiteral(lex);
+                return NodeFactory.createLiteralString(lex);
 
             } else {
                 throw new RiotException("Property value type must be one of uri, bnode, literal or array. Found " + type);
