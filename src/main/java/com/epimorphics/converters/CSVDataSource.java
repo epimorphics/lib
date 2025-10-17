@@ -75,7 +75,7 @@ public class CSVDataSource implements RawDataSource {
         CSVParser parser = new CSVParserBuilder()
             .withSeparator(CSVParser.DEFAULT_SEPARATOR)
             .withQuoteChar(CSVParser.DEFAULT_QUOTE_CHARACTER)
-            .withEscapeChar('\0')
+            .withEscapeChar(CSVParser.NULL_CHARACTER)
             .build();
         csvIn = new CSVReaderBuilder(reader).withCSVParser(parser).build();
         String[] headerRow;

@@ -212,12 +212,29 @@ public class JSFullWriter {
     
     public static String outputQuotedString(String string)
     {
-        // Use simple JSON string escaping since JSWriter method is no longer accessible
-        return "\"" + string.replace("\\", "\\\\")
-                           .replace("\"", "\\\"")
-                           .replace("\n", "\\n")
-                           .replace("\r", "\\r")
-                           .replace("\t", "\\t") + "\"" ;
+        StringBuilder sb = new StringBuilder();
+        sb.append('"');
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            switch (c) {
+                case '\\': sb.append("\\\\"); break;
+                case '"': sb.append("\\\""); break;
+                case '\b': sb.append("\\b"); break;
+                case '\f': sb.append("\\f"); break;
+                case '\n': sb.append("\\n"); break;
+                case '\r': sb.append("\\r"); break;
+                case '\t': sb.append("\\t"); break;
+                default:
+                    if (c < 0x20) {
+                        sb.append(String.format("\\u%04x", (int)c));
+                    } else {
+                        sb.append(c);
+                    }
+                    break;
+            }
+        }
+        sb.append('"');
+        return sb.toString();
     }
     
     public void print(String x) {
