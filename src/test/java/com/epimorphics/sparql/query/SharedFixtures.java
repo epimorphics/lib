@@ -6,8 +6,8 @@
 package com.epimorphics.sparql.query;
 
 import static com.epimorphics.sparql.exprs.LeafExprs.integer;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.jena.query.QueryFactory;
 

@@ -7,8 +7,8 @@ package com.epimorphics.sparql.query;
 
 import com.epimorphics.sparql.terms.*;
 import org.apache.jena.vocabulary.XSD;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.epimorphics.sparql.exprs.LeafExprs;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;

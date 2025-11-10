@@ -7,9 +7,9 @@ package com.epimorphics.sparql.patterns;
 
 import static com.epimorphics.test.utils.MakeCollection.list;
 import static com.epimorphics.util.SparqlUtils.renderToSparql;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.graphpatterns.GraphPattern;

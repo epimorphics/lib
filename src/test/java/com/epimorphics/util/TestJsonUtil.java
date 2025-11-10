@@ -21,11 +21,11 @@ import org.apache.jena.atlas.json.JsonNumber;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonString;
 import org.apache.jena.atlas.json.JsonValue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.epimorphics.json.JsonUtil.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestJsonUtil {
 

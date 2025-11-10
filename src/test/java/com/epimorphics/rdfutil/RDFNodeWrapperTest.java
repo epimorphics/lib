@@ -9,12 +9,12 @@
 
 package com.epimorphics.rdfutil;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public class RDFNodeWrapperTest
     /* External signature methods      */
     /***********************************/
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         Model m = ModelFactory.createDefaultModel();
         modelw = new ModelWrapper( m );
@@ -141,9 +141,9 @@ public class RDFNodeWrapperTest
         assertEquals( modelw.getModel().createLiteral( "testing 123" ), testLit.asLiteral() );
     }
 
-    @Test( expected=LiteralRequiredException.class)
+    @Test
     public void testAsLiteral1() {
-        testRes.asLiteral();
+        assertThrows(LiteralRequiredException.class, () -> { testRes.asLiteral(); });
     }
 
     @Test
@@ -257,9 +257,11 @@ public class RDFNodeWrapperTest
         assertEquals( NS + "r", testRes.asResource().getURI() );
     }
 
-    @Test( expected=ResourceRequiredException.class )
+    @Test
     public void testAsResource1() {
-        testLit.asResource();
+        assertThrows(ResourceRequiredException.class, () -> {
+            testLit.asResource();
+        });
     }
 
     @Test

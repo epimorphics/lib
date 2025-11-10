@@ -7,8 +7,8 @@
 */
 package com.epmorphics.webapi.dispatch;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Map;
 import jakarta.ws.rs.core.AbstractMultivaluedMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.test.utils.MakeCollection;
 import com.epimorphics.test.utils.MakeHash;
@@ -151,7 +151,7 @@ public class TestTemplateSet {
 		Map<String, String> map = new HashMap<String, String>();
 		Map<String, String> expected = MakeHash.hashMap( "alpha=99 beta=100 gamma=boggle" );
 		CompiledTemplate<String> ut = CompiledTemplate.prepare( template, "SPOO" );
-		assertTrue( "the uri should match the pattern", ut.match(map, uri, null ) );
+		assertTrue(ut.match(map, uri, null ), "the uri should match the pattern");
 		assertEquals( expected, map );
 	}
 	

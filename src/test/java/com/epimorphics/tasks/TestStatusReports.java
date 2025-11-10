@@ -15,11 +15,11 @@ import java.io.IOException;
 import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.json.JSFullWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestStatusReports {
     

@@ -5,9 +5,9 @@
 */
 package com.epimorphics.sparql.patterns;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.sparql.graphpatterns.And;
 import com.epimorphics.sparql.graphpatterns.Basic;

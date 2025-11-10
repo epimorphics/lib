@@ -9,9 +9,9 @@
 
 package com.epimorphics.rdfutil;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;

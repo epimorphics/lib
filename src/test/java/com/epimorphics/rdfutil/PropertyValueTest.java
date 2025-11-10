@@ -2,10 +2,10 @@ package com.epimorphics.rdfutil;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.iterator.ExtendedIterator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PropertyValueTest {
 
@@ -13,7 +13,7 @@ public class PropertyValueTest {
     private ModelWrapper modelw;
     private Resource root;
 
-    @Before
+    @BeforeEach
     public void before() {
         this.model = ModelFactory.createDefaultModel();
         model.setNsPrefix("ns", "http://example.org/");

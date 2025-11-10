@@ -5,14 +5,15 @@
 */
 package com.epimorphics.sparql.terms;
 
-import static com.epimorphics.util.Asserts.*;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static com.epimorphics.util.Asserts.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestTermVar {
 	
-	@Test public void testVariable() {
+	@Test
+    public void testVariable() {
 		Var tv1 = new Var("item");
 		
 		assertEquals("item", tv1.getName());

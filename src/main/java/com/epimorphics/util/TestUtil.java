@@ -20,8 +20,8 @@
 
 package com.epimorphics.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
 import java.util.Collection;
@@ -183,9 +183,9 @@ public class TestUtil {
         Set<RDFNode> expectedValues = getValues(expected, p);
         Set<RDFNode> actualValues = getValues(actual, p);
         if (expectedValues.size() == 1 && expectedValues.iterator().next().isAnon()) {
-            assertTrue("Must have value for wildcard property " + p, actualValues.size() > 0);
+            assertTrue(actualValues.size() > 0, "Must have value for wildcard property " + p);
         } else {
-            assertEquals("Compare property values for " + p, expectedValues, actualValues);
+            assertEquals(expectedValues, actualValues, "Compare property values for " + p);
         }
     }
 

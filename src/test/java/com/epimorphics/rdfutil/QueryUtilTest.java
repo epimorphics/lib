@@ -16,12 +16,12 @@ package com.epimorphics.rdfutil;
 // Imports
 ///////////////
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,12 +56,12 @@ public class QueryUtilTest
         assertEquals("SELECT * WHERE {?i rdf:type foaf:Person}", result);
     }
 
-    @Test @Ignore
+    @Test @Disabled
     public void testAddPageLimits() {
         fail( "Not yet implemented" );
     }
 
-    @Test @Ignore
+    @Test @Disabled
     public void testResultsFor() {
         fail( "Not yet implemented" );
     }
@@ -181,7 +181,7 @@ public class QueryUtilTest
     }
 
     @Test
-    @Ignore  // Bathing water endpoint is blocking access from java, clear why or how
+    @Disabled  // Bathing water endpoint is blocking access from java, clear why or how
     public void testRemoteService() {
         ResultSet rs = QueryUtil.serviceSelectAll( "https://environment.data.gov.uk/sparql/bwq/query", "select * {?s ?p ?o} limit 1", null );
         assertTrue( rs.hasNext() );

@@ -19,8 +19,8 @@ import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestJsonSerializer {
 

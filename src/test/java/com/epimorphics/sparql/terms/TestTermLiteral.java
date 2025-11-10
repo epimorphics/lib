@@ -6,12 +6,12 @@
 package com.epimorphics.sparql.terms;
 
 import static com.epimorphics.util.Asserts.assertDiffer;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.XSD;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestTermLiteral {
 	

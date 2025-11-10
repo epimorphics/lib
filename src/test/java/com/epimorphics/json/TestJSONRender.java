@@ -20,12 +20,12 @@
 
 package com.epimorphics.json;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -81,7 +81,7 @@ public class TestJSONRender {
 
         Model result = new RDFJSONModReader().parse( json );
 //        result.write(System.out, FileUtils.langTurtle);
-        assertTrue(msg, result.isIsomorphicWith(model));
+        assertTrue(result.isIsomorphicWith(model), msg);
     }
 
 }

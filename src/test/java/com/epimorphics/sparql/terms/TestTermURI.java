@@ -5,11 +5,11 @@
 */
 package com.epimorphics.sparql.terms;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.sparql.templates.Settings;
 import com.epimorphics.util.SparqlUtils;
@@ -45,6 +45,6 @@ public class TestTermURI {
 		
 		assertEquals("ex:alpha", obtained);
 		
-		assertTrue("usedPrefixes must contain used prefix", s.getUsedPrefixes().contains("ex"));
+		assertTrue(s.getUsedPrefixes().contains("ex"), "usedPrefixes must contain used prefix");
 	}
 }

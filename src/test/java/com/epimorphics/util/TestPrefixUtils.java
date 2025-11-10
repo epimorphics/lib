@@ -21,13 +21,14 @@
 
 package com.epimorphics.util;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.util.PrefixUtils.MergePrefixMapping;
 import com.epimorphics.vocabs.Cube;
@@ -38,7 +39,7 @@ public class TestPrefixUtils {
     PrefixMapping pm1;
     PrefixMapping pm2;
 
-    @Before
+    @BeforeEach
     public void init() {
         pm1 = PrefixMapping.Factory.create();
         pm1.setNsPrefix("p_a", "http://prefix/a#");
@@ -80,17 +81,17 @@ public class TestPrefixUtils {
     	
     	protected LoggingMergeMapping(PrefixMapping pm1, PrefixMapping pm2, String... ok) {
     		super(pm1, pm2);
-    		for (String o: ok) allowed.add(o);
+            allowed.addAll(Arrays.asList(ok));
     	}
     	
     	@Override public String getNsPrefixURI(String prefix) {
-    		assertTrue("incorrect prefix '" + prefix + "' supplied", allowed.contains(prefix));
+    		assertTrue(allowed.contains(prefix), "incorrect prefix '" + prefix + "' supplied");
     		seen.add(prefix);
     		return super.getNsPrefixURI(prefix);
     	}
     	
     	protected void check() {
-    		assertEquals("", allowed, seen);
+    		assertEquals(allowed, seen);
     	}
     }
     

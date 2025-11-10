@@ -21,8 +21,8 @@
 
 package com.epimorphics.webapi.marshalling;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,8 +31,8 @@ import java.io.StringReader;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
@@ -61,7 +61,7 @@ public class TestJsonResultPageMarshall {
 
     Model testModel;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         testModel = ModelFactory.createDefaultModel();
         testModel.read(new StringReader(testModelDef), null, FileUtils.langTurtle);

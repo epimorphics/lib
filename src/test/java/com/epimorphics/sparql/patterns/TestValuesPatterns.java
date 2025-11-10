@@ -8,11 +8,11 @@ package com.epimorphics.sparql.patterns;
 import static com.epimorphics.sparql.exprs.LeafExprs.integer;
 import static com.epimorphics.test.utils.MakeCollection.list;
 import static com.epimorphics.util.SparqlUtils.renderToSparql;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.sparql.exprs.Call;
 import com.epimorphics.sparql.exprs.Op;

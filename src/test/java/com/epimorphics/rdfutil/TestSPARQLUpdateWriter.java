@@ -31,9 +31,10 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestSPARQLUpdateWriter extends TestCase {
+public class TestSPARQLUpdateWriter /*extends TestCase*/ {
 
     public void testBasic() throws IOException {
         Model source = ModelFactory.createDefaultModel();

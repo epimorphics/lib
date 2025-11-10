@@ -5,7 +5,7 @@
 */
 package com.epimorphics.sparql.query;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.sparql.graphpatterns.Basic;
 import com.epimorphics.sparql.templates.Settings;

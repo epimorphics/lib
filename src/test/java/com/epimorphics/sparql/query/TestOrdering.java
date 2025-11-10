@@ -5,7 +5,7 @@
 */
 package com.epimorphics.sparql.query;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.epimorphics.sparql.exprs.Infix;
 import com.epimorphics.sparql.exprs.Op;

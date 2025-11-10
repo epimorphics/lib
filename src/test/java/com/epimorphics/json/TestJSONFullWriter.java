@@ -5,7 +5,7 @@
 */
 package com.epimorphics.json;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ import org.apache.jena.atlas.json.JsonNumber;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonString;
 import org.apache.jena.atlas.json.JsonValue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
     Added (some) tests when adding arrayElement(Number).
