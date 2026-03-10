@@ -39,6 +39,10 @@ Support for geolocations including parsing/formating OS Grid References and conv
 
 ## Change log
 
+**4.0.1**
+
+ * Update jackson-core 2.18.0 -> 2.18.6 to address CVEs
+
 **4.0.0** Update to Jena 5.6.0. Updated to Jersey 3.x which will involve some namespace changes in downstream code that references the javax.ws.rs.* namespace. Updated OpenCSV to 5.12. NOTE that from this release a minimum Java version of Java 17 is required.
 
 **3.1.7** Override jackson versions used by jena 3.9.0 dependency to avoid severe CVEs. There are remaining CVEs logged against jena 3.9.0 but they are less severe and exploitable in our usage.
