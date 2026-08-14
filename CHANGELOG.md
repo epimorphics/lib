@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 * Update transitive dependency on org.apache.httpcomponents.core5:httpcore5 5.2.1 to 5.4.3 to address CVE.
+* Update transitive dependency on org.apache.httpcomponents.core5:httpcore5-h2 5.2.1 to 5.4.3 to address CVE.
 
 ## [4.0.2]
 
