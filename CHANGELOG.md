@@ -6,13 +6,14 @@ All notable changes to this project from 2026-05-11 onward will be documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [4.0.4] - 2026-09-03
+
+* Update transitive dependency on org.apache.thrift:libthrift 0.23.0 to 0.24.0 to address CVE
 
 ## [4.0.3]
 
 ### Security
 
-* Update transitive dependency on org.apache.thrift:libthrift 0.23.0 to 0.24.0 to address CVE
 * Update transitive dependency on org.apache.httpcomponents.core5:httpclient5 5.2.1 to 5.6.3 to address CVE.
 * Update transitive dependency on org.apache.httpcomponents.core5:httpcore5 5.2.1 to 5.4.3 to address CVE.
 * Update transitive dependency on org.apache.httpcomponents.core5:httpcore5-h2 5.2.1 to 5.4.3 to address CVE.
