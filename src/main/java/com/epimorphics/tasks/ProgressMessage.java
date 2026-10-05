@@ -15,7 +15,7 @@ import static com.epimorphics.json.JsonUtil.getStringValue;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.jena.atlas.json.JsonObject;
 
 import com.epimorphics.json.JSFullWriter;
