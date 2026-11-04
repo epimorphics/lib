@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 4.0.5
+* Upgrade vulnerable dependencies:
+  * tools.jackson.core:jackson-core & jackson-databind 3.2.3 -> 3.2.4
+
+## [4.0.5] - 2026-10-05
 
 * Update dependency on com.fasterxml.jackson.core:jackson-core and com.fasterxml.jackson.core:jackson-databind from 2.22.1 to 2.22.3 to address CVEs.
 * Upgrade vulnerable dependencies:
