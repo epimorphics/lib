@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+
+## [4.0.7] - 2026-11-26
+
+* Upgrade commons-codec to 1.23.0 to address CVE
+
 ## [4.0.6] - 2026-11-04
 
 * Upgrade vulnerable dependencies:
